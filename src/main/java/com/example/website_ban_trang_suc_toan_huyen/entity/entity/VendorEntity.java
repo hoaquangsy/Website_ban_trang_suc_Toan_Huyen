@@ -8,26 +8,35 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
+import java.sql.Date;
 
 @Entity
 @Table
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryEntityClass {
+public class Vendor extends BaseEntityEntity {
     @Id
     @Column(length = 36)
-    private String categoryId;
+    private String vendorId;
     @Column(length = 30)
     private String name;
     @Column(length = 50)
-    private String description;
+    private String address;
     @Column(length = 50)
-    private String createBy;
+    private String bankName;
+    @Column(length = 30)
+    private String bankNumber;
+    @Column(length = 30)
+    private String email;
+    @Column
     private Date createAt;
-    private String updateBy;
-    private Date updateAt;
-    private Boolean status;
+    @Column(length = 30)
+    private String createBy;
+    @Column
+    private Date lastModifiedAt;
+    @Column(length = 30)
+    private String lastModifiedBy;
+
     
 }

@@ -8,14 +8,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.math.BigDecimal;
 
 @Entity
 @Table
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Material {
+public class MaterialClass {
     @Id
     @Column(length = 36)
     private String materialId;

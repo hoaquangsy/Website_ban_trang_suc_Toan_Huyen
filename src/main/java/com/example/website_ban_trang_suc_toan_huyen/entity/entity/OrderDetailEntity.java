@@ -9,36 +9,25 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.sql.Date;
 
 @Entity
 @Table
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Order {
+public class OrderDetailClass {
     @Id
     @Column(length = 36)
-    private String orderId;
+    private String productId;
     @Column(length = 36)
-    private String userId;
+    private String orderId;
     @Column
-    private Date dayTrading;
+    private Integer amount;
     @Column
-    private BigDecimal customerMoney;
+    private BigDecimal price;
     @Column
-    private Boolean paymentMethod;
-    @Column
-    private Boolean purchase;
-    @Column
-    private BigDecimal transportFee;
-    @Column
-    private BigDecimal deposit;
+    private BigDecimal discount;
     @Column
     private BigDecimal total;
-    @Column
-    private Boolean status;
-    @Column
-    private Boolean type;
 
 }

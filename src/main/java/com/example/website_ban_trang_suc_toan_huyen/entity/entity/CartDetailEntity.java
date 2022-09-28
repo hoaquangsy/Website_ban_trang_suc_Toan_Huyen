@@ -15,12 +15,15 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Cart {
+public class CartDetailClass {
     @Id
     @Column(length = 36)
     private String cartId;
     @Column(length = 36)
-    private String userId;
-
+    private String productId;
+    @Column
+    private Integer amount;
+    @Column
+    private BigDecimal total;
 
 }

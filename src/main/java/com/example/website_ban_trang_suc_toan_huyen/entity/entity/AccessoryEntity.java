@@ -8,36 +8,21 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.math.BigDecimal;
-import java.sql.Date;
 
 @Entity
 @Table
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Vendor {
+public class AccessoryClass {
     @Id
     @Column(length = 36)
-    private String vendorId;
+    private String accessoryId;
     @Column(length = 30)
     private String name;
-    @Column
-    private Date createAt;
     @Column(length = 30)
-    private String createBy;
-    @Column
-    private Date lastModifiedAt;
-    @Column(length = 30)
-    private String lastModifiedBy;
+    private String price;
     @Column(length = 50)
-    private String address;
-    @Column(length = 50)
-    private String bankName;
-    @Column(length = 30)
-    private String bankNumber;
-    @Column(length = 30)
-    private String email;
-
+    private String description;
     
 }

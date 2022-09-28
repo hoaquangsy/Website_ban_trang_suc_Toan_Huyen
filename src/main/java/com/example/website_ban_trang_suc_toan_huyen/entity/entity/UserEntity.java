@@ -4,11 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.math.BigDecimal;
+import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
@@ -16,22 +12,29 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Refund {
+public class User extends BaseEntityEntity {
     @Id
+    @GeneratedValue
     @Column(length = 36)
-    private String refundId;
-    @Column(length = 36)
-    private String orderId;
-    @Column(length = 36)
-    private String productId;
+    private String userId;
+    @Column(length = 50)
+    private String fullname;
+    @Column
+    private Date birthday;
+    @Column(length = 50)
+    private String phoneNumber;
+    @Column
+    private Boolean gender;
+    @Column(length = 30)
+    private String username;
+    @Column(length = 30)
+    private String password;
     @Column
     private Boolean status;
-    @Column(length = 255)
-    private String reason;
-    @Column(length = 255)
+    @Column(length = 100)
     private String note;
     @Column
-    private Date create_at;
+    private Date createAt;
     @Column(length = 50)
     private String createBy;
     @Column

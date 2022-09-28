@@ -16,26 +16,29 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MaterialType {
+public class OrderClass {
     @Id
     @Column(length = 36)
-    private String materialTypeId;
+    private String orderId;
     @Column(length = 36)
-    private String materialId;
-    @Column(length = 30)
-    private String materialTypeName;
+    private String userId;
     @Column
-    private BigDecimal purchasePrice;
+    private Date dayTrading;
     @Column
-    private BigDecimal saleprice;
+    private BigDecimal customerMoney;
     @Column
-    private Date lastModifiedAt;
-    @Column(length = 30)
-    private String createBy;
+    private Boolean paymentMethod;
     @Column
-    private Date createAt;
-    @Column(length = 30)
-    private String lastModifiedBy;
+    private Boolean purchase;
+    @Column
+    private BigDecimal transportFee;
+    @Column
+    private BigDecimal deposit;
+    @Column
+    private BigDecimal total;
+    @Column
+    private Boolean status;
+    @Column
+    private Boolean type;
 
-    
 }
