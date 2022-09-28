@@ -1,4 +1,4 @@
-package com.example.website_ban_trang_suc_toan_huyen.entity;
+package com.example.website_ban_trang_suc_toan_huyen.entity.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.example.website_ban_trang_suc_toan_huyen.entity;
+package com.example.website_ban_trang_suc_toan_huyen.entity.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,12 +15,15 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Cart {
+public class CartDetail {
     @Id
     @Column(length = 36)
     private String cartId;
     @Column(length = 36)
-    private String userId;
-
+    private String productId;
+    @Column
+    private Integer amount;
+    @Column
+    private BigDecimal total;
 
 }

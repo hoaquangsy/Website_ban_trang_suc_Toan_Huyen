@@ -1,4 +1,4 @@
-package com.example.website_ban_trang_suc_toan_huyen.entity;
+package com.example.website_ban_trang_suc_toan_huyen.entity.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,27 +16,26 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Refund {
+public class MaterialType {
     @Id
     @Column(length = 36)
-    private String refundId;
+    private String materialTypeId;
     @Column(length = 36)
-    private String orderId;
-    @Column(length = 36)
-    private String productId;
+    private String materialId;
+    @Column(length = 30)
+    private String materialTypeName;
     @Column
-    private Boolean status;
-    @Column(length = 255)
-    private String reason;
-    @Column(length = 255)
-    private String note;
+    private BigDecimal purchasePrice;
     @Column
-    private Date create_at;
-    @Column(length = 50)
-    private String createBy;
+    private BigDecimal saleprice;
     @Column
     private Date lastModifiedAt;
-    @Column(length = 50)
+    @Column(length = 30)
+    private String createBy;
+    @Column
+    private Date createAt;
+    @Column(length = 30)
     private String lastModifiedBy;
 
+    
 }

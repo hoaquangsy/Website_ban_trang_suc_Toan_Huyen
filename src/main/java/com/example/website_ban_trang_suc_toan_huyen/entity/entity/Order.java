@@ -1,4 +1,4 @@
-package com.example.website_ban_trang_suc_toan_huyen.entity;
+package com.example.website_ban_trang_suc_toan_huyen.entity.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,19 +16,29 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDetail {
+public class Order {
     @Id
     @Column(length = 36)
-    private String productId;
-    @Column(length = 36)
     private String orderId;
+    @Column(length = 36)
+    private String userId;
     @Column
-    private Integer amount;
+    private Date dayTrading;
     @Column
-    private BigDecimal price;
+    private BigDecimal customerMoney;
     @Column
-    private BigDecimal discount;
+    private Boolean paymentMethod;
+    @Column
+    private Boolean purchase;
+    @Column
+    private BigDecimal transportFee;
+    @Column
+    private BigDecimal deposit;
     @Column
     private BigDecimal total;
+    @Column
+    private Boolean status;
+    @Column
+    private Boolean type;
 
 }
