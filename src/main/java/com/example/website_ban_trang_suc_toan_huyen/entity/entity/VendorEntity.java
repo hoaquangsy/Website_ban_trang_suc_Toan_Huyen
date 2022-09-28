@@ -11,11 +11,11 @@ import javax.persistence.Table;
 import java.sql.Date;
 
 @Entity
-@Table
+@Table (name = "vendor")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Vendor extends BaseEntityEntity {
+public class VendorEntity extends BaseEntityEntity {
     @Id
     @Column(length = 36)
     private String vendorId;

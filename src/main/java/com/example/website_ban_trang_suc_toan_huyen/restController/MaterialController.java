@@ -8,27 +8,27 @@ import org.springframework.web.bind.annotation.*;
 public class MaterialController {
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAllMaterial() {
         return null;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> byId(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> getMaterialById(@PathVariable("id") Integer id) {
         return null;
     }
 
     @PostMapping
-    public ResponseEntity<?> add() {
+    public ResponseEntity<?> addMaterial() {
         return null;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> deleteMaterial(@PathVariable("id") Integer id) {
         return null;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id ) {
+    public ResponseEntity<?> updateMaterial(@PathVariable("id") Integer id ) {
         return null;
     }
 }

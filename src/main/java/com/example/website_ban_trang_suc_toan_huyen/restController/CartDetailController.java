@@ -8,27 +8,27 @@ import org.springframework.web.bind.annotation.*;
 public class CartDetailController {
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getCartDetailAll() {
         return null;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> byId(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> getCartDetailById(@PathVariable("id") Integer id) {
         return null;
     }
 
     @PostMapping
-    public ResponseEntity<?> add() {
+    public ResponseEntity<?> addCartDetail() {
         return null;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> deleteCartDetail(@PathVariable("id") Integer id) {
         return null;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id ) {
+    public ResponseEntity<?> updateCartDetail(@PathVariable("id") Integer id ) {
         return null;
     }
 }

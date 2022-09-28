@@ -11,11 +11,11 @@ import javax.persistence.Table;
 import java.sql.Date;
 
 @Entity
-@Table
+@Table (name = "refund")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Refund extends BaseEntityEntity {
+public class RefundEntity extends BaseEntityEntity {
     @Id
     @Column(length = 36)
     private String refundId;

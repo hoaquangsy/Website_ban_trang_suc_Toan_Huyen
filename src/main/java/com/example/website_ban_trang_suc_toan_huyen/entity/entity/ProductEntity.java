@@ -9,11 +9,11 @@ import java.math.BigDecimal;
 import java.sql.Date;
 
 @Entity
-@Table
+@Table (name = "product")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductClass extends BaseEntityEntity {
+public class ProductEntity extends BaseEntityEntity {
     @Id
     @GeneratedValue
     @Column(length = 36)

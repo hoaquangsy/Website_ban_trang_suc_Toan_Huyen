@@ -8,27 +8,27 @@ import org.springframework.web.bind.annotation.*;
 public class AccessoryController {
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAllAccessory() {
         return null;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> byId(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> getAccessoryById(@PathVariable("id") Integer id) {
         return null;
     }
 
     @PostMapping
-    public ResponseEntity<?> add() {
+    public ResponseEntity<?> addAccessory() {
         return null;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> deleteAccessory(@PathVariable("id") Integer id) {
         return null;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id ) {
+    public ResponseEntity<?> updateAccessory(@PathVariable("id") Integer id ) {
         return null;
     }
 }

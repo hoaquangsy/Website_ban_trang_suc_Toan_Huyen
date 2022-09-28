@@ -12,11 +12,11 @@ import java.math.BigDecimal;
 import java.sql.Date;
 
 @Entity
-@Table
+@Table (name = "materialtype")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MaterialTypeClass extends BaseEntity{
+public class MaterialTypeEntity extends BaseEntityEntity {
     @Id
     @Column(length = 36)
     private String materialTypeId;

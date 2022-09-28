@@ -12,11 +12,11 @@ import java.math.BigDecimal;
 import java.sql.Date;
 
 @Entity
-@Table
+@Table (name = "order")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderClass {
+public class OrderEntity {
     @Id
     @Column(length = 36)
     private String orderId;

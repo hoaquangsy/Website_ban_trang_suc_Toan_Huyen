@@ -10,11 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table (name = "cart")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartClass {
+public class CartClassEntity {
     @Id
     @Column(length = 36)
     private String cartId;

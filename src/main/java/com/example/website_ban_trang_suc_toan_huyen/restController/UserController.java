@@ -8,27 +8,27 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAllUser() {
         return null;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> byId(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> getUserById(@PathVariable("id") Integer id) {
         return null;
     }
 
     @PostMapping
-    public ResponseEntity<?> add() {
+    public ResponseEntity<?> addUser() {
         return null;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> deleteUser(@PathVariable("id") Integer id) {
         return null;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id ) {
+    public ResponseEntity<?> updateUser(@PathVariable("id") Integer id ) {
         return null;
     }
 }

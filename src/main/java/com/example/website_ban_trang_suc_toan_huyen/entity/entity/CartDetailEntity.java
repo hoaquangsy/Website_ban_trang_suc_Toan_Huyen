@@ -11,11 +11,11 @@ import javax.persistence.Table;
 import java.math.BigDecimal;
 
 @Entity
-@Table
+@Table(name = "cart_detail")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartDetailClass {
+public class CartDetailEntity {
     @Id
     @Column(length = 36)
     private String cartId;

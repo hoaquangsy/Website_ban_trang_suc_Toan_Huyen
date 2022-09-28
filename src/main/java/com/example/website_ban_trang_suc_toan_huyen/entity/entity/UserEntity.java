@@ -8,11 +8,11 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table
+@Table (name = "user")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseEntityEntity {
+public class UserEntity extends BaseEntityEntity {
     @Id
     @GeneratedValue
     @Column(length = 36)

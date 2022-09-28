@@ -11,11 +11,11 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table
+@Table(name = "category")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryEntityClass {
+public class CategoryEntity {
     @Id
     @Column(length = 36)
     private String categoryId;

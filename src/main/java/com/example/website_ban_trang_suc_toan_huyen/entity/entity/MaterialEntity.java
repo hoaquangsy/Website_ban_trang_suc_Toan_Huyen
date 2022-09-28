@@ -10,11 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "material" )
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MaterialClass {
+public class MaterialEntity {
     @Id
     @Column(length = 36)
     private String materialId;

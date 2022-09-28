@@ -10,11 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "accessory")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccessoryClass {
+
+public class AccessoryEntity {
     @Id
     @Column(length = 36)
     private String accessoryId;
