@@ -49,7 +49,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") String id,
+    public ResponseEntity<?> updateCategory(@PathVariable("id") String id,
                                     @Validated @RequestBody CategoryDto categoryDto) {
         return ResponseEntity.ok(SampleResponse.success(categoryService.updateCategory(id,categoryDto)));
     }
