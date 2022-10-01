@@ -8,21 +8,22 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
 
 @Entity
 @Table(name = "category")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryEntity {
+public class ProductPropertyEntity {
     @Id
     @Column(length = 36)
-    private String categoryId;
+    private String productPropertyId;
     @Column(length = 30)
     private String name;
-    @Column(length = 50)
-    private String description;
+    @Column(length = 36)
+    private String value;
+    @Column(length = 36)
+    private String productId;
 
     
 }

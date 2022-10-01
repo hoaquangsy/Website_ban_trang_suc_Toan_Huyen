@@ -36,5 +36,7 @@ public class MaterialTypeEntity extends BaseEntityEntity {
     private Date createAt;
     @Column(length = 30)
     private String lastModifiedBy;
+    @Column(length = 30)
+    private String color;
 
 }
