@@ -27,10 +27,10 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryEntity category = modelMapper.map(newCategory, CategoryEntity.class);
         UserDetailsImpl currentUser = new UserDetailsImpl();
 //                = CurrentUserUtils.getCurrentUserDetails();
-        category.setCreateAt(new Date());
-        category.setCreateBy(currentUser.getId()+"");
-        category.setUpdateAt(new Date());
-        category.setUpdateBy(currentUser.getId()+"");
+//        category.setCreateAt(new Date());
+//        category.setCreateBy(currentUser.getId()+"");
+//        category.setUpdateAt(new Date());
+//        category.setUpdateBy(currentUser.getId()+"");
         return modelMapper.map(categoryRepository.save(category),CategoryDto.class);
     }
     @Override
@@ -41,8 +41,8 @@ public class CategoryServiceImpl implements CategoryService {
         modelMapper.map(dto,category);
         UserDetailsImpl currentUser = new UserDetailsImpl();
 //                = CurrentUserUtils.getCurrentUserDetails();
-        category.setUpdateAt(new Date());
-        category.setUpdateBy(currentUser.getId()+"");
+//        category.setUpdateAt(new Date());
+//        category.setUpdateBy(currentUser.getId()+"");
         return modelMapper.map(categoryRepository.save(category),CategoryDto.class);
     }
     @Override

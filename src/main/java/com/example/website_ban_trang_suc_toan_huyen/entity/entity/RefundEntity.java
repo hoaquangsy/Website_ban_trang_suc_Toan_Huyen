@@ -15,7 +15,7 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RefundEntity extends BaseEntityEntity {
+public class RefundEntity extends BaseEntity {
     @Id
     @Column(length = 36)
     private String refundId;

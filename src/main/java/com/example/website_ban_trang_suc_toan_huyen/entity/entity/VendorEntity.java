@@ -15,7 +15,7 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class VendorEntity extends BaseEntityEntity {
+public class VendorEntity extends BaseEntity {
     @Id
     @Column(length = 36)
     private String vendorId;
