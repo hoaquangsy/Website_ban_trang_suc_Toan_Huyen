@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/vendor")
+
 public class VendorController {
 
     @GetMapping

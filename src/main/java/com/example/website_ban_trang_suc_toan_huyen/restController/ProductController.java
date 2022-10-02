@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1/product")
 @RestController
+@RequestMapping(value = "api/v1/product")
 public class ProductController {
 
     @GetMapping

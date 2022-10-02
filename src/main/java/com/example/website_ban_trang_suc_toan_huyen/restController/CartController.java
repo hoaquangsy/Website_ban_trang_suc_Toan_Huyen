@@ -4,8 +4,9 @@ package com.example.website_ban_trang_suc_toan_huyen.restController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+@RequestMapping(value = "api/v1/cart")
 @RestController
-@RequestMapping("/api/v1/cart")
 public class CartController {
 
     @GetMapping
