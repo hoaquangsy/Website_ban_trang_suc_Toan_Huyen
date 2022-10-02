@@ -5,7 +5,6 @@ package com.example.website_ban_trang_suc_toan_huyen.restController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/v1/product")
 @RestController
 @RequestMapping(value = "api/v1/product")
 public class ProductController {
