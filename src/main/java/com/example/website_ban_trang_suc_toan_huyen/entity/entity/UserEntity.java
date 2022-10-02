@@ -12,7 +12,7 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEntity extends BaseEntityEntity {
+public class UserEntity extends BaseEntity {
     @Id
     @GeneratedValue
     @Column(length = 36)

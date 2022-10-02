@@ -10,16 +10,20 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table (name = "cart")
+@Table(name = "category")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartClassEntity {
+public class ProductPropertyEntity {
     @Id
     @Column(length = 36)
-    private String cartId;
+    private String productPropertyId;
+    @Column(length = 30)
+    private String name;
     @Column(length = 36)
-    private String userId;
+    private String value;
+    @Column(length = 36)
+    private String productId;
 
-
+    
 }

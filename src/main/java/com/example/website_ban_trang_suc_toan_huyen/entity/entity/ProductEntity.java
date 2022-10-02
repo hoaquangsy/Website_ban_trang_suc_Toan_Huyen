@@ -13,7 +13,7 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductEntity extends BaseEntityEntity {
+public class ProductEntity extends BaseEntity {
     @Id
     @GeneratedValue
     @Column(length = 36)
@@ -48,5 +48,6 @@ public class ProductEntity extends BaseEntityEntity {
     private BigDecimal salary;
     @Column(length = 36)
     private String accessoryId;
-
+    @Column(length = 30)
+    private String gender;
 }

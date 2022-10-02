@@ -16,7 +16,7 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MaterialTypeEntity extends BaseEntityEntity {
+public class MaterialTypeEntity extends BaseEntity {
     @Id
     @Column(length = 36)
     private String materialTypeId;
@@ -36,5 +36,7 @@ public class MaterialTypeEntity extends BaseEntityEntity {
     private Date createAt;
     @Column(length = 30)
     private String lastModifiedBy;
+    @Column(length = 30)
+    private String color;
 
 }
