@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
@@ -17,8 +14,9 @@ import java.sql.Date;
 @AllArgsConstructor
 public class VendorEntity extends BaseEntity {
     @Id
-    @Column(length = 36)
-    private String vendorId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    private Integer vendorId;
     @Column(length = 30)
     private String name;
     @Column(length = 50)
@@ -29,14 +27,5 @@ public class VendorEntity extends BaseEntity {
     private String bankNumber;
     @Column(length = 30)
     private String email;
-    @Column
-    private Date createAt;
-    @Column(length = 30)
-    private String createBy;
-    @Column
-    private Date lastModifiedAt;
-    @Column(length = 30)
-    private String lastModifiedBy;
 
-    
 }
