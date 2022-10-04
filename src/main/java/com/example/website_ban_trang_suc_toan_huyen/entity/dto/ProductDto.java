@@ -6,11 +6,10 @@ import javax.persistence.Column;
 import java.math.BigDecimal;
 import java.sql.Date;
 
-
 @Data
 public class ProductDto {
-    @Column(length = 36)
-    private String productId;
+    @Column
+    private Integer productId;
     @Column(length = 36)
     private String categoryId;
     @Column(length = 36)
@@ -27,8 +26,6 @@ public class ProductDto {
     private BigDecimal saleprice;
     @Column(length = 50)
     private String status;
-    @Column
-    private Integer amount;
     @Column(length = 50)
     private String note;
     @Column
@@ -41,5 +38,4 @@ public class ProductDto {
     private Date lastModifiedAt;
     private String lastModifiedBy;
 
-    
 }
