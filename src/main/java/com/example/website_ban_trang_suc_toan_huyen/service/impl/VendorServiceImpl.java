@@ -1,6 +1,5 @@
 package com.example.website_ban_trang_suc_toan_huyen.service.impl;
 
-import com.example.website_ban_trang_suc_toan_huyen.entity.dto.ProductDto;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.VendorDto;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.VendorEntity;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
@@ -10,9 +9,9 @@ import com.example.website_ban_trang_suc_toan_huyen.service.VendorService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import java.sql.Date;
 
 @Service
@@ -32,9 +31,11 @@ public class VendorServiceImpl implements VendorService {
 
     @Override
     public VendorDto updateVendor(Integer id, VendorRequest updateVendor) {
-        VendorEntity vendor = vendorRepository.findById(id).orElseThrow(
+        VendorEntity vendor = modelMapper.map(updateVendor, VendorEntity.class);
+        VendorEntity vendorOpt = vendorRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "Vendor not found")
         );
+        vendor.setVendorId(id);
         vendor.setLastModifiedAt(new Date(System.currentTimeMillis()));
         return modelMapper.map(vendorRepository.save(vendor),VendorDto.class);
     }
@@ -50,11 +51,18 @@ public class VendorServiceImpl implements VendorService {
 
     @Override
     public VendorDto getVendorById(Integer id) {
-        return null;
+        VendorEntity vendor = vendorRepository.findById(id).orElseThrow(
+                () -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "Vendor not found")
+        );
+        return modelMapper.map(vendor,VendorDto.class);
     }
 
     @Override
     public Page<VendorDto> getAllVendor(int page, int pageSize) {
-        return null;
+        Page<VendorEntity> VendorPage = vendorRepository.findAll(PageRequest.of(page,pageSize));
+        if (VendorPage.getTotalElements()>0){
+            return VendorPage.map(vendor -> modelMapper.map(vendor, VendorDto.class));
+        }
+        throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "Categories not exist");
     }
 }
