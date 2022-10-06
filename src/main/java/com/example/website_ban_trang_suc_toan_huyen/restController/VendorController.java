@@ -3,6 +3,7 @@ package com.example.website_ban_trang_suc_toan_huyen.restController;
 
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.CategoryDto;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.VendorDto;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.VendorRequest;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.DefaultPagingResponse;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.SampleResponse;
@@ -29,9 +30,11 @@ public class VendorController {
     @Operation(summary = "Lấy tất cả vendor", description =
             "page: trang hiện tại (bắt đầu từ 0), page_size: số record trong trang hiện tại ")
     @GetMapping
-    public ResponseEntity<?> getAllVendor(@RequestParam(value = "page") int page,
-                                          @RequestParam(value = "page_size") int pageSize) {
-        Page<VendorDto> vendorDtoPage= vendorService.getAllVendor(page,pageSize);
+    public ResponseEntity<?> getAllVendor(@RequestParam(value = "pageNumber",required = false,defaultValue = "1") Integer pageNumber,
+                                          @RequestParam(value = "page_size",required = false,defaultValue = "15") Integer pageSize,
+                                          @RequestParam(value = "keyword",required = false,defaultValue = "") String keyword,
+                                          @RequestParam(value = "sortBy",required = false) String sortBy) {
+        PageDTO vendorDtoPage= vendorService.getAllVendor(pageNumber,pageSize , keyword, sortBy);
         return ResponseEntity.ok(SampleResponse.success(vendorDtoPage));
     }
 

@@ -11,13 +11,9 @@ import java.sql.Date;
 
 @Data
 public class ProductSizeDto {
-    @Column
     private Integer idProductSize;
-    @Column
     private Integer sizId;
-    @Column
     private Integer productId;
-    @Column
     private Integer quantity;
 
 }

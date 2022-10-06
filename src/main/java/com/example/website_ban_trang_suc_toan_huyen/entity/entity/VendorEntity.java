@@ -27,5 +27,6 @@ public class VendorEntity extends BaseEntity {
     private String bankNumber;
     @Column(length = 30)
     private String email;
-
+    @Column(length = 11)
+    private String phone;
 }

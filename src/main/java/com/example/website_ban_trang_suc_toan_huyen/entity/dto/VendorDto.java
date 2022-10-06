@@ -14,6 +14,7 @@ public class VendorDto {
     private String bankName;
     private String bankNumber;
     private String email;
+    private String phone;
     private Date createAt;
     private String createBy;
     private Date lastModifiedAt;

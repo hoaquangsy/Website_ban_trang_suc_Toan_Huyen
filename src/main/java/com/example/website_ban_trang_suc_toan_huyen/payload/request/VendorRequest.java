@@ -18,6 +18,7 @@ public class VendorRequest {
     private String bankName;
     private String bankNumber;
     private String email;
+    private String phone;
     @JsonProperty("create_At")
     private Date createAt;
     @JsonProperty("create_By")

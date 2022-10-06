@@ -29,13 +29,6 @@ public class RefundEntity extends BaseEntity {
     private String reason;
     @Column(length = 255)
     private String note;
-    @Column
-    private Date create_at;
-    @Column(length = 50)
-    private String createBy;
-    @Column
-    private Date lastModifiedAt;
-    @Column(length = 50)
-    private String lastModifiedBy;
+
 
 }

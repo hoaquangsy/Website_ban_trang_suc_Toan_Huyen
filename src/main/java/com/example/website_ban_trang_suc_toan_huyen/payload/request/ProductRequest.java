@@ -1,16 +1,12 @@
 package com.example.website_ban_trang_suc_toan_huyen.payload.request;
 
-import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductPropertyEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
-
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.List;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)

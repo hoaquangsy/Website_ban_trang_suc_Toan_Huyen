@@ -1,6 +1,7 @@
 package com.example.website_ban_trang_suc_toan_huyen.service.impl;
 
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.VendorDto;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.VendorEntity;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.VendorRequest;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import java.sql.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class VendorServiceImpl implements VendorService {
@@ -58,11 +61,12 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public Page<VendorDto> getAllVendor(int page, int pageSize) {
-        Page<VendorEntity> VendorPage = vendorRepository.findAll(PageRequest.of(page,pageSize));
-        if (VendorPage.getTotalElements()>0){
-            return VendorPage.map(vendor -> modelMapper.map(vendor, VendorDto.class));
-        }
-        throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "Categories not exist");
+    public PageDTO getAllVendor(Integer page, Integer pageSize, String keyword, String sortBy) {
+        List<VendorEntity> categoryEntityList = this.vendorRepository.search(page,pageSize,keyword,sortBy);
+        List<VendorDto> vendorDtos = categoryEntityList.stream()
+                .map(categoryEntity -> modelMapper.map(categoryEntity,VendorDto.class)).collect(Collectors.toList());
+        Long count = this.vendorRepository.count(page,pageSize,keyword,sortBy);
+        return new PageDTO<>(vendorDtos,page,pageSize,count);
     }
+
 }
