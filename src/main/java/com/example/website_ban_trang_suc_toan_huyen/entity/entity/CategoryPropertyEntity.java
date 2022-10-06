@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "category")
+@Table(name = "category_property")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

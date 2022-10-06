@@ -1,10 +1,18 @@
 package com.example.website_ban_trang_suc_toan_huyen.entity.entity;
 
-import java.sql.Date;
+import javax.persistence.Column;
+import java.time.Instant;
+import java.util.Date;
 
-public class BaseEntity {
-    private Date lastModifiedAt;
+
+public abstract class BaseEntity {
+    @Column
+    private Instant lastModifiedAt = Instant.now();
+    @Column
     private String lastModifiedBy;
+    @Column
     private String createBy;
+    @Column
     private Date createAt;
+
 }
