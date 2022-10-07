@@ -56,6 +56,7 @@ public class VendorController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteVendor(@PathVariable("id") UUID id) {
+
         return ResponseEntity.ok(SampleResponse.success(vendorService.deleteVendor(id)));
     }
 

@@ -31,7 +31,6 @@ public class VendorRequest {
     @NotBlank(message = "Tên không để trống")
     @Email(message = "Email sai định dạng")
     private String email;
-
     @NotBlank(message = "Điện thoại không để trống")
     private String phone;
 }
