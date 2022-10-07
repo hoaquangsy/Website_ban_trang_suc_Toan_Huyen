@@ -11,7 +11,6 @@ import java.util.function.Function;
 
 @Data
 public class PageDTO<T> implements Serializable {
-
     private PageableDTO page = new PageableDTO();
 
     private List<T> data;
@@ -56,3 +55,4 @@ public class PageDTO<T> implements Serializable {
         private long total = 0;
     }
 }
+

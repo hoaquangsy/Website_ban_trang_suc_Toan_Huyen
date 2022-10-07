@@ -9,6 +9,7 @@ import com.example.website_ban_trang_suc_toan_huyen.payload.response.SampleRespo
 import com.example.website_ban_trang_suc_toan_huyen.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
         name = "Các api về sản phẩm "
 )
 @RestController
+@Slf4j
 @RequestMapping(value = "/api/v1/product")
 public class ProductController {
     @Autowired
