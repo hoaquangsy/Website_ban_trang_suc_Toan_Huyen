@@ -2,25 +2,44 @@ package com.example.website_ban_trang_suc_toan_huyen.entity.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.sql.Date;
 
 @Entity
-@Table(name = "material" )
+@Table (name = "material")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MaterialEntity {
+public class MaterialEntity extends BaseEntity {
     @Id
-    @Column(length = 36)
-    private String materialId;
-    @Column(length = 36)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer materialId;
+    @Column
     private String materialName;
-    @Column(length = 50)
-    private String description;
+    @Column
+    private BigDecimal purchasePrice;
+    @Column
+    private BigDecimal salePrice;
+    @Column
+    private String color;
+    @Column
+    private String type;
+    @Column
+    private Integer age;
+    @Column
+    private Integer status;
+
+    @Getter
+    @AllArgsConstructor
+    public enum StatusEnum{
+        ACTIVE(1),
+        INACTIVE(0);
+
+        private final int code;
+    }
 
 }

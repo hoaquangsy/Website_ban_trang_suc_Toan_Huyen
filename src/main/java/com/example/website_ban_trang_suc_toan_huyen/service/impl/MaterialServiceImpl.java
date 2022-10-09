@@ -16,8 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.List;
-
 @Service
 public class MaterialServiceImpl implements MaterialService {
     @Autowired
@@ -25,6 +23,7 @@ public class MaterialServiceImpl implements MaterialService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Override
     public MaterialDto createMaterial(MaterialRequest request) {
         MaterialEntity entity = modelMapper.map(request, MaterialEntity.class);
         if (materialRepository.existsByMaterialNameAndTypeAndStatus(entity.getMaterialName(), entity.getType(), MaterialEntity.StatusEnum.ACTIVE.getCode())) {
@@ -34,7 +33,8 @@ public class MaterialServiceImpl implements MaterialService {
         return dto;
     }
 
-    public MaterialDto updateMaterial(MaterialRequest request,Integer id) {
+    @Override
+    public MaterialDto updateMaterial(MaterialRequest request, Integer id) {
         MaterialEntity entity = materialRepository.findById(id).get();
         if (ObjectUtils.isEmpty(entity)){
             throw new NotFoundException(400,"Not found material");
@@ -46,11 +46,13 @@ public class MaterialServiceImpl implements MaterialService {
         MaterialDto dto = modelMapper.map(materialRepository.save(entity),MaterialDto.class);
         return dto;
     }
+    @Override
     public void deleteMaterial(Integer id){
         MaterialEntity entity = materialRepository.findById(id).get();
         entity.setStatus(MaterialEntity.StatusEnum.INACTIVE.getCode());
         materialRepository.save(entity);
     }
+    @Override
     public Page<MaterialDto> getAllMaterial(int page, int pageSize){
         Page<MaterialEntity> materialEntityPage=materialRepository.findAll(PageRequest.of(page,pageSize));
         if (materialEntityPage.getTotalElements()>0){
@@ -58,4 +60,5 @@ public class MaterialServiceImpl implements MaterialService {
         }
         throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "Material not exist");
     }
+
 }
