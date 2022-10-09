@@ -3,6 +3,7 @@ package com.example.website_ban_trang_suc_toan_huyen.entity.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import java.util.Date;
 
 
 @Data
+@ToString
 public class CategoryDto {
     @Column(length = 36)
     private String categoryId;

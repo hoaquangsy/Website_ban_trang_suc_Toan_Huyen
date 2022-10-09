@@ -34,5 +34,4 @@ public class CategoryEntity {
     @Column
     private Boolean status;
 
-
 }

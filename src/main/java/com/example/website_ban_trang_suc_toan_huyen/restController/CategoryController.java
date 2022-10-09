@@ -2,6 +2,8 @@ package com.example.website_ban_trang_suc_toan_huyen.restController;
 
 
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.CategoryDto;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.request.CategorySearchDTO;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.DefaultPagingResponse;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.SampleResponse;
 import com.example.website_ban_trang_suc_toan_huyen.service.CategoryService;
@@ -25,15 +27,20 @@ public class CategoryController {
     @Operation(summary = "Lấy tất cả category", description =
             "page: trang hiện tại (bắt đầu từ 0), page_size: số record trong trang hiện tại ")
     @GetMapping
-    public ResponseEntity<?> getAllCategory(@RequestParam(value = "page") int page,
-                                    @RequestParam(value = "page_size") int pageSize) {
-        Page<CategoryDto> categoryDtoPage=categoryService.getAllCategory(page,pageSize);
-        return ResponseEntity.ok(DefaultPagingResponse.success(categoryDtoPage));
+    public ResponseEntity<?> getAllCategory(@RequestParam(value = "page", required = false) Integer pageIndex,
+                                    @RequestParam(value = "page_size",required = false) Integer pageSize,
+                                            @RequestParam(value = "keyword",required = false) String keyword,
+                                            @RequestParam(value = "sortBy",required = false) String sortBy
+                                            ) {
+            PageDTO categoryDtoPage=categoryService.search(pageIndex,pageSize,keyword,sortBy);
+        return ResponseEntity.ok(categoryDtoPage);
     }
 
     @Operation(summary = "Lấy thể loại theo Id", description = "Lấy thể loại theo Id")
     @GetMapping("/{id}")
     public ResponseEntity<?> getCategoryById(@PathVariable("id") String id) {
+        System.out.println("-------Get By ID----------");
+        System.out.println(this.categoryService.getCategoryById(id));
         return ResponseEntity.ok(SampleResponse.success(categoryService.getCategoryById(id)));
     }
 
