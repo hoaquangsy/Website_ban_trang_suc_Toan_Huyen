@@ -25,7 +25,9 @@ target/
 /dist/
 /nbdist/
 /.nb-gradle/
+logs/
 build/
+logs/
 !**/src/main/**/build/
 !**/src/test/**/build/
 

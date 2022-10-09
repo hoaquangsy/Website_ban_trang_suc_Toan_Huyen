@@ -5,7 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "api/v1/material-type")
+@RequestMapping("/api/v1/materialtype")
+
+
 public class MaterialTypeController {
 
     @GetMapping

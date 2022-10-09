@@ -1,6 +1,8 @@
 package com.example.website_ban_trang_suc_toan_huyen.service.impl;
 
+import com.example.website_ban_trang_suc_toan_huyen.DTO.CategoryDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.CategoryDto;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.CategoryEntity;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.repository.CategoryRepository;
@@ -14,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -21,6 +25,9 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
     @Autowired
     private  ModelMapper modelMapper;
+
+    @Autowired
+    private CategoryDTO categoryDTO;
 
     @Override
     public CategoryDto createCategory(CategoryDto newCategory){
@@ -59,5 +66,14 @@ public class CategoryServiceImpl implements CategoryService {
             return categoryEntityPage.map(categoryEntity -> modelMapper.map(categoryEntity,CategoryDto.class));
         }
         throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "Categories not exist");
+    }
+
+    @Override
+    public PageDTO search(Integer page, Integer pageSize, String keyword, String sortBy) {
+        List<CategoryEntity> categoryEntityList = this.categoryDTO.search(page,pageSize,keyword,sortBy);
+        List<CategoryDto> categoryDtos = categoryEntityList.stream()
+                .map(categoryEntity -> modelMapper.map(categoryEntity,CategoryDto.class)).collect(Collectors.toList());
+        Long count = this.categoryDTO.countCategory(page,pageSize,keyword,sortBy);
+        return new PageDTO<>(categoryDtos,page,pageSize,count);
     }
 }

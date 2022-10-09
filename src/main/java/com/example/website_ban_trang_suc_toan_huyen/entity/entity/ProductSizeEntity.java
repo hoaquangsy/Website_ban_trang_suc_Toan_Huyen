@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "product_size" )
@@ -16,10 +13,13 @@ import javax.persistence.Table;
 @AllArgsConstructor
 public class ProductSizeEntity {
     @Id
-    @Column(length = 36)
-    private String sizId;
-    @Column(length = 36)
-    private String productId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    private Integer idProductSize;
+    @Column
+    private Integer sizId;
+    @Column
+    private Integer productId;
     @Column
     private Integer quantity;
 

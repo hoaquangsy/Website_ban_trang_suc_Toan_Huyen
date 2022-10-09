@@ -16,8 +16,8 @@ import javax.persistence.Table;
 @AllArgsConstructor
 public class SizeEntity {
     @Id
-    @Column(length = 36)
-    private String sizId;
+    @Column
+    private Integer sizId;
     @Column(length = 30)
     private String size;
 

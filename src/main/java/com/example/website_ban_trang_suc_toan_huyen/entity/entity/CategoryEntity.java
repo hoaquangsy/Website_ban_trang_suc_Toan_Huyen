@@ -8,7 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
+import java.sql.Date;
 
 @Entity
 @Table(name = "category")
@@ -23,6 +23,15 @@ public class CategoryEntity {
     private String name;
     @Column(length = 50)
     private String description;
+    @Column
+    private Date createAt;
+    @Column(length = 50)
+    private String createBy;
+    @Column
+    private Date updateAt;
+    @Column(length = 50)
+    private String updateBy;
+    @Column
+    private Boolean status;
 
-    
 }

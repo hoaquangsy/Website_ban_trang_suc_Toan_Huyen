@@ -15,9 +15,9 @@ import java.sql.Date;
 @AllArgsConstructor
 public class ProductEntity extends BaseEntity {
     @Id
-    @GeneratedValue
-    @Column(length = 36)
-    private String productId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    private Integer productId;
     @Column(length = 36)
     private String categoryId;
     @Column(length = 36)
@@ -34,8 +34,6 @@ public class ProductEntity extends BaseEntity {
     private BigDecimal saleprice;
     @Column(length = 50)
     private String status;
-    @Column
-    private Integer amount;
     @Column(length = 50)
     private String note;
     @Column

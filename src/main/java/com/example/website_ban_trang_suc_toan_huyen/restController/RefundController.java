@@ -5,7 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "api/v1/refund")
+@RequestMapping("/api/v1/refund")
+
 public class RefundController {
 
     @GetMapping
