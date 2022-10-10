@@ -20,5 +20,6 @@ public class VendorDto {
     private String createBy;
     private Date lastModifiedAt;
     private String lastModifiedBy;
+    private Boolean deleted;
 
 }
