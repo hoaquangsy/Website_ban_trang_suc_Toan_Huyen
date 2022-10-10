@@ -24,22 +24,19 @@ public class UserEntity extends BaseEntity {
     @Column(length = 50)
     private String phoneNumber;
     @Column
-    private Boolean gender;
+    private String gender;
     @Column(length = 30)
     private String username;
     @Column(length = 30)
     private String password;
     @Column
-    private Boolean status;
+    private String status;
     @Column(length = 100)
     private String note;
     @Column
-    private Date createAt;
-    @Column(length = 50)
-    private String createBy;
+    private String role;
     @Column
-    private Date lastModifiedAt;
-    @Column(length = 50)
-    private String lastModifiedBy;
+    private String address;
+
 
 }
