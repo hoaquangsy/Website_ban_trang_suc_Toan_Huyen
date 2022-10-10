@@ -41,7 +41,7 @@ public class VendorDaoImpl implements VendorDao {
     }
 
     private String createWhereQuery(Integer page, Integer pageSize, String keyword, String sortBy, Map<String, Object> values) {
-        StringBuilder sql = new StringBuilder(" WHERE 1 = 1 ");
+        StringBuilder sql = new StringBuilder(" WHERE 1 = 1 AND C.deleted = false");
         if (!keyword.trim().equals("")) {
             sql.append(" AND ( C.name like :name ");
             values.put("name", "%"+keyword+"%");
@@ -53,9 +53,10 @@ public class VendorDaoImpl implements VendorDao {
             values.put("bankNumber", "%"+keyword+"%");
             sql.append(" OR C.email like :email ");
             values.put("email", "%"+keyword+"%");
-            sql.append(" OR C.phone like :phone )");
+            sql.append(" OR C.phone like :phone ) ");
             values.put("phone", "%"+keyword+"%");
         }
+
         return sql.toString();
     }
     private StringBuilder createOrderQuery(String sortBy) {

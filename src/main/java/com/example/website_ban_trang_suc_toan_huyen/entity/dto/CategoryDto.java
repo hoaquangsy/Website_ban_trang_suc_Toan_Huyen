@@ -9,23 +9,30 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
+import java.sql.Date;
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
 
 
 @Data
 @ToString
 public class CategoryDto {
-    @Column(length = 36)
-    private String categoryId;
-    @Column(length = 30)
+
+    private UUID categoryId;
+
     private String name;
-    @Column(length = 50)
+
     private String description;
-    @Column(length = 50)
+
+    private List<CategoryPropertyDTO> properties;
+
+    private Instant createAt;
+
     private String createBy;
-    private Date createAt;
-    private String updateBy;
-    private Date updateAt;
-    private Boolean status;
-    
+
+    private Instant lastModifiedAt;
+
+    private String lastModifiedBy;
+
 }

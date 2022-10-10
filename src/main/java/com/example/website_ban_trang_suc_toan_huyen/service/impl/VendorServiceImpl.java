@@ -29,6 +29,7 @@ public class VendorServiceImpl implements VendorService {
     public VendorDto createVendor(VendorRequest vendorRequest) {
         VendorEntity vendor = modelMapper.map(vendorRequest, VendorEntity.class);
         vendor.setVendorId(UUID.randomUUID());
+        vendor.setDeleted(Boolean.FALSE);
         return modelMapper.map(vendorRepository.save(vendor), VendorDto.class);
     }
 
@@ -39,7 +40,7 @@ public class VendorServiceImpl implements VendorService {
                 () -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "Vendor not found")
         );
         vendor.setVendorId(id);
-        vendor.setLastModifiedAt(new Date(System.currentTimeMillis()));
+        vendor.setDeleted(Boolean.FALSE);
         return modelMapper.map(vendorRepository.save(vendor),VendorDto.class);
     }
 
@@ -48,7 +49,8 @@ public class VendorServiceImpl implements VendorService {
         VendorEntity vendor = vendorRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "Vendor not found")
         );
-        vendorRepository.delete(vendor);
+        vendor.setDeleted(Boolean.TRUE);
+        vendorRepository.save(vendor);
         return HttpStatus.OK;
     }
 
