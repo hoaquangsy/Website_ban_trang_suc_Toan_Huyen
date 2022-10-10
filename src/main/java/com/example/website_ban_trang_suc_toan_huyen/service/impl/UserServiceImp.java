@@ -106,6 +106,7 @@ public class UserServiceImp implements UserService {
     public UserResponse updateUser(UserRequest userRequest){
         UserResponse response = new UserResponse();
         UserEntity user = new UserEntity();
+        user.setUserId(userRequest.getUserId());
         user.setUsername(userRequest.getUsername());
         user.setPassword(userRequest.getPassword());
         user.setGender(userRequest.getGender());
