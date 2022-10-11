@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartEntity {
+public class CartEntity extends BaseEntity {
     @Id
     @Column(length = 36)
     private String cartId;

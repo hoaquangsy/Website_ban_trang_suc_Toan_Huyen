@@ -31,4 +31,6 @@ public class VendorEntity extends BaseEntity {
     private String email;
     @Column(length = 11)
     private String phone;
+    @Column()
+    private Boolean deleted;
 }

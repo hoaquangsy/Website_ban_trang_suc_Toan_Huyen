@@ -1,5 +1,6 @@
 package com.example.website_ban_trang_suc_toan_huyen.payload.request;
 
+import com.example.website_ban_trang_suc_toan_huyen.entity.entity.MaterialEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -12,7 +13,6 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Data
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class MaterialRequest {
 
     @NotBlank(message = "Material is required")
@@ -28,8 +28,8 @@ public class MaterialRequest {
 
     @NotBlank(message = "color is required")
     private String color;
-    @NotBlank(message = "color is required")
-    private String type;
+    @NotNull(message = "color is required")
+    private MaterialEntity.MaterialType type;
     @NotNull(message = "age is required")
     private Integer age;
 }

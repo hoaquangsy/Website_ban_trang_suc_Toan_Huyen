@@ -1,7 +1,11 @@
 package com.example.website_ban_trang_suc_toan_huyen.service.impl;
 
+import com.example.website_ban_trang_suc_toan_huyen.dao.MaterialDao;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.MaterialDto;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.VendorDto;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.MaterialEntity;
+import com.example.website_ban_trang_suc_toan_huyen.entity.entity.VendorEntity;
 import com.example.website_ban_trang_suc_toan_huyen.exception.BadRequestException;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.MaterialRequest;
@@ -16,6 +20,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 @Service
 public class MaterialServiceImpl implements MaterialService {
     @Autowired
@@ -23,33 +32,34 @@ public class MaterialServiceImpl implements MaterialService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private MaterialDao materialDao;
+
     @Override
     public MaterialDto createMaterial(MaterialRequest request) {
         MaterialEntity entity = modelMapper.map(request, MaterialEntity.class);
-        if (materialRepository.existsByMaterialNameAndTypeAndStatus(entity.getMaterialName(), entity.getType(), MaterialEntity.StatusEnum.ACTIVE.getCode())) {
+        if (materialRepository.existsByMaterialNameAndTypeAndStatus(entity.getMaterialName(), entity.getType(),entity.getStatus())) {
             throw new BadRequestException("Material is existed");
         }
+        entity.setMaterialId(UUID.randomUUID());
+        entity.setStatus(MaterialEntity.StatusEnum.ACTIVE);
         MaterialDto dto = modelMapper.map(materialRepository.save(entity), MaterialDto.class);
         return dto;
     }
 
     @Override
-    public MaterialDto updateMaterial(MaterialRequest request, Integer id) {
-        MaterialEntity entity = materialRepository.findById(id).get();
-        if (ObjectUtils.isEmpty(entity)){
-            throw new NotFoundException(400,"Not found material");
-        }
-        if (materialRepository.existsByMaterialNameAndTypeAndStatus(entity.getMaterialName(), entity.getType(), MaterialEntity.StatusEnum.ACTIVE.getCode())) {
-            throw new BadRequestException("Material is existed");
+    public MaterialDto updateMaterial(MaterialRequest request, UUID id) {
+        MaterialEntity entity = materialRepository.findById(id).orElseThrow(() -> new NotFoundException(400,"Not found material"));
+        if (materialRepository.checkMaterialDuplicate(request.getMaterialName(), request.getType(),id ).isPresent()) {
+           throw new BadRequestException("Material is existed");
         }
         BeanUtils.copyProperties(request,entity);
-        MaterialDto dto = modelMapper.map(materialRepository.save(entity),MaterialDto.class);
-        return dto;
+        return modelMapper.map(materialRepository.save(entity),MaterialDto.class);
     }
     @Override
-    public void deleteMaterial(Integer id){
-        MaterialEntity entity = materialRepository.findById(id).get();
-        entity.setStatus(MaterialEntity.StatusEnum.INACTIVE.getCode());
+    public void deleteMaterial(UUID id){
+        MaterialEntity entity = materialRepository.findById(id).orElseThrow(() -> new NotFoundException(400,"Not found material"));
+        entity.setStatus(MaterialEntity.StatusEnum.INACTIVE);
         materialRepository.save(entity);
     }
     @Override
@@ -61,4 +71,15 @@ public class MaterialServiceImpl implements MaterialService {
         throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "Material not exist");
     }
 
+    @Override
+    public PageDTO search(String keyword, Integer pageIndex,
+                          Integer pageSize, MaterialEntity.MaterialType type,
+                          MaterialEntity.StatusEnum status, BigDecimal startPrice,
+                          BigDecimal endPrice,String sortBy) {
+        List<MaterialEntity> materialEntityList = this.materialDao.search(keyword,pageIndex,pageSize,type,status,startPrice,endPrice,sortBy);
+        List<MaterialDto> materialDtos = materialEntityList.stream()
+                .map(materialEntity -> modelMapper.map(materialEntity,MaterialDto.class)).collect(Collectors.toList());
+        Long count = this.materialDao.count(keyword,pageIndex,pageSize,type,status,startPrice,endPrice,sortBy);
+        return new PageDTO(materialDtos,pageIndex,pageSize,count);
+    }
 }

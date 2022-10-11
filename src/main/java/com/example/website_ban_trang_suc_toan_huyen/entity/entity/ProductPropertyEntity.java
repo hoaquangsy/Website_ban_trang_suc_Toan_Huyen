@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "category")
+@Table(name = "product_property")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
