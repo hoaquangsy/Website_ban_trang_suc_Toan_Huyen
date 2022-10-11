@@ -11,7 +11,7 @@ public class UserRequest {
     @NotBlank(message = "User không để trống")
     private String username;
     @NotBlank(message = "FullName không để trống")
-    private String fullname;
+    private String fullName;
     @NotNull(message = "birthday không để trống")
     private LocalDate birthday;
     @NotBlank(message = "Password không để trống")
@@ -24,6 +24,8 @@ public class UserRequest {
     private UserEntity.Role role;
     @NotNull(message = "Role không để trống")
     private String phoneNumber;
+    @NotNull(message = "CCCD không để trống")
+    private String cccd;
     @NotBlank(message = "Email không để trống")
     @Email
     private String email;

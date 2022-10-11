@@ -101,7 +101,8 @@ public class UserServiceImp implements UserService {
         user.setPhoneNumber(userRequest.getPhoneNumber());
         user.setDeleted(Boolean.FALSE);
         user.setStatus(Boolean.FALSE);
-        user.setFullname(userRequest.getFullname());
+        user.setCccd(user.getCccd());
+        user.setFullName(userRequest.getFullName());
         user.setBirthday(user.getBirthday());
         user.setImageUrl(userRequest.getImageUrl());
         user.setEmail(userRequest.getEmail());

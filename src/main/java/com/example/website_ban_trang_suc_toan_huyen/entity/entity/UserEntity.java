@@ -22,7 +22,7 @@ public class UserEntity extends BaseEntity {
     @Type(type = "uuid-char")
     private UUID userId;
     @Column(length = 50,nullable = false)
-    private String fullname;
+    private String fullName;
     @Column
     private LocalDate birthday;
     @Column(length = 12,nullable = false)
@@ -36,6 +36,8 @@ public class UserEntity extends BaseEntity {
     private Boolean status;
     @Column(length = 30,nullable = false)
     private String password;
+    @Column(length = 20,nullable = false)
+    private String cccd;
     @Column(nullable = false)
     private Boolean deleted;
     @Column(length = 100,nullable = false)
