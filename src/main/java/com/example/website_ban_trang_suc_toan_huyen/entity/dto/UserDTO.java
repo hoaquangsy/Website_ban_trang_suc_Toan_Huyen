@@ -12,7 +12,7 @@ import java.util.UUID;
 public class UserDTO {
     private UUID userId;
 
-    private String fullname;
+    private String fullName;
 
     private LocalDate birthday;
 
@@ -20,13 +20,15 @@ public class UserDTO {
 
     private UserEntity.Gender gender;
 
-    private String username;
+    private String userName;
 
     private String password;
 
     private Boolean deleted;
 
     private String note;
+
+    private String cccd;
 
     private UserEntity.Role role;
 

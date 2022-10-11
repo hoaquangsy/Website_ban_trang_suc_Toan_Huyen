@@ -35,11 +35,11 @@ public class UserDaoIpml implements UserDao {
     private String createWhereQuery( String keyword, UserEntity.Role role,Boolean status, Map<String, Object> values) {
         StringBuilder sql = new StringBuilder(" WHERE 1 = 1 AND C.deleted = false");
         if (!keyword.trim().equals("")) {
-            sql.append(" AND ( C.fullname like :name ");
+            sql.append(" AND ( C.fullName like :name ");
             values.put("name", "%"+keyword+"%");
             sql.append(" OR C.phoneNumber like :phoneNumber ");
             values.put("phoneNumber", "%"+keyword+"%");
-            sql.append(" OR C.username like :username ");
+            sql.append(" OR C.userName like :userName ");
             values.put("username", "%"+keyword+"%");
             sql.append(" OR C.email like :email ");
             values.put("email", "%"+keyword+"%");
