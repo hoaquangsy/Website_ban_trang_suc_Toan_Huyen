@@ -75,7 +75,6 @@ public class ProductServiceImpl implements ProductService {
         productSize.setQuantity(productRequest.getQuantity());
         // Add ProductSize
         productSizeRepository.save(productSize);
-        product.setLastModifiedAt(new Date(System.currentTimeMillis()));
         product.setProductId(id);
         return modelMapper.map(productRepository.save(product), ProductDto.class);
     }
