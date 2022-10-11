@@ -34,6 +34,6 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     @Query(value = "SELECT u FROM UserEntity u WHERE  u.email = :email and u.userId <> :id")
     Optional<UserEntity> findUserEntitiesByEmail(String email,UUID id);
 
-    @Query(value = "SELECT u FROM UserEntity u WHERE  u.username = :username and u.userId <> :id")
+    @Query(value = "SELECT u FROM UserEntity u WHERE  u.userName = :username and u.userId <> :id")
     Optional<UserEntity> findUserEntitiesbyUserName(String username,UUID id);
 }

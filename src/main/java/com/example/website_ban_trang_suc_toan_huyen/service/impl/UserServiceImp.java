@@ -39,7 +39,7 @@ public class UserServiceImp implements UserService {
         if(this.userRepository.findUserEntitiesByEmail(userRequest.getEmail()).isPresent()){
             throw new BadRequestException("Email đã tồn tại");
         }
-        if(this.userRepository.finUserEntitybyUsername(userRequest.getUsername()) != null){
+        if(this.userRepository.finUserEntitybyUsername(userRequest.getUserName()) != null){
             throw new BadRequestException("Username đã tồn tại");
         }
        UserEntity user = this.modelMapper.map(userRequest,UserEntity.class);
@@ -89,11 +89,11 @@ public class UserServiceImp implements UserService {
         if(this.userRepository.findUserEntitiesByEmail(userRequest.getEmail(),id).isPresent()){
             throw new BadRequestException("Email đã tồn tại");
         }
-        if(this.userRepository.findUserEntitiesbyUserName(userRequest.getUsername(),id).isPresent()){
+        if(this.userRepository.findUserEntitiesbyUserName(userRequest.getUserName(),id).isPresent()){
             throw new BadRequestException("Username đã tồn tại");
         }
         UserEntity user = this.userRepository.findUserEntitiesById(id).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND.value(), "User not found"));
-        user.setUsername(userRequest.getUsername());
+        user.setUserName(userRequest.getUserName());
         user.setPassword(userRequest.getPassword());
         user.setGender(userRequest.getGender());
         user.setRole(userRequest.getRole());

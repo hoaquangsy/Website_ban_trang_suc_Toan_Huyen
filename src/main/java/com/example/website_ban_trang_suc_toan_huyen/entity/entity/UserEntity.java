@@ -31,7 +31,7 @@ public class UserEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @Column(length = 30,nullable = false)
-    private String username;
+    private String userName;
     @Column(nullable = false)
     private Boolean status;
     @Column(length = 30,nullable = false)

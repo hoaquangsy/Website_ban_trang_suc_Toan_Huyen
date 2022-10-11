@@ -60,7 +60,7 @@ public class LoginServiceImp implements LoginService {
             return  response;
         }
         UserEntity user = new UserEntity();
-        user.setUsername(username);
+        user.setUserName(username);
         user.setPassword(password);
         user.setGender(registerRequest.getGender());
         userRepository.save(user);
