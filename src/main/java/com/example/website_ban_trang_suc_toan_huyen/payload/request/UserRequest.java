@@ -1,77 +1,37 @@
 package com.example.website_ban_trang_suc_toan_huyen.payload.request;
 
+import com.example.website_ban_trang_suc_toan_huyen.entity.entity.UserEntity;
+import lombok.Data;
+
+import javax.validation.constraints.*;
+import java.time.LocalDate;
+
+@Data
 public class UserRequest {
+    @NotBlank(message = "User không để trống")
     private String username;
+    @NotBlank(message = "FullName không để trống")
+    private String fullname;
+    @NotNull(message = "birthday không để trống")
+    private LocalDate birthday;
+    @NotBlank(message = "Password không để trống")
     private String password;
+    @NotBlank(message = "confirmPassword không để trống")
     private String confirmPassword;
-    private String gender;
-    private String role;
+    @NotNull(message = "Gender không để trống")
+    private UserEntity.Gender gender;
+    @NotNull(message = "Role không để trống")
+    private UserEntity.Role role;
+    @NotNull(message = "Role không để trống")
     private String phoneNumber;
+    @NotBlank(message = "Email không để trống")
+    @Email
+    private String email;
+    @NotBlank(message = "Adress không để trống")
     private String address;
-    private String userId;
+    @NotBlank(message = "Avatar không để trống")
+    private String imageUrl;
+    @NotBlank(message = "Avatar không để trống")
+    private String note;
 
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 }

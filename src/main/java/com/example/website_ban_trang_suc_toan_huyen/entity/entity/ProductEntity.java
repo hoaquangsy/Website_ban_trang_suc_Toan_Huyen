@@ -37,12 +37,6 @@ public class ProductEntity extends BaseEntity {
     @Column(length = 50)
     private String note;
     @Column
-    private Date createAt;
-    @Column
-    private Date lastModifiedAt;
-    @Column(length = 50)
-    private String lastModifiedBy;
-    @Column
     private BigDecimal salary;
     @Column(length = 36)
     private String accessoryId;

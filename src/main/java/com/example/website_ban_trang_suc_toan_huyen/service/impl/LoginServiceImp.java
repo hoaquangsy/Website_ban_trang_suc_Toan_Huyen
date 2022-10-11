@@ -59,13 +59,9 @@ public class LoginServiceImp implements LoginService {
             response.setMessage("mật khẩu trên 8 kí tự");
             return  response;
         }
-
-        Date date = new Date();
-
         UserEntity user = new UserEntity();
         user.setUsername(username);
         user.setPassword(password);
-        user.setCreateAt(date);
         user.setGender(registerRequest.getGender());
         userRepository.save(user);
         response.setMessage("Thêm tài khoản thành công");

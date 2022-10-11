@@ -1,88 +1,67 @@
 package com.example.website_ban_trang_suc_toan_huyen.service.impl;
 
+import com.example.website_ban_trang_suc_toan_huyen.dao.UserDao;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.UserDTO;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.UserEntity;
+import com.example.website_ban_trang_suc_toan_huyen.exception.BadRequestException;
+import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.UserRequest;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.UserResponse;
 import com.example.website_ban_trang_suc_toan_huyen.repository.UserRepository;
 import com.example.website_ban_trang_suc_toan_huyen.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImp implements UserService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    ModelMapper modelMapper;
+
+    @Autowired
+    UserDao userDao;
+
     @Override
-    public UserResponse addUser(UserRequest userRequest) {
-        UserResponse response = new UserResponse();
-        String username = userRequest.getUsername();
-        String password = userRequest.getPassword();
-        String passwordConfirm = userRequest.getConfirmPassword();
-        String gender = userRequest.getGender();
-        String role = userRequest.getRole();
-        String adress= userRequest.getAddress();
-        String phoneNumber = userRequest.getPhoneNumber();
-
-        if(username.isEmpty()){
-            response.setMessage("Tài khoản không được bỏ trống");
-            return response;
+    public UserDTO addUser(UserRequest userRequest) {
+        if(!userRequest.getPassword().equals(userRequest.getConfirmPassword())){
+            throw new BadRequestException("Confirm password không chính xác");
         }
-        UserEntity user1 = userRepository.finUserEntitybyUsername(username);
-        if(user1 != null){
-            response.setMessage("Tài khoản đã tồn tại vui lòng tạo tài khoản khác");
-            return  response;
+        if(this.userRepository.findUserEntitiesByEmail(userRequest.getEmail()).isPresent()){
+            throw new BadRequestException("Email đã tồn tại");
         }
-        if(password.isEmpty()){
-            response.setMessage("Mật khẩu không được bỏ trống");
-            return response;
+        if(this.userRepository.finUserEntitybyUsername(userRequest.getUsername()) != null){
+            throw new BadRequestException("Username đã tồn tại");
         }
-        if(gender.isEmpty()){
-            response.setMessage("Vui lòng chọn giới tính");
-            return response;
-        }
-        if(role.isEmpty()){
-            response.setMessage("Vui lòng chọn quyền");
-            return response;
-        }
-        if(adress.isEmpty()){
-            response.setMessage("Địa chỉ không được bỏ trống");
-            return response;
-        }
-        if(phoneNumber.isEmpty()){
-            response.setMessage("Số điện thoại không được bỏ trống");
-            return response;
-        }
-
-        UserEntity user = new UserEntity();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setGender(gender);
-        user.setRole(role);
-        user.setAddress(adress);
-        user.setPhoneNumber(phoneNumber);
-        Date date = new Date();
-        user.setCreateAt(date);
-        userRepository.save(user);
-        response.setMessage("Thêm tài khoản thành công");
-        return response;
+       UserEntity user = this.modelMapper.map(userRequest,UserEntity.class);
+        user.setUserId(UUID.randomUUID());
+        user.setDeleted(Boolean.FALSE);
+        user.setStatus(Boolean.FALSE);
+        return this.modelMapper.map(this.userRepository.save(user),UserDTO.class);
     }
 
     @Override
-    public UserResponse deleteUser(UserRequest userRequest) {
-        UserResponse response = new UserResponse();
-        String id = userRequest.getUserId();
-        if (id.isEmpty()){
-            response.setMessage("Chua chọn người dùng để xóa");
-            return response;
-        }
-        userRepository.deleteById(id);
-        response.setMessage("Xóa thành công");
-        return response;
+    public UserDTO deleteUser(UUID id) {
+        UserEntity user = this.userRepository.findUserEntitiesById(id).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "User not found"));
+        user.setDeleted(Boolean.TRUE);
+        return this.modelMapper.map(this.userRepository.save(user),UserDTO.class);
+
     }
+
+    private UserDTO getById(UUID id){
+        UserEntity user = this.userRepository.findUserEntitiesById(id).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "User not found"));
+        return this.modelMapper.map(user,UserDTO.class);
+    }
+
 
     @Override
     public UserResponse getAllUser(UserRequest userRequest) {
@@ -103,20 +82,52 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public UserResponse updateUser(UserRequest userRequest){
-        UserResponse response = new UserResponse();
-        UserEntity user = new UserEntity();
-        user.setUserId(userRequest.getUserId());
+    public UserDTO updateUser(UUID id ,UserRequest userRequest){
+        if(!userRequest.getPassword().equals(userRequest.getConfirmPassword())){
+            throw new BadRequestException("Confirm password không chính xác");
+        }
+        if(this.userRepository.findUserEntitiesByEmail(userRequest.getEmail(),id).isPresent()){
+            throw new BadRequestException("Email đã tồn tại");
+        }
+        if(this.userRepository.findUserEntitiesbyUserName(userRequest.getUsername(),id).isPresent()){
+            throw new BadRequestException("Username đã tồn tại");
+        }
+        UserEntity user = this.userRepository.findUserEntitiesById(id).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND.value(), "User not found"));
         user.setUsername(userRequest.getUsername());
         user.setPassword(userRequest.getPassword());
         user.setGender(userRequest.getGender());
         user.setRole(userRequest.getRole());
         user.setAddress(userRequest.getAddress());
         user.setPhoneNumber(userRequest.getPhoneNumber());
-        Date date = new Date();
-        user.setCreateAt(date);
-        userRepository.save(user);
-        response.setMessage("Cập nhật tài khoản thành công");
-        return response;
+        user.setDeleted(Boolean.FALSE);
+        user.setStatus(Boolean.FALSE);
+        user.setFullname(userRequest.getFullname());
+        user.setBirthday(user.getBirthday());
+        user.setImageUrl(userRequest.getImageUrl());
+        user.setEmail(userRequest.getEmail());
+        user.setNote(userRequest.getNote());
+        return this.modelMapper.map(  userRepository.save(user),UserDTO.class);
+    }
+
+    @Override
+    public UserDTO lock(UUID uuid) {
+        UserEntity user  = this.userRepository.findUserEntitiesById(uuid).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND.value(), "User not found"));
+        user.setStatus(Boolean.TRUE);
+        return this.modelMapper.map(this.userRepository.save(user),UserDTO.class);
+    }
+
+    @Override
+    public UserDTO unlock(UUID uuid) {
+        UserEntity user  = this.userRepository.findUserEntitiesById(uuid).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND.value(), "User not found"));
+        user.setStatus(Boolean.FALSE);
+        return this.modelMapper.map(this.userRepository.save(user),UserDTO.class);
+    }
+
+    @Override
+    public PageDTO search(String keyword, UserEntity.Role role, Integer pageNumber, Integer pageSize, String sortBy,Boolean status) {
+        List<UserEntity> userEntities =  this.userDao.search(keyword,role,pageNumber,pageSize,sortBy,status);
+        List<UserDTO> userDTOS = userEntities.stream().map(userEntity -> this.modelMapper.map(userEntity,UserDTO.class)).collect(Collectors.toList());
+        Long count = this.userDao.count(keyword,role,pageNumber,pageSize,sortBy,status);
+        return new PageDTO(userDTOS,pageNumber,pageSize,count);
     }
 }
