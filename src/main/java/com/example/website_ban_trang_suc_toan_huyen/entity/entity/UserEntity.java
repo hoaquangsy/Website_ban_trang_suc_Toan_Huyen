@@ -33,13 +33,5 @@ public class UserEntity extends BaseEntity {
     private Boolean status;
     @Column(length = 100)
     private String note;
-    @Column
-    private Date createAt;
-    @Column(length = 50)
-    private String createBy;
-    @Column
-    private Date lastModifiedAt;
-    @Column(length = 50)
-    private String lastModifiedBy;
 
 }

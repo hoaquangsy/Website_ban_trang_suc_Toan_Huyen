@@ -6,7 +6,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-import java.sql.Date;
+import java.util.Date;
 import java.time.Instant;
 
 @MappedSuperclass
@@ -15,11 +15,11 @@ import java.time.Instant;
 public abstract class BaseEntity {
 
     @Column
-    protected Date lastModifiedAt ;
+    protected Instant lastModifiedAt = Instant.now() ;
     @Column
     protected String lastModifiedBy;
     @Column(updatable = false)
     protected String createBy;
     @Column(updatable = false)
-    protected Date createAt;
+    protected Instant createAt = Instant.now();
 }

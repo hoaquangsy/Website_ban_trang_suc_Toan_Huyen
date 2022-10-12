@@ -3,9 +3,7 @@ package com.example.website_ban_trang_suc_toan_huyen.restController;
 
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.AccessoryDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
-import com.example.website_ban_trang_suc_toan_huyen.entity.entity.MaterialEntity;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.AccessoryRequest;
-import com.example.website_ban_trang_suc_toan_huyen.payload.request.CategoryRequest;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.SampleResponse;
 import com.example.website_ban_trang_suc_toan_huyen.service.AccessoryService;
 import com.example.website_ban_trang_suc_toan_huyen.support.enums.AccessoryStatus;
