@@ -21,7 +21,7 @@ public class VendorDaoImpl implements VendorDao {
     public List<VendorEntity> search(Integer page, Integer pageSize, String keyword, String sortBy) {
         Map<String, Object> values = new HashMap<>();
         StringBuilder sql = new StringBuilder("SELECT C FROM VendorEntity C");
-        sql.append(createWhereQuery(page,pageSize,keyword,sortBy, values));
+        sql.append(createWhereQuery(keyword, values));
         sql.append(createOrderQuery(sortBy));
         Query query = entityManager.createQuery(sql.toString(), VendorEntity.class);
         values.forEach(query::setParameter);
@@ -34,13 +34,13 @@ public class VendorDaoImpl implements VendorDao {
     public Long count(Integer page, Integer pageSize, String keyword, String sortBy) {
         Map<String, Object> values = new HashMap<>();
         StringBuilder sql = new StringBuilder("SELECT COUNT(C) FROM VendorEntity C");
-        sql.append(createWhereQuery(page,pageSize,keyword,sortBy, values));
+        sql.append(createWhereQuery(keyword, values));
         Query query = entityManager.createQuery(sql.toString(), Long.class);
         values.forEach(query::setParameter);
         return (Long) query.getSingleResult();
     }
 
-    private String createWhereQuery(Integer page, Integer pageSize, String keyword, String sortBy, Map<String, Object> values) {
+    private String createWhereQuery( String keyword, Map<String, Object> values) {
         StringBuilder sql = new StringBuilder(" WHERE 1 = 1 AND C.deleted = false");
         if (!keyword.trim().equals("")) {
             sql.append(" AND ( C.name like :name ");

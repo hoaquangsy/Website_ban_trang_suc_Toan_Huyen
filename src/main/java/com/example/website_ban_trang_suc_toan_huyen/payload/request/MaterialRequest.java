@@ -28,8 +28,10 @@ public class MaterialRequest {
 
     @NotBlank(message = "color is required")
     private String color;
-    @NotNull(message = "color is required")
+
+    @NotNull(message = "MaterialType is required")
     private MaterialEntity.MaterialType type;
+
     @NotNull(message = "age is required")
     private Integer age;
 }
