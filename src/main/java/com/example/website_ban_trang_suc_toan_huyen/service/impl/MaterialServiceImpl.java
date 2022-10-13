@@ -56,6 +56,27 @@ public class MaterialServiceImpl implements MaterialService {
         BeanUtils.copyProperties(request,entity);
         return modelMapper.map(materialRepository.save(entity),MaterialDto.class);
     }
+
+    @Override
+    public MaterialDto lock(UUID id) {
+        MaterialEntity entity = materialRepository.findById(id).orElseThrow(() -> new NotFoundException(400,"Not found material"));
+        entity.setStatus(MaterialEntity.StatusEnum.INACTIVE);
+        return modelMapper.map(materialRepository.save(entity),MaterialDto.class);
+    }
+
+    @Override
+    public MaterialDto getById(UUID id) {
+        MaterialEntity entity = materialRepository.findById(id).orElseThrow(() -> new NotFoundException(400,"Not found material"));
+             return this.modelMapper.map(entity,MaterialDto.class);
+    }
+
+    @Override
+    public MaterialDto unlock(UUID id) {
+        MaterialEntity entity = materialRepository.findById(id).orElseThrow(() -> new NotFoundException(400,"Not found material"));
+        entity.setStatus(MaterialEntity.StatusEnum.ACTIVE);
+        return modelMapper.map(materialRepository.save(entity),MaterialDto.class);
+    }
+
     @Override
     public void deleteMaterial(UUID id){
         MaterialEntity entity = materialRepository.findById(id).orElseThrow(() -> new NotFoundException(400,"Not found material"));

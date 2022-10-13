@@ -14,6 +14,12 @@ public interface MaterialService {
 
     MaterialDto updateMaterial(MaterialRequest request, UUID id);
 
+    MaterialDto lock(UUID id);
+
+    MaterialDto getById(UUID id);
+
+    MaterialDto unlock(UUID id);
+
     void deleteMaterial(UUID id);
 
     Page<MaterialDto> getAllMaterial(int page, int pageSize);

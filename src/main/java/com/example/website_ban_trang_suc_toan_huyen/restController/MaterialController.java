@@ -38,8 +38,8 @@ public class MaterialController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getMaterialById(@PathVariable("id") Integer id) {
-        return null;
+    public ResponseEntity<?> getMaterialById(@PathVariable("id") UUID id) {
+        return ResponseEntity.ok(SampleResponse.success(this.materialService.getById(id)));
     }
 
     @PostMapping
@@ -51,6 +51,14 @@ public class MaterialController {
     public ResponseEntity<?> deleteMaterial(@PathVariable("id") UUID id) {
         this.materialService.deleteMaterial(id);
         return ResponseEntity.ok(SampleResponse.success(null));
+    }
+    @PostMapping("{id}/lock")
+    public ResponseEntity<?> lockUser(@PathVariable("id") UUID id){
+        return ResponseEntity.ok(SampleResponse.success(this.materialService.lock(id)));
+    }
+    @PostMapping("{id}/unlock")
+    public ResponseEntity<?> unlockUser(@PathVariable("id") UUID id){
+        return ResponseEntity.ok(SampleResponse.success(this.materialService.unlock(id)));
     }
 
     @PutMapping("/{id}")
