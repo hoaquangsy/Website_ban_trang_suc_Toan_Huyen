@@ -8,10 +8,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.UUID;
 
 @Data
 public class ProductSizeDto {
-    private Integer idProductSize;
+    private UUID idProductSize;
     private Integer sizId;
     private Integer productId;
     private Integer quantity;
