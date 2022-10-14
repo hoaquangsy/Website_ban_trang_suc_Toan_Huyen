@@ -6,6 +6,8 @@ import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductEntity;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductSizeEntity;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.ProductRequest;
+import com.example.website_ban_trang_suc_toan_huyen.repository.CategoryRepository;
+import com.example.website_ban_trang_suc_toan_huyen.repository.MaterialRepository;
 import com.example.website_ban_trang_suc_toan_huyen.repository.ProductRepository;
 import com.example.website_ban_trang_suc_toan_huyen.repository.ProductSizeRepository;
 import com.example.website_ban_trang_suc_toan_huyen.service.ProductService;
@@ -18,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.UUID;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -28,70 +31,57 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private MaterialRepository materialRepository;
+
+
     @Override
     public ProductDto createProduct(ProductRequest productRequest) {
+        validate(productRequest);
         ProductEntity product = modelMapper.map(productRequest, ProductEntity.class);
         ProductSizeEntity productSize = modelMapper.map(productRequest, ProductSizeEntity.class);
-        ProductEntity productByName = productRepository.findByNameProduct(productRequest.getNameProduct());
-        if (ObjectUtils.isEmpty(productByName)) {
-            // Không có tên  => add Product
-            ProductDto productDto= modelMapper.map(productRepository.save(product), ProductDto.class);
-            ProductEntity productById = productRepository.findById(productDto.getProductId()).get();
+            // lưu product
+            ProductDto productDto = modelMapper.map(productRepository.save(product), ProductDto.class);
             productSize.setProductId(productDto.getProductId());
             productSize.setSizId(productRequest.getSizeId());
             productSize.setQuantity(productRequest.getQuantity());
-            // Add ProductSize
+            // lưu productSize
             modelMapper.map(productSizeRepository.save(productSize), ProductSizeDto.class);
             return productDto;
-        }
-        else {
-            // Nếu tên tồn tại => Check sản phẩm và size có tồn tại trong ProductSize không
-            ProductSizeEntity productSizeOpt = productSizeRepository.findByProductIdAndSizId(productByName.getProductId(),productRequest.getSizeId());
-            if (!ObjectUtils.isEmpty(productSizeOpt)) {
-                throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "ProductSize is exits");
-            }
-//            UserDetailsImpl currentUser = new UserDetailsImpl();
-//                = CurrentUserUtils.getCurrentUserDetails();
-            productSize.setProductId(productByName.getProductId());
-            productSize.setSizId(productRequest.getSizeId());
-            productSize.setQuantity(productRequest.getQuantity());
-            // Add ProductSize
-            modelMapper.map(productSizeRepository.save(productSize), ProductSizeDto.class);
-            return modelMapper.map(productByName, ProductDto.class);
-        }
+
+//        }
     }
 
     @Override
-    public ProductDto updateProduct(Integer id, ProductRequest productRequest) {
+    public ProductDto updateProduct(UUID id, ProductRequest productRequest) {
+        validate(productRequest);
         ProductEntity product = modelMapper.map(productRequest, ProductEntity.class);
         ProductSizeEntity productSize = modelMapper.map(productRequest, ProductSizeEntity.class);
-        ProductEntity productOpt = productRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "Product not found")
-        );
-        ProductSizeEntity productSizeOpt = productSizeRepository.findByProductIdAndSizId(id,productRequest.getSizeId());
+        ProductEntity productOpt = productRepository.findById(id).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "Product not found"));
+        ProductSizeEntity productSizeOpt = productSizeRepository.findByProductIdAndSizId(id, productRequest.getSizeId());
         productSize.setIdProductSize(productSizeOpt.getIdProductSize());
         productSize.setProductId(id);
         productSize.setSizId(productRequest.getSizeId());
         productSize.setQuantity(productRequest.getQuantity());
-        // Add ProductSize
+        // update ProductSize
         productSizeRepository.save(productSize);
         product.setProductId(id);
         return modelMapper.map(productRepository.save(product), ProductDto.class);
     }
+
     @Override
-    public ProductDto getProductById(Integer productId) {
-        ProductEntity product = productRepository.findById(productId).orElseThrow(
-                () -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "ProductId not found")
-        );
+    public ProductDto getProductById(UUID productId) {
+        ProductEntity product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "ProductId not found"));
         return modelMapper.map(product, ProductDto.class);
     }
 
     @Override
-    public HttpStatus  deleteProduct(Integer productId) {
-        ProductEntity product = productRepository.findById(productId).orElseThrow(
-                () -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "ProductId not found")
-        );
-        product.setStatus("Inactive");
+    public HttpStatus deleteProduct(UUID productId) {
+        ProductEntity product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "ProductId not found"));
+        product.setStatus(ProductEntity.StatusEnum.INACTIVE.toString());
         productRepository.save(product);
         return HttpStatus.OK;
     }
@@ -103,5 +93,25 @@ public class ProductServiceImpl implements ProductService {
             return productEntityPage.map(productEntity -> modelMapper.map(productEntity, ProductDto.class));
         }
         throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "Products not exist");
+    }
+
+    private void validate(ProductRequest productRequest) {
+        // kiểm tra category tồn tại
+        if (!categoryRepository.existsById(productRequest.getCategoryId())) {
+            throw new NotFoundException(HttpStatus.BAD_REQUEST.value(), "Category not exits");
+        }
+        // kiểm tra size tồn tại
+        if (!productSizeRepository.existsById(productRequest.getSizeId())) {
+            throw new NotFoundException(HttpStatus.BAD_REQUEST.value(), "Size not exits");
+        }
+        // kiểm tra tên product tồn tại
+        if (!ObjectUtils.isEmpty(productRepository.findByNameProduct(productRequest.getNameProduct()))){
+            throw new NotFoundException(HttpStatus.BAD_REQUEST.value(), "Product is exits");
+        }
+        // kiểm tra material tồn tại
+        if (!materialRepository.existsById(productRequest.getMaterialId())){
+            throw new NotFoundException(HttpStatus.BAD_REQUEST.value(), "Material not exits");
+        }
+        // chưa kiểm tra eventID
     }
 }
