@@ -5,17 +5,18 @@ import lombok.Data;
 import javax.persistence.Column;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.UUID;
 
 @Data
 public class ProductDto {
-    private Integer productId;
+    private UUID productId;
     private String categoryId;
     private String vendorId;
     private String code;
     private String nameProduct;
     private float weight;
     private BigDecimal purchasePrice;
-    private BigDecimal saleprice;
+    private BigDecimal salePrice;
     private String status;
     private String note;
     private BigDecimal salary;

@@ -3,25 +3,26 @@ package com.example.website_ban_trang_suc_toan_huyen.entity.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.UUID;
 
 @Entity
-@Table (name = "product")
+@Table(name = "product")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductEntity extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Type(type = "uuid-char")
     @Column
-    private Integer productId;
+    private UUID productId;
     @Column(length = 36)
-    private String categoryId;
+    private UUID categoryId;
     @Column(length = 36)
-    private String vendorId;
+    private UUID vendorId;
     @Column(length = 36)
     private String code;
     @Column(length = 50)
@@ -31,7 +32,7 @@ public class ProductEntity extends BaseEntity {
     @Column
     private BigDecimal purchasePrice;
     @Column
-    private BigDecimal saleprice;
+    private BigDecimal salePrice;
     @Column(length = 50)
     private String status;
     @Column(length = 50)
@@ -42,4 +43,13 @@ public class ProductEntity extends BaseEntity {
     private String accessoryId;
     @Column(length = 30)
     private String gender;
+    @Column
+    private UUID eventId;
+    @Column
+    private UUID materialId;
+
+    public enum StatusEnum {
+        ACTIVE,
+        INACTIVE
+    }
 }

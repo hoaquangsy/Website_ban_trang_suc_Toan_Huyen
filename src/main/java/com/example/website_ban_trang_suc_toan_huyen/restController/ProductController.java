@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @Tag(
         description = "Product controller",
         name = "Các api về sản phẩm "
@@ -37,7 +39,7 @@ public class ProductController {
 
     @Operation(summary = "Lấy thể loại theo Id", description = "Lấy sản phẩm theo Id")
     @GetMapping("/{id}")
-    public ResponseEntity<?> getProductById(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> getProductById(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(SampleResponse.success(productService.getProductById(id)));
     }
 
@@ -47,12 +49,12 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable("id") Integer productId) {
+    public ResponseEntity<?> deleteProduct(@PathVariable("id") UUID productId) {
         return ResponseEntity.ok(productService.deleteProduct(productId));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable("id") Integer id,
+    public ResponseEntity<?> updateProduct(@PathVariable("id") UUID id,
                                            @Validated @RequestBody ProductRequest productRequest) {
         return ResponseEntity.ok(SampleResponse.success(productService.updateProduct(id,productRequest)));
     }

@@ -5,14 +5,16 @@ import com.example.website_ban_trang_suc_toan_huyen.payload.request.ProductReque
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 
+import java.util.UUID;
+
 public interface ProductService {
     ProductDto createProduct(ProductRequest newProduct);
 
-    ProductDto updateProduct(Integer id, ProductRequest productRequest);
+    ProductDto updateProduct(UUID id, ProductRequest productRequest);
 
-    HttpStatus deleteProduct(Integer id);
+    HttpStatus deleteProduct(UUID id);
 
-    ProductDto getProductById(Integer id);
+    ProductDto getProductById(UUID id);
 
     Page<ProductDto> getAllProduct(int page, int pageSize);
 }
