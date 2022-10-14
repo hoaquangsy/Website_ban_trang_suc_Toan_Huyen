@@ -7,16 +7,17 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.UUID;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProductRequest {
     @NotBlank(message = "trong")
     @JsonProperty("category_id")
-    private String categoryId;
+    private UUID categoryId;
     @JsonProperty("vendor_id")
     @NotBlank(message = "trong")
-    private String vendorId;
+    private UUID vendorId;
     @NotBlank(message = "trong")
     private String code;
     @JsonProperty("name_Product")
@@ -25,7 +26,7 @@ public class ProductRequest {
     private float weight;
     @JsonProperty("purchase_Price")
     private BigDecimal purchasePrice;
-    private BigDecimal saleprice;
+    private BigDecimal salePrice;
     private String status;
     private String note;
     @JsonProperty("create_At")
@@ -40,6 +41,8 @@ public class ProductRequest {
     private String gender;
     private Integer sizeId;
     private Integer quantity;
+    private UUID eventId;
+    private UUID materialId;
 //    private List<ProductProperty> productProperty;
 //    private List<ImageProduct> imageProducts;
 //    public static class ProductProperty{

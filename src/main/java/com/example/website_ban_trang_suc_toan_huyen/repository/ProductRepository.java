@@ -5,7 +5,9 @@ import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @Repository
-public interface ProductRepository extends JpaRepository<ProductEntity,Integer> {
+public interface ProductRepository extends JpaRepository<ProductEntity, UUID> {
     ProductEntity findByNameProduct (String name);
 }
