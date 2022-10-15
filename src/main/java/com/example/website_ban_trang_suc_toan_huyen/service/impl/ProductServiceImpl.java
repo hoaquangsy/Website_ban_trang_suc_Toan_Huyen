@@ -6,10 +6,7 @@ import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductEntity;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductSizeEntity;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.ProductRequest;
-import com.example.website_ban_trang_suc_toan_huyen.repository.CategoryRepository;
-import com.example.website_ban_trang_suc_toan_huyen.repository.MaterialRepository;
-import com.example.website_ban_trang_suc_toan_huyen.repository.ProductRepository;
-import com.example.website_ban_trang_suc_toan_huyen.repository.ProductSizeRepository;
+import com.example.website_ban_trang_suc_toan_huyen.repository.*;
 import com.example.website_ban_trang_suc_toan_huyen.service.ProductService;
 import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
@@ -29,6 +26,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductSizeRepository productSizeRepository;
     @Autowired
+    private SizeRepository sizeRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
@@ -46,7 +46,6 @@ public class ProductServiceImpl implements ProductService {
             // lưu product
             ProductDto productDto = modelMapper.map(productRepository.save(product), ProductDto.class);
             productSize.setProductId(productDto.getProductId());
-            productSize.setSizId(productRequest.getSizeId());
             productSize.setQuantity(productRequest.getQuantity());
             // lưu productSize
             modelMapper.map(productSizeRepository.save(productSize), ProductSizeDto.class);
@@ -97,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
 
     private void validate(ProductRequest productRequest) {
         // kiểm tra category tồn tại
-        if (!categoryRepository.existsById(productRequest.getCategoryId())) {
+        if (categoryRepository.findId(productRequest.getCategoryId()).isEmpty()) {
             throw new NotFoundException(HttpStatus.BAD_REQUEST.value(), "Category not exits");
         }
         // kiểm tra size tồn tại
