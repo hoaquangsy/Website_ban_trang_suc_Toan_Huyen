@@ -19,6 +19,7 @@ import java.util.UUID;
 
 @RestController()
 @RequestMapping(value = "api/v1/accessory")
+@CrossOrigin("*")
 public class AccessoryController {
 
     @Autowired
@@ -49,14 +50,27 @@ public class AccessoryController {
 
     @Operation(summary = "Search accessory")
     @GetMapping
-    public PageDTO search(@RequestParam(value = "page",defaultValue = "1",required = false) Integer page,
+    public PageDTO search(@RequestParam(value = "pageIndex",defaultValue = "1",required = false) Integer pageIndex,
                                             @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize,
                                             @RequestParam(value = "keyword",defaultValue = "",required = false) String keyword,
                                             @RequestParam(value = "status",required = false) AccessoryStatus status,
-                                            @RequestParam(value = "startPrice",required = false) BigDecimal startPrice,
-                                            @RequestParam(value = "endPrice",required = false) BigDecimal endPrice,
                                             @RequestParam(value = "sortBy",required = false) String sortBy
     ) {
-        return this.accessoryService.search(keyword,page,pageSize,status,sortBy,startPrice,endPrice);
+        return this.accessoryService.search(keyword,pageIndex,pageSize,status,sortBy);
+    }
+
+    @PutMapping("active/{id}")
+    public ResponseEntity<?> active(@PathVariable("id") UUID id ) {
+        return ResponseEntity.ok(SampleResponse.success(accessoryService.active(id)));
+    }
+
+    @PutMapping("inactive/{id}")
+    public ResponseEntity<?> inactive(@PathVariable("id") UUID id ) {
+        return ResponseEntity.ok(SampleResponse.success(accessoryService.inactive(id)));
+    }
+
+    @PutMapping("drafts/{id}")
+    public ResponseEntity<?> drafts(@PathVariable("id") UUID id ) {
+        return ResponseEntity.ok(SampleResponse.success(accessoryService.draft(id)));
     }
 }

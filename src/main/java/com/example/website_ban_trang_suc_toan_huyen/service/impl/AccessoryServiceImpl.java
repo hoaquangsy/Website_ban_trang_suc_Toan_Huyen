@@ -1,5 +1,6 @@
 package com.example.website_ban_trang_suc_toan_huyen.service.impl;
 
+import com.example.website_ban_trang_suc_toan_huyen.dao.AccessoryDAO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.AccessoryDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.AccessoryEntity;
@@ -24,6 +25,8 @@ public class AccessoryServiceImpl implements AccessoryService {
     private AccessoryRepository accessoryRepository;
     @Autowired
     private  ModelMapper modelMapper;
+    @Autowired
+    private AccessoryDAO accessoryDAO;
 
     @Override
     public AccessoryDTO create(AccessoryRequest request) {
@@ -61,15 +64,42 @@ public class AccessoryServiceImpl implements AccessoryService {
     }
 
     @Override
-    public PageDTO search(String keyword, Integer page, Integer pageSize,
-                          AccessoryStatus status, String sortBy, BigDecimal startPrice, BigDecimal endPrice) {
-        List<AccessoryEntity> accessoryEntities =this.accessoryRepository.search(page,pageSize,keyword
-                ,sortBy,status,startPrice,endPrice);
+    public PageDTO search(String keyword, Integer pageIndex, Integer pageSize,
+                          AccessoryStatus status, String sortBy) {
+        List<AccessoryEntity> accessoryEntities =this.accessoryDAO.search(pageIndex,pageSize,keyword
+                ,sortBy,status);
         List<AccessoryDTO> accessoriesDTO = accessoryEntities.stream()
                 .map(accessoryEntity -> modelMapper.map(accessoryEntity,AccessoryDTO.class))
                 .collect(Collectors.toList());
-        Long count = this.accessoryRepository.count(page,pageSize,keyword,sortBy,status,startPrice,endPrice);
-        return new PageDTO<>(accessoriesDTO,page,pageSize,count);
+        Long count = this.accessoryDAO.count(pageIndex,pageSize,keyword,sortBy,status);
+        return new PageDTO<>(accessoriesDTO,pageIndex,pageSize,count);
+    }
+
+    @Override
+    public HttpStatus active(UUID id) {
+            AccessoryEntity accessory =accessoryRepository.findById(id)
+                    .orElseThrow(()->new NotFoundException(400,"NOT FOUND ACCESSORY"));
+            accessory.setStatus(AccessoryStatus.ACTIVE);
+            accessoryRepository.save(accessory);
+            return HttpStatus.OK;
+    }
+
+    @Override
+    public HttpStatus inactive(UUID id) {
+        AccessoryEntity accessory =accessoryRepository.findById(id)
+                .orElseThrow(()->new NotFoundException(400,"NOT FOUND ACCESSORY"));
+        accessory.setStatus(AccessoryStatus.INACTIVE);
+        accessoryRepository.save(accessory);
+        return HttpStatus.OK;
+    }
+
+    @Override
+    public HttpStatus draft(UUID id) {
+        AccessoryEntity accessory =accessoryRepository.findById(id)
+                .orElseThrow(()->new NotFoundException(400,"NOT FOUND ACCESSORY"));
+        accessory.setStatus(AccessoryStatus.DRAFTS);
+        accessoryRepository.save(accessory);
+        return HttpStatus.OK;
     }
 }
 

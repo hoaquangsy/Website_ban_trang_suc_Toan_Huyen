@@ -2,7 +2,6 @@ package com.example.website_ban_trang_suc_toan_huyen.dao.impl;
 
 import com.example.website_ban_trang_suc_toan_huyen.dao.AccessoryDAO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.AccessoryEntity;
-import com.example.website_ban_trang_suc_toan_huyen.entity.entity.MaterialEntity;
 import com.example.website_ban_trang_suc_toan_huyen.support.enums.AccessoryStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -22,57 +21,44 @@ public class AccessoryDAOImpl implements AccessoryDAO {
     private EntityManager entityManager;
 
     @Override
-    public List<AccessoryEntity> search(Integer page, Integer pageSize, String keyword, String sortBy,
-                                        AccessoryStatus status,
-                                        BigDecimal startPrice, BigDecimal endPrice) {
+    public List<AccessoryEntity> search(Integer pageIndex, Integer pageSize, String keyword, String sortBy,
+                                        AccessoryStatus status) {
         Map<String, Object> values = new HashMap<>();
         StringBuilder sql = new StringBuilder("SELECT A FROM AccessoryEntity A");
-        sql.append(createWhereQuery(keyword, values, status, startPrice, endPrice));
+        sql.append(createWhereQuery(keyword, values, status));
         sql.append(createOrderQuery(sortBy));
         Query query = entityManager.createQuery(sql.toString(), AccessoryEntity.class);
         values.forEach(query::setParameter);
-        query.setFirstResult((page - 1) * pageSize);
+        query.setFirstResult((pageIndex - 1) * pageSize);
         query.setMaxResults(pageSize);
         return query.getResultList();
     }
 
     @Override
-    public Long count(Integer page, Integer pageSize, String keyword, String sortBy,
-                      AccessoryStatus status,
-                      BigDecimal startPrice, BigDecimal endPrice) {
+    public Long count(Integer pageIndex, Integer pageSize, String keyword, String sortBy,
+                      AccessoryStatus status) {
         Map<String, Object> values = new HashMap<>();
         StringBuilder sql = new StringBuilder("SELECT COUNT(A) FROM AccessoryEntity A");
-        sql.append(createWhereQuery(keyword, values, status, startPrice, endPrice));
+        sql.append(createWhereQuery(keyword, values, status));
         Query query = entityManager.createQuery(sql.toString(), Long.class);
         values.forEach(query::setParameter);
         return (Long) query.getSingleResult();
     }
 
     private String createWhereQuery(String keyword, Map<String, Object> values,
-                                    AccessoryStatus status,
-                                    BigDecimal startPrice, BigDecimal endPrice) {
-        StringBuilder sql = new StringBuilder(" WHERE 1 = 1 AND A.deleted = false");
+                                    AccessoryStatus status) {
+        StringBuilder sql = new StringBuilder(" WHERE 1 = 1 ");
         if (!keyword.trim().equals("")) {
             sql.append(" AND ( A.name like :name ");
             values.put("name", "%"+keyword+"%");
-            sql.append(" OR A.color like :color ");
+            sql.append(" OR A.color like :color )");
             values.put("color", "%"+keyword+"%");
-            sql.append(" OR A.description like :description ");
-            values.put("description", "%"+keyword+"%");
         }
         if(Objects.nonNull(status)){
-            sql.append(" AND  C.status = :status ");
+            sql.append(" AND  A.status = :status ");
             values.put("status", status);
         }
-        if(Objects.nonNull(startPrice)){
-            sql.append(" AND  C.purchasePrice >= :startPrice ");
-            values.put("startPrice", startPrice);
-        }
-        if(Objects.nonNull(endPrice)){
-            sql.append(" AND  C.purchasePrice <= :endPrice ");
-            values.put("endPrice", endPrice);
-        }
-
+        sql.toString();
         return sql.toString();
     }
     private StringBuilder createOrderQuery(String sortBy) {
@@ -80,7 +66,7 @@ public class AccessoryDAOImpl implements AccessoryDAO {
         if (StringUtils.hasLength(sortBy)) {
             sql.append(" order by A.").append(sortBy.replace(".", " "));
         } else {
-            sql.append(" order by A.name desc ");
+            sql.append(" order by A.lastModifiedAt desc ");
         }
         return sql;
     }
