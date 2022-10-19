@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -117,6 +116,20 @@ public class CategoryServiceImpl implements CategoryService {
        });
         Long count = this.categoryDao.countCategory(page, pageSize, keyword, sortBy);
         return new PageDTO<>(categoryDtos, page, pageSize, count);
+    }
+
+    public PageDTO autoComplete(Integer page, Integer pageSize, String keyword, String sortBy) {
+        Long count = this.categoryDao.countCategory(page, pageSize, keyword, sortBy);
+        pageSize = Integer.parseInt(count.toString());
+        List<CategoryEntity> categoryEntityList = this.categoryDao.search(page, pageSize, keyword, sortBy);
+        List<CategoryDto> categoryDtos = categoryEntityList.stream()
+                .map(categoryEntity -> modelMapper.map(categoryEntity, CategoryDto.class)).collect(Collectors.toList());
+        return new PageDTO<>(categoryDtos, page, pageSize, count);
+    }
+
+    @Override
+    public List<CategoryPropertyDTO> getProperties(UUID id) {
+        return this.categoryPropertyRepository.findByCategoryId(id).stream().map(categoryPropertyEntity ->  this.modelMapper.map(categoryPropertyEntity,CategoryPropertyDTO.class)).collect(Collectors.toList());
     }
 
     private void checkProperties(List<String> properties) {

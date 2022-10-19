@@ -19,6 +19,7 @@ import java.util.UUID;
 
 @RestController()
 @RequestMapping(value = "api/v1/accessory")
+@CrossOrigin("*")
 public class AccessoryController {
 
     @Autowired
@@ -49,7 +50,7 @@ public class AccessoryController {
 
     @Operation(summary = "Search accessory")
     @GetMapping
-    public PageDTO search(@RequestParam(value = "page",defaultValue = "1",required = false) Integer page,
+    public PageDTO search(@RequestParam(value = "pageIndex",defaultValue = "1",required = false) Integer page,
                                             @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize,
                                             @RequestParam(value = "keyword",defaultValue = "",required = false) String keyword,
                                             @RequestParam(value = "status",required = false) AccessoryStatus status,
@@ -59,4 +60,18 @@ public class AccessoryController {
     ) {
         return this.accessoryService.search(keyword,page,pageSize,status,sortBy,startPrice,endPrice);
     }
+    @Operation(summary = "auto complete")
+    @GetMapping("/auto-complete")
+    public ResponseEntity<?> autoComplete(@RequestParam(value = "pageIndex",defaultValue = "1",required = false) Integer page,
+                                          @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize,
+                                          @RequestParam(value = "keyword",defaultValue = "",required = false) String keyword,
+                                          @RequestParam(value = "status",required = false) AccessoryStatus status,
+                                          @RequestParam(value = "startPrice",required = false) BigDecimal startPrice,
+                                          @RequestParam(value = "endPrice",required = false) BigDecimal endPrice,
+                                          @RequestParam(value = "sortBy",required = false) String sortBy) {
+        return ResponseEntity.ok(SampleResponse.success(accessoryService.autoComplete(keyword,page,pageSize,status,sortBy,startPrice,endPrice)));
+    }
+
+
+
 }

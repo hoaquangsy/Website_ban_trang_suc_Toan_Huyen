@@ -5,6 +5,8 @@ import lombok.Data;
 
 @Data
 public class ProductProperty{
+
     private String name;
+
     private String value;
 };

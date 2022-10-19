@@ -1,10 +1,13 @@
 package com.example.website_ban_trang_suc_toan_huyen.service;
 
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.ProductDto;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
+import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductEntity;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.ProductRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public interface ProductService {
@@ -16,5 +19,22 @@ public interface ProductService {
 
     ProductDto getProductById(UUID id);
 
+    ProductDto lock(UUID id);
+
+    ProductDto unlock(UUID id);
+
     Page<ProductDto> getAllProduct(int page, int pageSize);
+
+    PageDTO search(Integer pageIndex,
+                   Integer pageSize,
+                   String keyword,
+                   ProductEntity.StatusEnum status,
+                   UUID materialId,
+                   UUID vendorId,
+                   UUID categoryId,
+                   UUID accessoryId,
+                   BigDecimal startPrice,
+                   BigDecimal endPrice,
+                   String sortBy,
+                   ProductEntity.ProductGender gender);
 }

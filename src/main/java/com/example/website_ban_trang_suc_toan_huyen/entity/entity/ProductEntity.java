@@ -16,40 +16,48 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ProductEntity extends BaseEntity {
     @Id
+    @Column(name = "product_id", length = 36)
     @Type(type = "uuid-char")
-    @Column
     private UUID productId;
     @Column(length = 36)
+    @Type(type = "uuid-char")
     private UUID categoryId;
     @Column(length = 36)
+    @Type(type = "uuid-char")
     private UUID vendorId;
     @Column(length = 36)
     private String code;
     @Column(length = 50)
     private String nameProduct;
     @Column
-    private float weight;
-    @Column
-    private BigDecimal purchasePrice;
-    @Column
-    private BigDecimal salePrice;
+    private Boolean deleted;
     @Column(length = 50)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status;
     @Column(length = 50)
     private String note;
     @Column
     private BigDecimal salary;
     @Column(length = 36)
-    private String accessoryId;
+    @Type(type = "uuid-char")
+    private UUID accessoryId;
     @Column(length = 30)
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private ProductGender gender;
     @Column
+    @Type(type = "uuid-char")
     private UUID eventId;
     @Column
+    @Type(type = "uuid-char")
     private UUID materialId;
 
     public enum StatusEnum {
         ACTIVE,
         INACTIVE
+    }
+    public enum ProductGender {
+        FEMALE,
+        MALE,
+        FEMALE_AND_MALE
     }
 }

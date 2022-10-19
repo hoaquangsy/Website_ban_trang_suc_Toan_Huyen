@@ -1,7 +1,6 @@
 package com.example.website_ban_trang_suc_toan_huyen.repository;
 
 
-import com.example.website_ban_trang_suc_toan_huyen.entity.entity.AccessoryEntity;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.SizeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +16,7 @@ public interface SizeRepository extends JpaRepository<SizeEntity,UUID> {
     @Query("Select s from SizeEntity  s where s.deleted = false")
     List<SizeEntity> getAllBy();
 
-    @Query("Select s from SizeEntity  s where s.deleted = false and s.sizId = :id")
+    @Query("Select s from SizeEntity  s where s.deleted = false and s.sizeId = :id")
     Optional<SizeEntity> getSizeEntitiesBy(UUID id);
 
 

@@ -30,7 +30,7 @@ public class SizeServiceIpml implements SizeService {
     public SizeDto create(SizeRequest sizeRequest) {
         SizeEntity entity = this.mapper.map(sizeRequest,SizeEntity.class);
         entity.setDeleted(Boolean.FALSE);
-        entity.setSizId(UUID.randomUUID());
+        entity.setSizeId(UUID.randomUUID());
         return this.mapper.map( this.sizeRepository.save(entity),SizeDto.class);
     }
 

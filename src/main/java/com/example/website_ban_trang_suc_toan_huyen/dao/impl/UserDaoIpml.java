@@ -2,7 +2,6 @@ package com.example.website_ban_trang_suc_toan_huyen.dao.impl;
 
 import com.example.website_ban_trang_suc_toan_huyen.dao.UserDao;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.UserEntity;
-import com.example.website_ban_trang_suc_toan_huyen.entity.entity.VendorEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 

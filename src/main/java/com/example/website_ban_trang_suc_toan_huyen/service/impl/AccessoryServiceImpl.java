@@ -61,6 +61,19 @@ public class AccessoryServiceImpl implements AccessoryService {
     }
 
     @Override
+    public PageDTO autoComplete(String keyword, Integer page, Integer pageSize,
+                                           AccessoryStatus status, String sortBy, BigDecimal startPrice, BigDecimal endPrice) {
+        Long count = this.accessoryRepository.count(page,pageSize,keyword,sortBy,status,startPrice,endPrice);
+        pageSize = Integer.parseInt(count.toString());
+        List<AccessoryEntity> accessoryEntities =this.accessoryRepository.search(page,pageSize,keyword
+                ,sortBy,status,startPrice,endPrice);
+        List<AccessoryDTO> accessoriesDTO = accessoryEntities.stream()
+                .map(accessoryEntity -> modelMapper.map(accessoryEntity,AccessoryDTO.class))
+                .collect(Collectors.toList());
+        return new PageDTO<>(accessoriesDTO,page,pageSize,count);
+    }
+
+    @Override
     public PageDTO search(String keyword, Integer page, Integer pageSize,
                           AccessoryStatus status, String sortBy, BigDecimal startPrice, BigDecimal endPrice) {
         List<AccessoryEntity> accessoryEntities =this.accessoryRepository.search(page,pageSize,keyword
@@ -72,4 +85,3 @@ public class AccessoryServiceImpl implements AccessoryService {
         return new PageDTO<>(accessoriesDTO,page,pageSize,count);
     }
 }
-

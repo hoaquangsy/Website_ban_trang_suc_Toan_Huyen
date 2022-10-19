@@ -18,6 +18,10 @@ public interface AccessoryService {
 
     AccessoryDTO getById(UUID id);
 
+    PageDTO autoComplete(String keyword, Integer page, Integer pageSize,
+                                    AccessoryStatus status, String sortBy,
+                                    BigDecimal startPrice,BigDecimal endPrice);
+
     PageDTO search(String keyword, Integer page, Integer pageSize,
                    AccessoryStatus status, String sortBy,
                    BigDecimal startPrice,BigDecimal endPrice);

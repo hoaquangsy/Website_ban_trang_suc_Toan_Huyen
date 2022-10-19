@@ -1,7 +1,6 @@
 package com.example.website_ban_trang_suc_toan_huyen.restController;
 
 
-import com.example.website_ban_trang_suc_toan_huyen.entity.dto.UserDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.UserEntity;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.UserRequest;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.Path;
 import java.util.UUID;
 
 @RestController

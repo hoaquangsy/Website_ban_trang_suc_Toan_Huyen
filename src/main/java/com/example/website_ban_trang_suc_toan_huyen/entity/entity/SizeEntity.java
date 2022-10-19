@@ -20,7 +20,7 @@ public class SizeEntity extends  BaseEntity{
     @Id
     @Column(length = 36)
     @Type(type = "uuid-char")
-    private UUID sizId;
+    private UUID sizeId;
     @Column(length = 30)
     private String size;
     @Column

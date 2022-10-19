@@ -27,4 +27,7 @@ public interface MaterialService {
     PageDTO search(String keyword, Integer pageIndex, Integer pageSize,
                    MaterialEntity.MaterialType type, MaterialEntity.StatusEnum status,
                    BigDecimal startPrice,BigDecimal endPrice,String sortBy);
+    PageDTO autoComplete(String keyword, Integer pageIndex, Integer pageSize,
+                   MaterialEntity.MaterialType type, MaterialEntity.StatusEnum status,
+                   BigDecimal startPrice,BigDecimal endPrice,String sortBy);
 }

@@ -2,10 +2,8 @@ package com.example.website_ban_trang_suc_toan_huyen.service.impl;
 
 import com.example.website_ban_trang_suc_toan_huyen.dao.MaterialDao;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.MaterialDto;
-import com.example.website_ban_trang_suc_toan_huyen.entity.dto.VendorDto;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.MaterialEntity;
-import com.example.website_ban_trang_suc_toan_huyen.entity.entity.VendorEntity;
 import com.example.website_ban_trang_suc_toan_huyen.exception.BadRequestException;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.MaterialRequest;
@@ -18,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -101,6 +98,19 @@ public class MaterialServiceImpl implements MaterialService {
         List<MaterialDto> materialDtos = materialEntityList.stream()
                 .map(materialEntity -> modelMapper.map(materialEntity,MaterialDto.class)).collect(Collectors.toList());
         Long count = this.materialDao.count(keyword,pageIndex,pageSize,type,status,startPrice,endPrice,sortBy);
+        return new PageDTO(materialDtos,pageIndex,pageSize,count);
+    }
+    @Override
+    public PageDTO autoComplete(String keyword, Integer pageIndex,
+                          Integer pageSize, MaterialEntity.MaterialType type,
+                          MaterialEntity.StatusEnum status, BigDecimal startPrice,
+                          BigDecimal endPrice,String sortBy) {
+        Long count = this.materialDao.count(keyword,pageIndex,pageSize,type,status,startPrice,endPrice,sortBy);
+        pageSize = Integer.parseInt(count.toString());
+        List<MaterialEntity> materialEntityList = this.materialDao.search(keyword,pageIndex,pageSize,type,status,startPrice,endPrice,sortBy);
+        List<MaterialDto> materialDtos = materialEntityList.stream()
+                .map(materialEntity -> modelMapper.map(materialEntity,MaterialDto.class)).collect(Collectors.toList());
+
         return new PageDTO(materialDtos,pageIndex,pageSize,count);
     }
 }
