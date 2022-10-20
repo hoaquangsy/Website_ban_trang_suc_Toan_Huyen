@@ -3,12 +3,14 @@ package com.example.website_ban_trang_suc_toan_huyen.entity.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
 @Table (name = "order_detail")
@@ -17,10 +19,13 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class OrderDetailEntity {
     @Id
+    @Type(type = "uuid-char")
+    @Column
+    private UUID id;
     @Column(length = 36)
-    private String productId;
+    private UUID productId;
     @Column(length = 36)
-    private String orderId;
+    private UUID orderId;
     @Column
     private Integer amount;
     @Column

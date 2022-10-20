@@ -5,6 +5,8 @@ import com.example.website_ban_trang_suc_toan_huyen.entity.entity.OrderDetailEnt
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @Repository
-public interface OrderDetailRepository extends JpaRepository<OrderDetailEntity,String> {
+public interface OrderDetailRepository extends JpaRepository<OrderDetailEntity, UUID> {
 }
