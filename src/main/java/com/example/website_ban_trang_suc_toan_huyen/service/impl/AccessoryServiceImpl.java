@@ -23,31 +23,31 @@ public class AccessoryServiceImpl implements AccessoryService {
     @Autowired
     private AccessoryRepository accessoryRepository;
     @Autowired
-    private ModelMapper modelMapper;
+    private  ModelMapper modelMapper;
 
     @Override
     public AccessoryDTO create(AccessoryRequest request) {
-        AccessoryEntity accessory = modelMapper.map(request, AccessoryEntity.class);
+        AccessoryEntity accessory = modelMapper.map(request,AccessoryEntity.class);
         accessory.setAccessoryId(UUID.randomUUID());
         accessory.setDeleted(Boolean.FALSE);
         accessory.setStatus(AccessoryStatus.ACTIVE);
         accessoryRepository.save(accessory);
-        AccessoryDTO accessoryDTO = modelMapper.map(accessory, AccessoryDTO.class);
+        AccessoryDTO accessoryDTO =modelMapper.map(accessory,AccessoryDTO.class);
         return accessoryDTO;
     }
 
     @Override
     public AccessoryDTO update(AccessoryRequest request, UUID id) {
-        AccessoryEntity accessory = accessoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(400, "NOT FOUND ACCESSORY"));
-        BeanUtils.copyProperties(request, accessory);
-        return modelMapper.map(accessoryRepository.save(accessory), AccessoryDTO.class);
+        AccessoryEntity accessory =accessoryRepository.findById(id)
+                .orElseThrow(()->new NotFoundException(400,"NOT FOUND ACCESSORY"));
+        BeanUtils.copyProperties(request,accessory);
+        return modelMapper.map(accessoryRepository.save(accessory),AccessoryDTO.class);
     }
 
     @Override
     public HttpStatus delete(UUID id) {
-        AccessoryEntity accessory = accessoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(400, "NOT FOUND ACCESSORY"));
+        AccessoryEntity accessory =accessoryRepository.findById(id)
+                .orElseThrow(()->new NotFoundException(400,"NOT FOUND ACCESSORY"));
         accessory.setDeleted(Boolean.TRUE);
         accessoryRepository.save(accessory);
         return HttpStatus.OK;
@@ -55,21 +55,21 @@ public class AccessoryServiceImpl implements AccessoryService {
 
     @Override
     public AccessoryDTO getById(UUID id) {
-        AccessoryEntity accessory = accessoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(400, "NOT FOUND ACCESSORY"));
-        return modelMapper.map(accessory, AccessoryDTO.class);
+        AccessoryEntity accessory =accessoryRepository.findById(id)
+                .orElseThrow(()->new NotFoundException(400,"NOT FOUND ACCESSORY"));
+        return modelMapper.map(accessory,AccessoryDTO.class);
     }
 
     @Override
     public PageDTO search(String keyword, Integer page, Integer pageSize,
                           AccessoryStatus status, String sortBy, BigDecimal startPrice, BigDecimal endPrice) {
-        List<AccessoryEntity> accessoryEntities = this.accessoryRepository.search(page, pageSize, keyword
-                , sortBy, status, startPrice, endPrice);
+        List<AccessoryEntity> accessoryEntities =this.accessoryRepository.search(page,pageSize,keyword
+                ,sortBy,status,startPrice,endPrice);
         List<AccessoryDTO> accessoriesDTO = accessoryEntities.stream()
-                .map(accessoryEntity -> modelMapper.map(accessoryEntity, AccessoryDTO.class))
+                .map(accessoryEntity -> modelMapper.map(accessoryEntity,AccessoryDTO.class))
                 .collect(Collectors.toList());
-        Long count = this.accessoryRepository.count(page, pageSize, keyword, sortBy, status, startPrice, endPrice);
-        return new PageDTO<>(accessoriesDTO, page, pageSize, count);
+        Long count = this.accessoryRepository.count(page,pageSize,keyword,sortBy,status,startPrice,endPrice);
+        return new PageDTO<>(accessoriesDTO,page,pageSize,count);
     }
 }
 
