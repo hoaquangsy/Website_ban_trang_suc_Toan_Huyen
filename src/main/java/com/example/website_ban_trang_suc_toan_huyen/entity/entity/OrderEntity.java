@@ -25,7 +25,6 @@ public class OrderEntity extends BaseEntity{
     @Column(length = 36)
     private UUID id;
     @Column(length = 36)
-    @Type(type = "uuid-char")
     private String userId;
     @Column
     private Date dayTrading;
