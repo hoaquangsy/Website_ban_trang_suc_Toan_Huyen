@@ -19,10 +19,11 @@ public interface AccessoryService {
     AccessoryDTO getById(UUID id);
 
     PageDTO autoComplete(String keyword, Integer page, Integer pageSize,
-                                    AccessoryStatus status, String sortBy,
-                                    BigDecimal startPrice,BigDecimal endPrice);
-
-    PageDTO search(String keyword, Integer page, Integer pageSize,
-                   AccessoryStatus status, String sortBy,
-                   BigDecimal startPrice,BigDecimal endPrice);
+                                    AccessoryStatus status, String sortBy
+                                    );
+    PageDTO search(String keyword, Integer pageIndex, Integer pageSize,
+                   AccessoryStatus status, String sortBy);
+    HttpStatus active(UUID id);
+    HttpStatus inactive(UUID id);
+    HttpStatus draft(UUID id);
 }

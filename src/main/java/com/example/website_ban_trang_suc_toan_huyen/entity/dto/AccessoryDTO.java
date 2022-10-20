@@ -30,4 +30,5 @@ public class AccessoryDTO {
     private String lastModifiedBy;
 
     private AccessoryStatus status;
+
 }
