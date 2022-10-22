@@ -15,33 +15,31 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class OrderRequest {
     @NotNull
     private UUID userId;
     @NotNull
-    private Date dayTrading;
-    @NotNull
     private BigDecimal customerMoney;
     @NotNull
-    @EnumValidator(enumClass = OrderEntity.PaymentMethod.class,message = "Sai định dạng payment method")
-    private String paymentMethod;
-    @NotNull
-    private Boolean purchase;
+    private OrderEntity.PaymentMethod paymentMethod;
     @NotNull
     private BigDecimal transportFee;
     @NotNull
-    private BigDecimal deposit;
-    @NotNull
     private BigDecimal total;
     @NotNull
-    private Boolean type;
+    private OrderEntity.OrderType purchaseType;
+
+    @NotNull
+    private OrderEntity.StatusEnum status;
+
     private UUID eventId;
+
+    @NotNull
+    private String address;
     @NotEmpty
     private List<@Valid OrderDetailRq> orderDetailList;
 
     @Data
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     @Valid
     public static class OrderDetailRq{
         @NotNull
@@ -54,6 +52,8 @@ public class OrderRequest {
         private BigDecimal discount;
         @NotNull
         private BigDecimal total;
+        @NotNull
+        private UUID sizeId;
     }
 
 

@@ -23,6 +23,7 @@ public class OrderDetailEntity {
     @Column
     private UUID id;
     @Column(length = 36)
+    @Type(type = "uuid-char")
     private UUID productId;
     @Column(length = 36)
     private UUID orderId;
@@ -34,5 +35,8 @@ public class OrderDetailEntity {
     private BigDecimal discount;
     @Column
     private BigDecimal total;
+    @Column
+    @Type(type = "uuid-char")
+    private UUID sizeId;
 
 }

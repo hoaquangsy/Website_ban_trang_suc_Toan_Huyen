@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -14,4 +15,7 @@ public interface ProductSizeRepository extends JpaRepository<ProductSizeEntity,U
     ProductSizeEntity findByProductIdAndSizeId (UUID productId, Integer sizeId);
     @Query("select  p from ProductSizeEntity p where p.productId = :id and p.deleted = false")
     List<ProductSizeEntity> findByProductId(UUID id);
+
+    @Query("select  p from ProductSizeEntity p where p.productId = :id and p.sizeId = :sizeId and  p.deleted = false")
+    Optional<ProductSizeEntity> findByProductAndSize(UUID id,UUID sizeId);
 }
