@@ -20,10 +20,7 @@ import org.springframework.util.CollectionUtils;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -249,7 +246,59 @@ public class ProductServiceImpl implements ProductService {
             productDto.setAccessory(this.modelMapper.map(this.accessoryRepository.findById(productDto.getAccessoryId()).get(), AccessoryDTO.class));
             productDto.setMaterial(this.modelMapper.map(this.materialRepository.findByID(productDto.getMaterialId()).get(),MaterialDto.class));
             productDto.setVendor(this.modelMapper.map(this.vendorRepository.findByID(productDto.getVendorId()).get(), VendorDto.class));
+            if(!CollectionUtils.isEmpty( this.productImageRepository.findByProductId(productDto.getProductId()))){
+                List<ProductImageDTO> imageDTOList =  this.productImageRepository.findByProductId(productDto.getProductId()).stream()
+                        .map(productImage -> this.modelMapper.map(productImage,ProductImageDTO.class)).collect(Collectors.toList());
+                productDto.setProductImages(imageDTOList);
+            }
+            if(!CollectionUtils.isEmpty( this.productPropertyRepository.findByProductId(productDto.getProductId()))){
+                List<ProductPropertyDto> productPropertyDtos =  this.productPropertyRepository.findByProductId(productDto.getProductId()).stream()
+                        .map(productProperty -> this.modelMapper.map(productProperty,ProductPropertyDto.class)).collect(Collectors.toList());
+                productDto.setProductProperties(productPropertyDtos);
+            }
+            if(!CollectionUtils.isEmpty( this.productSizeRepository.findByProductId(productDto.getProductId()))){
+                List<ProductSizeDto> productSizeDtos =  this.productSizeRepository.findByProductId(productDto.getProductId()).stream()
+                        .map(productSize -> this.modelMapper.map(productSize,ProductSizeDto.class)).collect(Collectors.toList());
+                productSizeDtos.forEach(productSizeDto -> {
+                    Optional<SizeEntity> sizeEntity =  this.sizeRepository.getSizeEntitiesBy(productSizeDto.getSizeId());
+                    sizeEntity.ifPresent(entity -> productSizeDto.setSize(entity.getSize()));
+                });
+                productDto.setProductSizes(productSizeDtos);
+            }
 
+        });
+        return new PageDTO(proProductDtos,pageIndex,pageSize,count);
+    }
+
+    @Override
+    public PageDTO autoComplete(Integer pageIndex, Integer pageSize, String keyword, ProductEntity.StatusEnum status, UUID materialId, UUID vendorId, UUID categoryId, UUID accessoryId, BigDecimal startPrice, BigDecimal endPrice, String sortBy, ProductEntity.ProductGender gender) {
+        Long count = this.productDao.count(pageIndex,pageSize,keyword,status,materialId,vendorId,accessoryId,categoryId,startPrice,endPrice,sortBy,gender);
+        if(count == 0L){
+            return PageDTO.empty();
+        }
+        pageSize = Integer.parseInt(count+ "");
+        List<ProductEntity> productEntities = this.productDao.search(pageIndex,pageSize,keyword,status,materialId,vendorId,accessoryId,categoryId,startPrice,endPrice,sortBy,gender);
+        List<ProductDto> proProductDtos = productEntities.stream()
+                .map(productEntity -> modelMapper.map(productEntity,ProductDto.class)).collect(Collectors.toList());
+        proProductDtos.forEach(productDto -> {
+            productDto.setCategory(this.modelMapper.map(this.categoryRepository.findId(productDto.getCategoryId()).get(), CategoryDto.class));
+            productDto.setAccessory(this.modelMapper.map(this.accessoryRepository.findById(productDto.getAccessoryId()).get(), AccessoryDTO.class));
+            productDto.setMaterial(this.modelMapper.map(this.materialRepository.findByID(productDto.getMaterialId()).get(),MaterialDto.class));
+            productDto.setVendor(this.modelMapper.map(this.vendorRepository.findByID(productDto.getVendorId()).get(), VendorDto.class));
+            if(!CollectionUtils.isEmpty( this.productImageRepository.findByProductId(productDto.getProductId()))){
+                List<ProductImageDTO> imageDTOList =  this.productImageRepository.findByProductId(productDto.getProductId()).stream()
+                        .map(productImage -> this.modelMapper.map(productImage,ProductImageDTO.class)).collect(Collectors.toList());
+                productDto.setProductImages(imageDTOList);
+            }
+            if(!CollectionUtils.isEmpty( this.productSizeRepository.findByProductId(productDto.getProductId()))){
+                List<ProductSizeDto> productSizeDtos =  this.productSizeRepository.findByProductId(productDto.getProductId()).stream()
+                        .map(productSize -> this.modelMapper.map(productSize,ProductSizeDto.class)).collect(Collectors.toList());
+                productSizeDtos.forEach(productSizeDto -> {
+                    Optional<SizeEntity> sizeEntity =  this.sizeRepository.getSizeEntitiesBy(productSizeDto.getSizeId());
+                    sizeEntity.ifPresent(entity -> productSizeDto.setSize(entity.getSize()));
+                });
+                productDto.setProductSizes(productSizeDtos);
+            }
         });
         return new PageDTO(proProductDtos,pageIndex,pageSize,count);
     }
@@ -276,6 +325,23 @@ public class ProductServiceImpl implements ProductService {
         if (this.vendorRepository.findByID(productRequest.getVendorId()).isEmpty()){
             throw new NotFoundException(HttpStatus.BAD_REQUEST.value(), "Vendor not exits");
         }
-
+    }
+    @Override
+    public List<ProductOrderDto> getProductOrder(){
+        List<ProductSizeEntity> productSizeEntities = this.productSizeRepository.findAllProductOrder();
+        List<ProductOrderDto> productOrderDtos = new ArrayList<>();
+        productSizeEntities.forEach((productSize) -> {
+            ProductOrderDto productOrderDto = new ProductOrderDto();
+            productOrderDto.setId(productSize.getIdProductSize());
+            productOrderDto.setProductId(productSize.getProductId());
+            productOrderDto.setPrice(productSize.getSalePrice());
+            productOrderDto.setSizeId(productSize.getSizeId());
+            productOrderDto.setQuantity(productSize.getQuantity());
+            productOrderDto.setNameProduct(this.productRepository.findID(productSize.getProductId()).get().getNameProduct());
+            productOrderDto.setSize(this.sizeRepository.getSizeEntitiesBy(productSize.getSizeId()).get().getSize());
+            productOrderDto.setImageUrl(this.productImageRepository.findByProductId(productSize.getProductId()).stream().map(productImage -> productImage.getImageUrl()).collect(Collectors.toList()));
+            productOrderDtos.add(productOrderDto);
+        });
+        return productOrderDtos;
     }
 }

@@ -86,4 +86,24 @@ public class ProductController {
         return this.productService.search(pageIndex,pageSize,keyword,status,materialId,vendorId,accessoryId,categoryId,startPrice,endPrice,sortBy,gender);
 
     }
+    @GetMapping("autoComplete")
+    public PageDTO autocomplete(@RequestParam(value = "pageIndex",defaultValue = "1",required = false) Integer pageIndex,
+                          @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize,
+                          @RequestParam(value = "keyword",defaultValue = "",required = false) String keyword,
+                          @RequestParam(value = "status",required = false) ProductEntity.StatusEnum status,
+                          @RequestParam(value = "materialId",required = false) UUID materialId,
+                          @RequestParam(value = "vendorId",required = false) UUID vendorId,
+                          @RequestParam(value = "categoryId",required = false) UUID categoryId,
+                          @RequestParam(value = "accessoryId",required = false) UUID accessoryId,
+                          @RequestParam(value = "startPrice",required = false) BigDecimal startPrice,
+                          @RequestParam(value = "endPrice",required = false) BigDecimal endPrice,
+                          @RequestParam(value = "sortBy",required = false,defaultValue = "") String sortBy,
+                          @RequestParam(value = "gender",required = false) ProductEntity.ProductGender gender){
+        return this.productService.autoComplete(pageIndex,pageSize,keyword,status,materialId,vendorId,accessoryId,categoryId,startPrice,endPrice,sortBy,gender);
+
+    }
+    @GetMapping("product-order")
+    public ResponseEntity<?> getProductOrder(){
+        return ResponseEntity.ok(SampleResponse.success(this.productService.getProductOrder()));
+    }
 }

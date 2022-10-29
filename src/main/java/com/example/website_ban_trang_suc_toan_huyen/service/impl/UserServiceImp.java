@@ -130,4 +130,10 @@ public class UserServiceImp implements UserService {
         Long count = this.userDao.count(keyword,role,pageNumber,pageSize,sortBy,status);
         return new PageDTO(userDTOS,pageNumber,pageSize,count);
     }
+
+    @Override
+    public List<UserDTO> getCustomer() {
+        List<UserEntity> userEntities =  this.userRepository.findCustomer();
+        return userEntities.stream().map(userEntity -> this.modelMapper.map(userEntity,UserDTO.class)).collect(Collectors.toList());
+    }
 }

@@ -14,16 +14,18 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
-    @Query(value = "SELECT * FROM user u WHERE  u.username = :username", nativeQuery = true)
+    @Query(value = "SELECT * FROM user u WHERE  u.username = :username  and u.deleted = false", nativeQuery = true)
     UserEntity finUserEntitybyUsername(@Param("username") String name);
 
-    @Query(value = "SELECT u FROM UserEntity u")
+    @Query(value = "SELECT u FROM UserEntity u where u.deleted = false")
     List<UserEntity> findAllUsers();
 
-    @Query(value = "SELECT * FROM user u WHERE  u.phonenumber = :phonenumber", nativeQuery = true)
+    @Query(value = "SELECT * FROM user u WHERE  u.phonenumber = :phonenumber and u.deleted = false", nativeQuery = true)
     List<UserEntity> finUserEntityByPhoneNumber(@Param("phonenumber") String phoneNumber);
+    @Query(value = "SELECT u FROM UserEntity u WHERE  u.role = 'CUSTOMER' and u.deleted = false")
+    List<UserEntity> findCustomer();
 
-    @Query(value = "SELECT u FROM UserEntity u WHERE  u.email = :email")
+    @Query(value = "SELECT u FROM UserEntity u WHERE  u.email = :email  and u.deleted = false ")
     Optional<UserEntity> findUserEntitiesByEmail(String email);
 
     @Query(value = "SELECT u FROM UserEntity u WHERE u.userId = :id and u.deleted = false")

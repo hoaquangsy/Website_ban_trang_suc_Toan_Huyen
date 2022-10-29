@@ -34,6 +34,8 @@ public class UserDTO {
 
     private String address;
 
+    private String email;
+
     private Boolean status;
 
     private Instant createAt;

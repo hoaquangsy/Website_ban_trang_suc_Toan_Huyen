@@ -26,9 +26,10 @@ public class OrderDetailEntity {
     @Type(type = "uuid-char")
     private UUID productId;
     @Column(length = 36)
+    @Type(type = "uuid-char")
     private UUID orderId;
     @Column
-    private Integer amount;
+    private Integer quantity;
     @Column
     private BigDecimal price;
     @Column

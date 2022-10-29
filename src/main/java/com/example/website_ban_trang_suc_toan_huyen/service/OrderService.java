@@ -9,7 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 public interface OrderService {
@@ -27,8 +29,8 @@ public interface OrderService {
     PageDTO search(Integer pageIndex, Integer pageSize, String keyword,
                    OrderEntity.StatusEnum status,
                    OrderEntity.PaymentMethod payMethod, OrderEntity.OrderType orderType,
-                   Instant startDate, Instant endDate,
-                   BigDecimal startPrice, BigDecimal endPrice,UUID userId,
-                   String sortBy);
+                   String startDate, String endDate,
+                   BigDecimal startPrice, BigDecimal endPrice, UUID userId,
+                   String sortBy) throws ParseException;
 
 }

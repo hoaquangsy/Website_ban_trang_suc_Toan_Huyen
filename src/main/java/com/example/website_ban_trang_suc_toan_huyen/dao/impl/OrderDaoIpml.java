@@ -10,7 +10,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.*;
 
 @Repository
@@ -21,7 +24,7 @@ public class OrderDaoIpml implements OrderDao {
     private EntityManager entityManager;
 
     @Override
-    public List<OrderEntity> search(Integer pageIndex, Integer pageSize, String keyword, OrderEntity.StatusEnum status, OrderEntity.PaymentMethod payMethod, OrderEntity.OrderType orderType, Instant startDate, Instant endDate, BigDecimal startPrice, BigDecimal endPrice, UUID userId, String sortBy) {
+    public List<OrderEntity> search(Integer pageIndex, Integer pageSize, String keyword, OrderEntity.StatusEnum status, OrderEntity.PaymentMethod payMethod, OrderEntity.OrderType orderType, String startDate, String endDate, BigDecimal startPrice, BigDecimal endPrice, UUID userId, String sortBy) throws ParseException {
         Map<String, Object> values = new HashMap<>();
         StringBuilder sql = new StringBuilder("SELECT C FROM OrderEntity C");
         sql.append(createWhereQuery(keyword, values,status,payMethod,orderType,startDate,endDate,startPrice,endPrice,userId));
@@ -35,8 +38,8 @@ public class OrderDaoIpml implements OrderDao {
 
     @Override
     public Long count(Integer pageIndex, Integer pageSize, String keyword, OrderEntity.StatusEnum status,
-                      OrderEntity.PaymentMethod payMethod, OrderEntity.OrderType orderType, Instant startDate,
-                      Instant endDate, BigDecimal startPrice, BigDecimal endPrice, UUID userId, String sortBy) {
+                      OrderEntity.PaymentMethod payMethod, OrderEntity.OrderType orderType, String startDate,
+                      String endDate, BigDecimal startPrice, BigDecimal endPrice, UUID userId, String sortBy) throws ParseException {
         Map<String, Object> values = new HashMap<>();
         StringBuilder sql = new StringBuilder("SELECT COUNT(C) FROM OrderEntity C");
         sql.append(createWhereQuery(keyword, values,status,payMethod,orderType,startDate,endDate,startPrice,endPrice,userId));
@@ -45,8 +48,8 @@ public class OrderDaoIpml implements OrderDao {
         System.out.println(sql.toString());
         return (Long) query.getSingleResult();
     }
-    private String createWhereQuery(String keyword, Map<String, Object> values,OrderEntity.StatusEnum status, OrderEntity.PaymentMethod payMethod, OrderEntity.OrderType orderType, Instant startDate, Instant endDate, BigDecimal startPrice, BigDecimal endPrice, UUID userId
-                                  ) {
+    private String createWhereQuery(String keyword, Map<String, Object> values,OrderEntity.StatusEnum status, OrderEntity.PaymentMethod payMethod, OrderEntity.OrderType orderType, String startDate, String endDate, BigDecimal startPrice, BigDecimal endPrice, UUID userId
+                                  ) throws ParseException {
         StringBuilder sql = new StringBuilder(" WHERE 1 = 1");
         if (!keyword.trim().equals("")) {
             sql.append(" AND  C.address like :address ");
@@ -57,8 +60,8 @@ public class OrderDaoIpml implements OrderDao {
             values.put("status", status);
         }
         if (Objects.nonNull(orderType)) {
-            sql.append(" AND C.purchasetype = :purchasetype ");
-            values.put("purchasetype", orderType);
+            sql.append(" AND C.purchaseType = :orderType ");
+            values.put("orderType", orderType);
         }
         if (Objects.nonNull(payMethod)) {
             sql.append(" AND  C.paymentMethod = :payMethod ");
@@ -66,11 +69,11 @@ public class OrderDaoIpml implements OrderDao {
         }
         if (Objects.nonNull(startDate)) {
             sql.append(" AND  C.createAt >= :startDate ");
-            values.put("startDate", startDate);
+            values.put("startDate",new SimpleDateFormat("yyyy/MM/dd").parse(startDate).toInstant());
         }
         if (Objects.nonNull(endDate)) {
             sql.append(" AND  C.createAt <= :endDate ");
-            values.put("endDate", endDate);
+            values.put("endDate", new SimpleDateFormat("yyyy/MM/dd").parse(endDate).toInstant());
         }
         if (Objects.nonNull(startPrice)) {
             sql.append(" AND  C.total >= :startPrice ");

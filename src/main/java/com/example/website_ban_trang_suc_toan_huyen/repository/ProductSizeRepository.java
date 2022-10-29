@@ -16,6 +16,9 @@ public interface ProductSizeRepository extends JpaRepository<ProductSizeEntity,U
     @Query("select  p from ProductSizeEntity p where p.productId = :id and p.deleted = false")
     List<ProductSizeEntity> findByProductId(UUID id);
 
+    @Query("select  p from ProductSizeEntity p where  p.deleted = false and p.productId not in (select s from  ProductEntity  s where s.deleted = false and s.status = 'INACTIVE')")
+    List<ProductSizeEntity> findAllProductOrder();
+
     @Query("select  p from ProductSizeEntity p where p.productId = :id and p.sizeId = :sizeId and  p.deleted = false")
     Optional<ProductSizeEntity> findByProductAndSize(UUID id,UUID sizeId);
 }

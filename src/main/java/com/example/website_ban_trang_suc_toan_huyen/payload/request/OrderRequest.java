@@ -16,28 +16,29 @@ import java.util.UUID;
 
 @Data
 public class OrderRequest {
-    @NotNull
+    @NotNull(message = "Người dùng không để trống")
     private UUID userId;
     @NotNull
     private BigDecimal customerMoney;
-    @NotNull
+    @NotNull(message = "Phương thức thanh toán không để trống")
     private OrderEntity.PaymentMethod paymentMethod;
-    @NotNull
+    @NotNull(message = "Phí vận chuyển không để trống")
     private BigDecimal transportFee;
-    @NotNull
+    @NotNull(message = "Tổng tiền không để trống")
     private BigDecimal total;
-    @NotNull
+    @NotNull(message = "Loại mua hàng không để trống")
     private OrderEntity.OrderType purchaseType;
 
-    @NotNull
+    @NotNull(message = "Trạng thái không để trống")
     private OrderEntity.StatusEnum status;
 
     private UUID eventId;
 
-    @NotNull
+    @NotNull(message = "Địa chỉ không để trống")
     private String address;
-    @NotEmpty
-    private List<@Valid OrderDetailRq> orderDetailList;
+
+    @NotEmpty(message = "Hiện không có sản phẩm trong hóa đơn này")
+    private List<OrderDetailRq> orderDetailList;
 
     @Data
     @Valid
@@ -45,10 +46,10 @@ public class OrderRequest {
         @NotNull
         private UUID productId;
         @NotNull
-        private Integer amount;
+        private Integer quantity;
         @NotNull
         private BigDecimal price;
-        @NotNull
+
         private BigDecimal discount;
         @NotNull
         private BigDecimal total;

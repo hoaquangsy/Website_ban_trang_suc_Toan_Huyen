@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -47,4 +47,6 @@ public class OrderDTO {
     private Instant lastModifiedAt;
 
     private String lastModifiedBy;
+
+    private List<ProductOrderDto> orderDetailDTOList;
 }

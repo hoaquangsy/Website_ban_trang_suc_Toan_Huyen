@@ -1,10 +1,7 @@
 package com.example.website_ban_trang_suc_toan_huyen.service.impl;
 
 import com.example.website_ban_trang_suc_toan_huyen.dao.OrderDao;
-import com.example.website_ban_trang_suc_toan_huyen.entity.dto.EventDto;
-import com.example.website_ban_trang_suc_toan_huyen.entity.dto.MaterialDto;
-import com.example.website_ban_trang_suc_toan_huyen.entity.dto.OrderDTO;
-import com.example.website_ban_trang_suc_toan_huyen.entity.dto.UserDTO;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.*;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.*;
 import com.example.website_ban_trang_suc_toan_huyen.exception.BadRequestException;
@@ -23,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,6 +50,12 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderDao orderDao;
 
+    @Autowired
+    private SizeRepository sizeRepository;
+
+    @Autowired
+    private ProductImageRepository productImageRepository;
+
 
     @Override
     @Transactional
@@ -63,7 +68,7 @@ public class OrderServiceImpl implements OrderService {
             if(productEntity.isEmpty()){
                 throw  new NotFoundException(HttpStatus.NOT_FOUND.value(),"Sản phẩm không tồn tại");
             }
-            if(productEntity.get().getQuantity() < orderDetailRq.getAmount()){
+            if(productEntity.get().getQuantity() < orderDetailRq.getQuantity()){
                 throw new BadRequestException("Số lượng sản phẩm không đủ");
             }
         });
@@ -79,13 +84,14 @@ public class OrderServiceImpl implements OrderService {
             OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
             BeanUtils.copyProperties(orderDetailRq, orderDetailEntity);
             orderDetailEntity.setId(UUID.randomUUID());
+            orderDetailEntity.setOrderId(order.getId());
             orderDetailEntityList.add(orderDetailEntity);
         });
         orderDetailRepository.saveAll(orderDetailEntityList);
         orderDetailEntityList.forEach(orderDetailEntity -> {
             Optional<ProductSizeEntity> productSize = this.productSizeRepository.findByProductAndSize(orderDetailEntity.getProductId(),orderDetailEntity.getSizeId());
             ProductSizeEntity sizeEntity = productSize.orElseThrow(() -> new BadRequestException("Lỗi hệ thống"));
-            sizeEntity.setQuantity(sizeEntity.getQuantity() - orderDetailEntity.getAmount());
+            sizeEntity.setQuantity(sizeEntity.getQuantity() - orderDetailEntity.getQuantity());
             this.productSizeRepository.save(sizeEntity);
         });
         return orderRequest;
@@ -103,11 +109,27 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO findOrder(UUID idOrder){
-        OrderEntity orderEntity = orderRepository.findById(idOrder).get();
-        if (ObjectUtils.isEmpty(orderEntity)){
-            throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "Order not exist");
-        }
-        return    modelMapper.map(orderRepository.findById(idOrder).get(),OrderDTO.class);
+        OrderEntity orderEntity = orderRepository.findById(idOrder).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "Order không tồn tại"));
+       OrderDTO orderDTO =  modelMapper.map(orderEntity,OrderDTO.class);
+       List<ProductOrderDto> productOrderDtos = new ArrayList<>();
+   List<OrderDetailEntity> orderDetailEntities = this.orderDetailRepository.findByOrderId(orderDTO.getId());
+   orderDetailEntities.forEach(orderDetailEntity -> {
+       ProductOrderDto productOrderDto = new ProductOrderDto();
+       productOrderDto.setProductId(orderDetailEntity.getProductId());
+       productOrderDto.setSizeId(orderDetailEntity.getSizeId());
+       productOrderDto.setId(orderDetailEntity.getId());
+       ProductEntity productEntity = this.productRepository.findID(orderDetailEntity.getProductId()).get();
+       SizeEntity entity = this.sizeRepository.getSizeEntitiesBy(orderDetailEntity.getSizeId()).get();
+       productOrderDto.setSize(entity.getSize());
+       productOrderDto.setNameProduct(productEntity.getNameProduct());
+       productOrderDto.setQuantity(orderDetailEntity.getQuantity());
+       productOrderDto.setPrice(orderDetailEntity.getPrice());
+       List<ProductImageEntity> productImageEntity = this.productImageRepository.findByProductId(orderDetailEntity.getProductId());
+       productOrderDto.setImageUrl(productImageEntity.stream().map(ProductImageEntity::getImageUrl).collect(Collectors.toList()));
+      productOrderDtos.add(productOrderDto);
+   });
+       orderDTO.setOrderDetailDTOList(productOrderDtos);
+        return orderDTO;
     }
 
     @Override
@@ -129,7 +151,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public PageDTO search(Integer pageIndex, Integer pageSize, String keyword, OrderEntity.StatusEnum status, OrderEntity.PaymentMethod payMethod, OrderEntity.OrderType orderType, Instant startDate, Instant endDate, BigDecimal startPrice, BigDecimal endPrice,UUID userId, String sortBy) {
+    public PageDTO search(Integer pageIndex, Integer pageSize, String keyword, OrderEntity.StatusEnum status, OrderEntity.PaymentMethod payMethod, OrderEntity.OrderType orderType, String startDate, String endDate, BigDecimal startPrice, BigDecimal endPrice, UUID userId, String sortBy) throws ParseException {
         Long count = this.orderDao.count(pageIndex,pageSize,keyword,status,payMethod,orderType,startDate,endDate,startPrice,endPrice,userId,sortBy);
        if(count == 0L){
            return PageDTO.empty();

@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/user")
-
+@CrossOrigin("*")
 public class UserController {
 
     @Autowired
@@ -50,6 +50,10 @@ public class UserController {
     @PostMapping("/getAll")
     public UserResponse getAllUser(UserRequest userRequest){
         return userService.getAllUser(userRequest);
+    }
+    @GetMapping("/customer")
+    public ResponseEntity<?> getEmployee(){
+        return ResponseEntity.ok(SampleResponse.success(userService.getCustomer()));
     }
 
     @GetMapping("")
