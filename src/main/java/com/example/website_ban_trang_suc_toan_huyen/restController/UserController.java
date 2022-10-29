@@ -1,7 +1,6 @@
 package com.example.website_ban_trang_suc_toan_huyen.restController;
 
 
-import com.example.website_ban_trang_suc_toan_huyen.entity.dto.UserDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.UserEntity;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.UserRequest;
@@ -13,12 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.Path;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/user")
-
+@CrossOrigin("*")
 public class UserController {
 
     @Autowired
@@ -52,6 +50,10 @@ public class UserController {
     @PostMapping("/getAll")
     public UserResponse getAllUser(UserRequest userRequest){
         return userService.getAllUser(userRequest);
+    }
+    @GetMapping("/customer")
+    public ResponseEntity<?> getEmployee(){
+        return ResponseEntity.ok(SampleResponse.success(userService.getCustomer()));
     }
 
     @GetMapping("")

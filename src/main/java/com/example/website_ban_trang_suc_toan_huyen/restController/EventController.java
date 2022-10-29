@@ -1,11 +1,8 @@
 package com.example.website_ban_trang_suc_toan_huyen.restController;
 
-import com.example.website_ban_trang_suc_toan_huyen.entity.dto.AccessoryDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.EventDto;
-import com.example.website_ban_trang_suc_toan_huyen.payload.request.AccessoryRequest;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.EventRequest;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.SampleResponse;
-import com.example.website_ban_trang_suc_toan_huyen.service.AccessoryService;
 import com.example.website_ban_trang_suc_toan_huyen.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;

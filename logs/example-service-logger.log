@@ -1,0 +1,161 @@
+
+2022-10-29 17:31:19,412 DEBUG c.z.h.p.HikariPool:421 [HikariPool-1 housekeeper] HikariPool-1 - Pool stats (total=10, active=0, idle=10, waiting=0)
+2022-10-29 17:31:19,412 DEBUG c.z.h.p.HikariPool:518 [HikariPool-1 housekeeper] HikariPool-1 - Fill pool skipped, pool is at sufficient level.
+2022-10-29 17:31:49,427 DEBUG c.z.h.p.HikariPool:421 [HikariPool-1 housekeeper] HikariPool-1 - Pool stats (total=10, active=0, idle=10, waiting=0)
+2022-10-29 17:31:49,427 DEBUG c.z.h.p.HikariPool:518 [HikariPool-1 housekeeper] HikariPool-1 - Fill pool skipped, pool is at sufficient level.
+2022-10-29 17:31:55,188 INFO c.e.w.c.CustomURLFilter:53 [http-nio-8080-exec-3] 
+LOGGING REQUEST-----------------------------------
+[REQUEST-ID]: 72afbe23-b163-4299-95a9-482060d06866
+[PATH]: /notification/api/me/notifications
+[QUERIES]: null
+[HEADERS]: 
+---host : localhost:8080
+---connection : keep-alive
+---accept : */*
+---access-control-request-method : GET
+---access-control-request-headers : authorization,language,x-show-error
+---origin : http://localhost:4200
+---user-agent : Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36
+---sec-fetch-mode : cors
+---sec-fetch-site : same-site
+---sec-fetch-dest : empty
+---referer : http://localhost:4200/
+---accept-encoding : gzip, deflate, br
+---accept-language : vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7,fr-FR;q=0.6,fr;q=0.5
+LOGGING REQUEST-----------------------------------
+
+2022-10-29 17:31:55,189 DEBUG o.s.w.f.CommonsRequestLoggingFilter:47 [http-nio-8080-exec-3] Before request [OPTIONS /notification/api/me/notifications]
+2022-10-29 17:31:55,189 DEBUG o.s.c.l.LogFormatUtils:119 [http-nio-8080-exec-3] OPTIONS "/notification/api/me/notifications", parameters={}
+2022-10-29 17:31:55,189 DEBUG o.s.w.s.h.AbstractHandlerMapping:522 [http-nio-8080-exec-3] Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2022-10-29 17:31:55,189 DEBUG o.s.o.j.s.OpenEntityManagerInViewInterceptor:86 [http-nio-8080-exec-3] Opening JPA EntityManager in OpenEntityManagerInViewInterceptor
+2022-10-29 17:31:55,189 DEBUG o.s.o.j.s.OpenEntityManagerInViewInterceptor:111 [http-nio-8080-exec-3] Closing JPA EntityManager in OpenEntityManagerInViewInterceptor
+2022-10-29 17:31:55,190 DEBUG o.s.w.s.FrameworkServlet:1131 [http-nio-8080-exec-3] Completed 403 FORBIDDEN
+2022-10-29 17:31:55,190 DEBUG o.s.w.f.CommonsRequestLoggingFilter:55 [http-nio-8080-exec-3] REQUEST DATA : OPTIONS /notification/api/me/notifications]
+2022-10-29 17:32:19,429 DEBUG c.z.h.p.HikariPool:421 [HikariPool-1 housekeeper] HikariPool-1 - Pool stats (total=10, active=0, idle=10, waiting=0)
+2022-10-29 17:32:19,429 DEBUG c.z.h.p.HikariPool:518 [HikariPool-1 housekeeper] HikariPool-1 - Fill pool skipped, pool is at sufficient level.
+2022-10-29 17:32:49,446 DEBUG c.z.h.p.HikariPool:421 [HikariPool-1 housekeeper] HikariPool-1 - Pool stats (total=10, active=0, idle=10, waiting=0)
+2022-10-29 17:32:49,446 DEBUG c.z.h.p.HikariPool:518 [HikariPool-1 housekeeper] HikariPool-1 - Fill pool skipped, pool is at sufficient level.
+2022-10-29 17:32:55,200 INFO c.e.w.c.CustomURLFilter:53 [http-nio-8080-exec-5] 
+LOGGING REQUEST-----------------------------------
+[REQUEST-ID]: a8e01e3c-0afd-4a6e-bf3a-0fcec3ea41ea
+[PATH]: /notification/api/me/notifications
+[QUERIES]: null
+[HEADERS]: 
+---host : localhost:8080
+---connection : keep-alive
+---accept : */*
+---access-control-request-method : GET
+---access-control-request-headers : authorization,language,x-show-error
+---origin : http://localhost:4200
+---user-agent : Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36
+---sec-fetch-mode : cors
+---sec-fetch-site : same-site
+---sec-fetch-dest : empty
+---referer : http://localhost:4200/
+---accept-encoding : gzip, deflate, br
+---accept-language : vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7,fr-FR;q=0.6,fr;q=0.5
+LOGGING REQUEST-----------------------------------
+
+2022-10-29 17:32:55,201 DEBUG o.s.w.f.CommonsRequestLoggingFilter:47 [http-nio-8080-exec-5] Before request [OPTIONS /notification/api/me/notifications]
+2022-10-29 17:32:55,201 DEBUG o.s.c.l.LogFormatUtils:119 [http-nio-8080-exec-5] OPTIONS "/notification/api/me/notifications", parameters={}
+2022-10-29 17:32:55,202 DEBUG o.s.w.s.h.AbstractHandlerMapping:522 [http-nio-8080-exec-5] Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2022-10-29 17:32:55,203 DEBUG o.s.o.j.s.OpenEntityManagerInViewInterceptor:86 [http-nio-8080-exec-5] Opening JPA EntityManager in OpenEntityManagerInViewInterceptor
+2022-10-29 17:32:55,203 DEBUG o.s.o.j.s.OpenEntityManagerInViewInterceptor:111 [http-nio-8080-exec-5] Closing JPA EntityManager in OpenEntityManagerInViewInterceptor
+2022-10-29 17:32:55,204 DEBUG o.s.w.s.FrameworkServlet:1131 [http-nio-8080-exec-5] Completed 403 FORBIDDEN
+2022-10-29 17:32:55,204 DEBUG o.s.w.f.CommonsRequestLoggingFilter:55 [http-nio-8080-exec-5] REQUEST DATA : OPTIONS /notification/api/me/notifications]
+2022-10-29 17:33:19,462 DEBUG c.z.h.p.HikariPool:421 [HikariPool-1 housekeeper] HikariPool-1 - Pool stats (total=10, active=0, idle=10, waiting=0)
+2022-10-29 17:33:19,463 DEBUG c.z.h.p.HikariPool:518 [HikariPool-1 housekeeper] HikariPool-1 - Fill pool skipped, pool is at sufficient level.
+2022-10-29 17:33:49,472 DEBUG c.z.h.p.HikariPool:421 [HikariPool-1 housekeeper] HikariPool-1 - Pool stats (total=10, active=0, idle=10, waiting=0)
+2022-10-29 17:33:49,472 DEBUG c.z.h.p.HikariPool:518 [HikariPool-1 housekeeper] HikariPool-1 - Fill pool skipped, pool is at sufficient level.
+2022-10-29 17:33:55,206 INFO c.e.w.c.CustomURLFilter:53 [http-nio-8080-exec-10] 
+LOGGING REQUEST-----------------------------------
+[REQUEST-ID]: 91b1c05f-60a8-4b06-81f4-8ce37dfb5f14
+[PATH]: /notification/api/me/notifications
+[QUERIES]: null
+[HEADERS]: 
+---host : localhost:8080
+---connection : keep-alive
+---accept : */*
+---access-control-request-method : GET
+---access-control-request-headers : authorization,language,x-show-error
+---origin : http://localhost:4200
+---user-agent : Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36
+---sec-fetch-mode : cors
+---sec-fetch-site : same-site
+---sec-fetch-dest : empty
+---referer : http://localhost:4200/
+---accept-encoding : gzip, deflate, br
+---accept-language : vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7,fr-FR;q=0.6,fr;q=0.5
+LOGGING REQUEST-----------------------------------
+
+2022-10-29 17:33:55,206 DEBUG o.s.w.f.CommonsRequestLoggingFilter:47 [http-nio-8080-exec-10] Before request [OPTIONS /notification/api/me/notifications]
+2022-10-29 17:33:55,207 DEBUG o.s.c.l.LogFormatUtils:119 [http-nio-8080-exec-10] OPTIONS "/notification/api/me/notifications", parameters={}
+2022-10-29 17:33:55,208 DEBUG o.s.w.s.h.AbstractHandlerMapping:522 [http-nio-8080-exec-10] Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2022-10-29 17:33:55,209 DEBUG o.s.o.j.s.OpenEntityManagerInViewInterceptor:86 [http-nio-8080-exec-10] Opening JPA EntityManager in OpenEntityManagerInViewInterceptor
+2022-10-29 17:33:55,210 DEBUG o.s.o.j.s.OpenEntityManagerInViewInterceptor:111 [http-nio-8080-exec-10] Closing JPA EntityManager in OpenEntityManagerInViewInterceptor
+2022-10-29 17:33:55,210 DEBUG o.s.w.s.FrameworkServlet:1131 [http-nio-8080-exec-10] Completed 403 FORBIDDEN
+2022-10-29 17:33:55,211 DEBUG o.s.w.f.CommonsRequestLoggingFilter:55 [http-nio-8080-exec-10] REQUEST DATA : OPTIONS /notification/api/me/notifications]
+2022-10-29 17:34:19,476 DEBUG c.z.h.p.HikariPool:421 [HikariPool-1 housekeeper] HikariPool-1 - Pool stats (total=10, active=0, idle=10, waiting=0)
+2022-10-29 17:34:19,476 DEBUG c.z.h.p.HikariPool:518 [HikariPool-1 housekeeper] HikariPool-1 - Fill pool skipped, pool is at sufficient level.
+2022-10-29 17:34:49,481 DEBUG c.z.h.p.HikariPool:421 [HikariPool-1 housekeeper] HikariPool-1 - Pool stats (total=10, active=0, idle=10, waiting=0)
+2022-10-29 17:34:49,481 DEBUG c.z.h.p.HikariPool:518 [HikariPool-1 housekeeper] HikariPool-1 - Fill pool skipped, pool is at sufficient level.
+2022-10-29 17:34:55,191 INFO c.e.w.c.CustomURLFilter:53 [http-nio-8080-exec-1] 
+LOGGING REQUEST-----------------------------------
+[REQUEST-ID]: 2eca4efb-a418-44f1-acc7-1e35958fb3fb
+[PATH]: /notification/api/me/notifications
+[QUERIES]: null
+[HEADERS]: 
+---host : localhost:8080
+---connection : keep-alive
+---accept : */*
+---access-control-request-method : GET
+---access-control-request-headers : authorization,language,x-show-error
+---origin : http://localhost:4200
+---user-agent : Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36
+---sec-fetch-mode : cors
+---sec-fetch-site : same-site
+---sec-fetch-dest : empty
+---referer : http://localhost:4200/
+---accept-encoding : gzip, deflate, br
+---accept-language : vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7,fr-FR;q=0.6,fr;q=0.5
+LOGGING REQUEST-----------------------------------
+
+2022-10-29 17:34:55,191 DEBUG o.s.w.f.CommonsRequestLoggingFilter:47 [http-nio-8080-exec-1] Before request [OPTIONS /notification/api/me/notifications]
+2022-10-29 17:34:55,191 DEBUG o.s.c.l.LogFormatUtils:119 [http-nio-8080-exec-1] OPTIONS "/notification/api/me/notifications", parameters={}
+2022-10-29 17:34:55,191 DEBUG o.s.w.s.h.AbstractHandlerMapping:522 [http-nio-8080-exec-1] Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2022-10-29 17:34:55,192 DEBUG o.s.o.j.s.OpenEntityManagerInViewInterceptor:86 [http-nio-8080-exec-1] Opening JPA EntityManager in OpenEntityManagerInViewInterceptor
+2022-10-29 17:34:55,192 DEBUG o.s.o.j.s.OpenEntityManagerInViewInterceptor:111 [http-nio-8080-exec-1] Closing JPA EntityManager in OpenEntityManagerInViewInterceptor
+2022-10-29 17:34:55,192 DEBUG o.s.w.s.FrameworkServlet:1131 [http-nio-8080-exec-1] Completed 403 FORBIDDEN
+2022-10-29 17:34:55,192 DEBUG o.s.w.f.CommonsRequestLoggingFilter:55 [http-nio-8080-exec-1] REQUEST DATA : OPTIONS /notification/api/me/notifications]
+2022-10-29 17:35:19,482 DEBUG c.z.h.p.HikariPool:421 [HikariPool-1 housekeeper] HikariPool-1 - Pool stats (total=10, active=0, idle=10, waiting=0)
+2022-10-29 17:35:19,482 DEBUG c.z.h.p.HikariPool:518 [HikariPool-1 housekeeper] HikariPool-1 - Fill pool skipped, pool is at sufficient level.
+2022-10-29 17:35:49,492 DEBUG c.z.h.p.HikariPool:421 [HikariPool-1 housekeeper] HikariPool-1 - Pool stats (total=10, active=0, idle=10, waiting=0)
+2022-10-29 17:35:49,492 DEBUG c.z.h.p.HikariPool:518 [HikariPool-1 housekeeper] HikariPool-1 - Fill pool skipped, pool is at sufficient level.
+2022-10-29 17:35:55,185 INFO c.e.w.c.CustomURLFilter:53 [http-nio-8080-exec-2] 
+LOGGING REQUEST-----------------------------------
+[REQUEST-ID]: cc414f11-b9f7-4f70-9a60-036458155047
+[PATH]: /notification/api/me/notifications
+[QUERIES]: null
+[HEADERS]: 
+---host : localhost:8080
+---connection : keep-alive
+---accept : */*
+---access-control-request-method : GET
+---access-control-request-headers : authorization,language,x-show-error
+---origin : http://localhost:4200
+---user-agent : Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36
+---sec-fetch-mode : cors
+---sec-fetch-site : same-site
+---sec-fetch-dest : empty
+---referer : http://localhost:4200/
+---accept-encoding : gzip, deflate, br
+---accept-language : vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7,fr-FR;q=0.6,fr;q=0.5
+LOGGING REQUEST-----------------------------------
+
+2022-10-29 17:35:55,185 DEBUG o.s.w.f.CommonsRequestLoggingFilter:47 [http-nio-8080-exec-2] Before request [OPTIONS /notification/api/me/notifications]
+2022-10-29 17:35:55,185 DEBUG o.s.c.l.LogFormatUtils:119 [http-nio-8080-exec-2] OPTIONS "/notification/api/me/notifications", parameters={}
+2022-10-29 17:35:55,185 DEBUG o.s.w.s.h.AbstractHandlerMapping:522 [http-nio-8080-exec-2] Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2022-10-29 17:35:55,186 DEBUG o.s.o.j.s.OpenEntityManagerInViewInterceptor:86 [http-nio-8080-exec-2] Opening JPA EntityManager in OpenEntityManagerInViewInterceptor
+2022-10-29 17:35:55,186 DEBUG o.s.o.j.s.OpenEntityManagerInViewInterceptor:111 [http-nio-8080-exec-2] Closing JPA EntityManager in OpenEntityManagerInViewInterceptor
+2022-10-29 17:35:55,186 DEBUG o.s.w.s.FrameworkServlet:1131 [http-nio-8080-exec-2] Completed 403 FORBIDDEN
+2022-10-29 17:35:55,186 DEBUG o.s.w.f.CommonsRequestLoggingFilter:55 [http-nio-8080-exec-2] REQUEST DATA : OPTIONS /notification/api/me/notifications]

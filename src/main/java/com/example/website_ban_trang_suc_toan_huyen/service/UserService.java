@@ -6,6 +6,7 @@ import com.example.website_ban_trang_suc_toan_huyen.entity.entity.UserEntity;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.UserRequest;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.UserResponse;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
@@ -19,4 +20,6 @@ public interface UserService {
 
      UserDTO unlock(UUID uuid);
      PageDTO search(String keyword, UserEntity.Role role, Integer pageNumber, Integer pageSize, String sortBy,Boolean status);
+
+     List<UserDTO> getCustomer();
 }

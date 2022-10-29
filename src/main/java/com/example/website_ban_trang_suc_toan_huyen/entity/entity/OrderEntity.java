@@ -2,43 +2,72 @@ package com.example.website_ban_trang_suc_toan_huyen.entity.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.UUID;
 
 @Entity
-@Table (name = "order")
+@Table (name = "orders")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderEntity {
+public class OrderEntity extends BaseEntity{
     @Id
+    @Type(type = "uuid-char")
     @Column(length = 36)
-    private String orderId;
+    private UUID id;
     @Column(length = 36)
-    private String userId;
+    @Type(type = "uuid-char")
+    private UUID userId;
     @Column
-    private Date dayTrading;
+    private Long orderCode;
     @Column
     private BigDecimal customerMoney;
     @Column
-    private Boolean paymentMethod;
-    @Column
-    private Boolean purchase;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
     @Column
     private BigDecimal transportFee;
     @Column
-    private BigDecimal deposit;
-    @Column
     private BigDecimal total;
     @Column
-    private Boolean status;
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status;
     @Column
-    private Boolean type;
+    private OrderType purchaseType;
+    @Column
+    private String address;
+
+    @Column
+    @Type(type ="uuid-char")
+    private UUID eventId;
+
+    @AllArgsConstructor
+    @Getter
+    public enum PaymentMethod {
+        MONEY,
+        CARD;
+    }
+    @AllArgsConstructor
+    @Getter
+    public enum StatusEnum {
+        CHO_XAC_NHAN,
+        XAC_NHAN,
+        DANG_GIAO,
+        DA_GIAO,
+        HUY
+    }
+    @AllArgsConstructor
+    @Getter
+    public enum OrderType {
+       DIRECT_TYPE,
+        ONLINE
+    }
+
 
 }

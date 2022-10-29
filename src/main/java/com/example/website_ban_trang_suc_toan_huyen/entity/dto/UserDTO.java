@@ -3,7 +3,7 @@ package com.example.website_ban_trang_suc_toan_huyen.entity.dto;
 
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.UserEntity;
 import lombok.Data;
-import java.sql.Date;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -33,6 +33,8 @@ public class UserDTO {
     private UserEntity.Role role;
 
     private String address;
+
+    private String email;
 
     private Boolean status;
 

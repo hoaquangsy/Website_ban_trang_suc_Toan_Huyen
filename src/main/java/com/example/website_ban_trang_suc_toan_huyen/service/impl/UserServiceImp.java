@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -130,5 +129,11 @@ public class UserServiceImp implements UserService {
         List<UserDTO> userDTOS = userEntities.stream().map(userEntity -> this.modelMapper.map(userEntity,UserDTO.class)).collect(Collectors.toList());
         Long count = this.userDao.count(keyword,role,pageNumber,pageSize,sortBy,status);
         return new PageDTO(userDTOS,pageNumber,pageSize,count);
+    }
+
+    @Override
+    public List<UserDTO> getCustomer() {
+        List<UserEntity> userEntities =  this.userRepository.findCustomer();
+        return userEntities.stream().map(userEntity -> this.modelMapper.map(userEntity,UserDTO.class)).collect(Collectors.toList());
     }
 }

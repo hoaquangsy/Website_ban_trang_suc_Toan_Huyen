@@ -24,6 +24,7 @@ public class EventDto {
     private LocalDate endDate;
 
     private String description;
+    
     private Instant createAt;
 
     private String createBy;

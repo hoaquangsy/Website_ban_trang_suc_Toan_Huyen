@@ -9,9 +9,6 @@ import com.example.website_ban_trang_suc_toan_huyen.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 @Service
 public class LoginServiceImp implements LoginService {
 
