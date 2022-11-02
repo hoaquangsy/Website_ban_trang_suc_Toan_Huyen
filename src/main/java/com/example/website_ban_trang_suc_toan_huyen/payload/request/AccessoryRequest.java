@@ -1,5 +1,6 @@
 package com.example.website_ban_trang_suc_toan_huyen.payload.request;
 
+import com.example.website_ban_trang_suc_toan_huyen.support.enums.AccessoryStatus;
 import lombok.Data;
 
 import javax.validation.constraints.DecimalMin;
@@ -21,5 +22,7 @@ public class AccessoryRequest {
     private String color;
 
     private String description;
+
+    private AccessoryStatus status;
 
 }

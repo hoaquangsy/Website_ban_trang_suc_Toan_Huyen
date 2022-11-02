@@ -1,58 +1,40 @@
 package com.example.website_ban_trang_suc_toan_huyen.payload.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductEntity;
 import lombok.Data;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProductRequest {
-    @NotBlank(message = "trong")
-    @JsonProperty("category_id")
+    @NotNull(message = "Thể loại không được để trống")
     private UUID categoryId;
-    @JsonProperty("vendor_id")
-    @NotBlank(message = "trong")
-    private UUID vendorId;
-    @NotBlank(message = "trong")
-    private String code;
-    @JsonProperty("name_Product")
-    @NotBlank(message = "trong")
-    private String nameProduct;
-    private float weight;
-    @JsonProperty("purchase_Price")
-    private BigDecimal purchasePrice;
-    private BigDecimal salePrice;
-    private String status;
-    private String note;
-    @JsonProperty("create_At")
-    private Date createAt;
-    @JsonProperty("last_Modified_At")
-    private Date lastModifiedAt;
-    @JsonProperty("last_Modified_By")
-    private String lastModifiedBy;
-    private BigDecimal salary;
-    @JsonProperty("accessory_Id")
-    private String accessoryId;
-    private String gender;
-    private Integer sizeId;
-    private Integer quantity;
-    private UUID eventId;
-    private UUID materialId;
-//    private List<ProductProperty> productProperty;
-//    private List<ImageProduct> imageProducts;
-//    public static class ProductProperty{
-//        private String productPropertyId;
-//        private String name;  //mau
-//        private String value; // xanh
-//        private String productId;
-//    };
-//    private static class ImageProduct{
-//        private String url;
-//    };
 
+    @NotNull(message = "Nhà cung cấp không để trống")
+    private UUID vendorId;
+
+    @NotBlank(message = "Tên sản phẩm không để trống")
+    private String nameProduct;
+
+    private String note;
+
+    @NotNull(message = "Lương không để trống")
+    private BigDecimal salary;
+    @NotNull(message = "Phụ kiện không để trống")
+    private UUID accessoryId;
+    @NotNull(message = "Giới tính không để trống")
+    private ProductEntity.ProductGender gender;
+    @NotEmpty(message = "Size không để trống")
+    private List<SizeProduct> sizeProducts;
+    private UUID eventId;
+    @NotNull(message = "Nguyên liệu không để trống")
+    private UUID materialId;
+
+    private List<ProductProperty> productProperties;
+
+    private List<String> imageUrls;
 }

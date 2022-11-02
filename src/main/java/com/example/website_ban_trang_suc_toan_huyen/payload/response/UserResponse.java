@@ -2,7 +2,6 @@ package com.example.website_ban_trang_suc_toan_huyen.payload.response;
 
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.UserEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 public class UserResponse {
 

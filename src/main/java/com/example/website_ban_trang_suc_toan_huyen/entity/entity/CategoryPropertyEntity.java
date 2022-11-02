@@ -1,7 +1,6 @@
 package com.example.website_ban_trang_suc_toan_huyen.entity.entity;
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;

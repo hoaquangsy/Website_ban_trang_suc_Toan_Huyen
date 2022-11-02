@@ -2,7 +2,11 @@ package com.example.website_ban_trang_suc_toan_huyen.restController;
 
 
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.OrderDTO;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
+import com.example.website_ban_trang_suc_toan_huyen.entity.entity.MaterialEntity;
+import com.example.website_ban_trang_suc_toan_huyen.entity.entity.OrderEntity;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.OrderRequest;
+import com.example.website_ban_trang_suc_toan_huyen.payload.request.OrderUpdate;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.SampleResponse;
 import com.example.website_ban_trang_suc_toan_huyen.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Tag(
@@ -21,8 +29,7 @@ import java.util.UUID;
 )
 @RestController
 @RequestMapping("/api/v1/order")
-
-
+@CrossOrigin("*")
 public class OrderController {
     @Autowired
     private OrderService orderService;
@@ -54,9 +61,25 @@ public class OrderController {
     }
 
     @Operation(summary = "update order", description = "update order")
-    @PutMapping("/update")
-    public ResponseEntity<?> updateOrder(@RequestParam("id") UUID id,
-                                         @RequestParam("status") Integer status) {
-        return ResponseEntity.ok(SampleResponse.success(orderService.update(id,status)));
+    @PostMapping("/{id}")
+    public ResponseEntity<?> updateOrder(@PathVariable("id") UUID id,
+                                         @RequestBody OrderUpdate  update) {
+        return ResponseEntity.ok(SampleResponse.success(orderService.update(id,update.getStatus())));
+    }
+    @Operation(summary = "Search Chất liệu")
+    @GetMapping
+    public PageDTO search(@RequestParam(value = "pageIndex",defaultValue = "1",required = false) Integer pageIndex,
+                          @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize,
+                          @RequestParam(value = "keyword",defaultValue = "",required = false) String keyword,
+                          @RequestParam(value = "status",required = false) OrderEntity.StatusEnum status,
+                          @RequestParam(value = "payMethod",required = false) OrderEntity.PaymentMethod payMethod,
+                          @RequestParam(value = "purchaseType",required = false) OrderEntity.OrderType orderType,
+                          @RequestParam(value = "startDate",required = false) String startDate,
+                          @RequestParam(value = "endDate",required = false) String endDate,
+                          @RequestParam(value = "startPrice",required = false) BigDecimal startPrice,
+                          @RequestParam(value = "endPrice",required = false) BigDecimal endPrice,
+                          @RequestParam(value = "userId",required = false) UUID userId,
+                          @RequestParam(value = "sortBy",required = false) String sortBy) throws ParseException {
+        return this.orderService.search(pageIndex,pageSize,keyword,status,payMethod,orderType,startDate,endDate,startPrice,endPrice,userId,sortBy);
     }
 }

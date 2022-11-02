@@ -1,18 +1,14 @@
 package com.example.website_ban_trang_suc_toan_huyen.restController;
 
 
-import com.example.website_ban_trang_suc_toan_huyen.entity.dto.CategoryDto;
-import com.example.website_ban_trang_suc_toan_huyen.entity.dto.VendorDto;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.VendorRequest;
-import com.example.website_ban_trang_suc_toan_huyen.payload.response.DefaultPagingResponse;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.SampleResponse;
 import com.example.website_ban_trang_suc_toan_huyen.service.VendorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -63,5 +59,14 @@ public class VendorController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateVendor(@PathVariable("id") UUID id, @Validated @RequestBody VendorRequest vendorRequest) {
         return ResponseEntity.ok(SampleResponse.success(vendorService.updateVendor(id, vendorRequest)));
+    }
+
+    @GetMapping("/auto-complete")
+    public ResponseEntity<?> autoComplete(@RequestParam(value = "pageIndex",required = false,defaultValue = "1") Integer pageNumber,
+                                          @RequestParam(value = "pageSize",required = false,defaultValue = "15") Integer pageSize,
+                                          @RequestParam(value = "keyword",required = false,defaultValue = "") String keyword,
+                                          @RequestParam(value = "sortBy",required = false) String sortBy) {
+        PageDTO vendorDtoPage= vendorService.autoComplete(pageNumber,pageSize , keyword, sortBy);
+        return ResponseEntity.ok(SampleResponse.success(vendorDtoPage));
     }
 }

@@ -15,45 +15,46 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class OrderRequest {
-    @NotNull
+    @NotNull(message = "Người dùng không để trống")
     private UUID userId;
     @NotNull
-    private Date dayTrading;
-    @NotNull
     private BigDecimal customerMoney;
-    @NotNull
-    @EnumValidator(enumClass = OrderEntity.PaymentMethod.class,message = "Sai định dạng payment method")
-    private String paymentMethod;
-    @NotNull
-    private Boolean purchase;
-    @NotNull
+    @NotNull(message = "Phương thức thanh toán không để trống")
+    private OrderEntity.PaymentMethod paymentMethod;
+    @NotNull(message = "Phí vận chuyển không để trống")
     private BigDecimal transportFee;
-    @NotNull
-    private BigDecimal deposit;
-    @NotNull
+    @NotNull(message = "Tổng tiền không để trống")
     private BigDecimal total;
-    @NotNull
-    private Boolean type;
+    @NotNull(message = "Loại mua hàng không để trống")
+    private OrderEntity.OrderType purchaseType;
+
+    @NotNull(message = "Trạng thái không để trống")
+    private OrderEntity.StatusEnum status;
+
     private UUID eventId;
-    @NotEmpty
-    private List<@Valid OrderDetailRq> orderDetailList;
+
+    @NotNull(message = "Địa chỉ không để trống")
+    private String address;
+
+    @NotEmpty(message = "Hiện không có sản phẩm trong hóa đơn này")
+    private List<OrderDetailRq> orderDetailList;
 
     @Data
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     @Valid
     public static class OrderDetailRq{
         @NotNull
         private UUID productId;
         @NotNull
-        private Integer amount;
+        private Integer quantity;
         @NotNull
         private BigDecimal price;
-        @NotNull
+
         private BigDecimal discount;
         @NotNull
         private BigDecimal total;
+        @NotNull
+        private UUID sizeId;
     }
 
 

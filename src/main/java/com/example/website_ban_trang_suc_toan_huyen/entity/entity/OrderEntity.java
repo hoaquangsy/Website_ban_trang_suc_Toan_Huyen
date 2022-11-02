@@ -6,10 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.UUID;
@@ -25,27 +22,29 @@ public class OrderEntity extends BaseEntity{
     @Column(length = 36)
     private UUID id;
     @Column(length = 36)
+    @Type(type = "uuid-char")
     private UUID userId;
     @Column
-    private Date dayTrading;
+    private Long orderCode;
     @Column
     private BigDecimal customerMoney;
     @Column
-    private String paymentMethod;
-    @Column
-    private Boolean purchase;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
     @Column
     private BigDecimal transportFee;
     @Column
-    private BigDecimal deposit;
-    @Column
     private BigDecimal total;
     @Column
-    private Integer status;
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status;
     @Column
-    private Boolean type;
+    private OrderType purchaseType;
+    @Column
+    private String address;
 
     @Column
+    @Type(type ="uuid-char")
     private UUID eventId;
 
     @AllArgsConstructor
@@ -57,10 +56,17 @@ public class OrderEntity extends BaseEntity{
     @AllArgsConstructor
     @Getter
     public enum StatusEnum {
-        OPEN(1),
-        CLOSE(2);
-        private Integer code;
-
+        CHO_XAC_NHAN,
+        XAC_NHAN,
+        DANG_GIAO,
+        DA_GIAO,
+        HUY
+    }
+    @AllArgsConstructor
+    @Getter
+    public enum OrderType {
+       DIRECT_TYPE,
+        ONLINE
     }
 
 

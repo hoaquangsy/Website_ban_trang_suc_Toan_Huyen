@@ -3,7 +3,6 @@ package com.example.website_ban_trang_suc_toan_huyen.entity.dto;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.MaterialEntity;
 import lombok.Data;
 
-import javax.persistence.Column;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;

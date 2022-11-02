@@ -1,12 +1,8 @@
 package com.example.website_ban_trang_suc_toan_huyen.dao.impl;
-
-import com.example.website_ban_trang_suc_toan_huyen.dao.CategoryDao;
 import com.example.website_ban_trang_suc_toan_huyen.dao.MaterialDao;
-import com.example.website_ban_trang_suc_toan_huyen.entity.entity.CategoryEntity;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.MaterialEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;

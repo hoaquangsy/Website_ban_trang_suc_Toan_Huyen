@@ -12,9 +12,21 @@ import java.util.UUID;
 
 @Data
 public class ProductSizeDto {
+
     private UUID idProductSize;
-    private Integer sizId;
-    private Integer productId;
+
+    private UUID sizeId;
+
+    private String size;
+
+    private Float weight;
+
+    private BigDecimal purchasePrice;
+
+    private BigDecimal salePrice;
+
+    private UUID productId;
+
     private Integer quantity;
 
 }
