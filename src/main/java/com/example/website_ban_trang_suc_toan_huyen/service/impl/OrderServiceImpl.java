@@ -169,4 +169,14 @@ public class OrderServiceImpl implements OrderService {
         return new PageDTO(materialDtos,pageIndex,pageSize,count);
     }
 
+    @Override
+    public List<OrderDTO> findAllOrder() {
+        List<OrderEntity> list = orderRepository.findAll();
+        System.out.println(list);
+        return   list
+                .stream()
+                .map(order -> modelMapper.map(order, OrderDTO.class))
+                .collect(Collectors.toList());
+    }
+
 }

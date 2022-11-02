@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 public interface OrderService {
@@ -32,5 +33,7 @@ public interface OrderService {
                    String startDate, String endDate,
                    BigDecimal startPrice, BigDecimal endPrice, UUID userId,
                    String sortBy) throws ParseException;
+
+    List<OrderDTO> findAllOrder();
 
 }

@@ -9,6 +9,7 @@ import com.example.website_ban_trang_suc_toan_huyen.payload.request.OrderRequest
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.OrderUpdate;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.SampleResponse;
 import com.example.website_ban_trang_suc_toan_huyen.service.OrderService;
+import com.example.website_ban_trang_suc_toan_huyen.util.ExcelUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Tag(
@@ -81,5 +88,21 @@ public class OrderController {
                           @RequestParam(value = "userId",required = false) UUID userId,
                           @RequestParam(value = "sortBy",required = false) String sortBy) throws ParseException {
         return this.orderService.search(pageIndex,pageSize,keyword,status,payMethod,orderType,startDate,endDate,startPrice,endPrice,userId,sortBy);
+    }
+    @GetMapping("/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=order_" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        List<OrderDTO> listOrder= orderService.findAllOrder();
+
+        ExcelUtils excelExporter = new ExcelUtils(listOrder);
+
+        excelExporter.export(response);
     }
 }
