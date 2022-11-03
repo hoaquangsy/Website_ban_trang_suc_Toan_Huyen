@@ -37,7 +37,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public CartDetailDTO addToCart(CartRequest cartRequest) {
-        Optional<CartEntity> cartEntityOptional = this.cartRepository.findById(cartRequest.getUserId());
+        Optional<CartEntity> cartEntityOptional = this.cartRepository.findByUserId(cartRequest.getUserId());
         CartEntity cartEntity = new CartEntity();
         UUID cartId = null;
         if(cartEntityOptional.isEmpty()){

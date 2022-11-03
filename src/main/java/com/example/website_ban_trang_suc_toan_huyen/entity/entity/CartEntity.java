@@ -22,5 +22,6 @@ public class CartEntity extends BaseEntity {
     @Type(type = "uuid-char")
     private UUID id;
     @Column(name = "user_id",length = 36)
+    @Type(type = "uuid-char")
     private UUID userId;
 }
