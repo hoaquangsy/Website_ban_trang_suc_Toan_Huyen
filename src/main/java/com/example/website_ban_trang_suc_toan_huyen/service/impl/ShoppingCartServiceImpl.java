@@ -51,9 +51,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             cartId = cartEntityOptional.get().getId();
         }
         CartDetailEntity cartDetailEntity = new CartDetailEntity();
-        cartDetailEntity.setId(UUID.randomUUID());
-        cartDetailEntity.setCartId(cartId);
-
         Optional<ProductEntity> productEntity = productRepository.findById(cartRequest.getProductId());
         if(productEntity.isEmpty()){
             throw new NotFoundException(HttpStatus.NOT_FOUND.value(),"Product Not Found");
@@ -63,9 +60,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         CartDetailEntity cartDetailEn = cartDetailRepository.findByCartIdAndProductId(cartId, cartDetailEntity.getProductId());
         if(ObjectUtils.isEmpty(cartDetailEn)){
+            cartDetailEntity.setId(UUID.randomUUID());
+            cartDetailEntity.setCartId(cartId);
             cartDetailEntity.setAmount(cartRequest.getAmount());
         }else {
             cartDetailEntity.setAmount(cartRequest.getAmount() + cartDetailEn.getAmount());
+            cartDetailEntity.setId(cartDetailEn.getId());
+            cartDetailEntity.setCartId(cartId);
         }
 
         CartDetailEntity cartDetail = this.cartDetailRepository.save(cartDetailEntity);
@@ -78,7 +79,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         CartDetailEntity cartDetailEntity = this.cartDetailRepository.findById(id).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(),"CartDetail Not Found"));
 
         if(amount<0){
-            throw new NotFoundException(HttpStatus.BAD_REQUEST.value(),"CartDetail Not Found");
+            throw new NotFoundException(HttpStatus.BAD_REQUEST.value(),"amount >= 0");
         }
         cartDetailEntity.setAmount(amount);
 
@@ -88,7 +89,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public CartDetailDTO deleteCart(UUID id) {
         CartDetailEntity cartDetailEntity = this.cartDetailRepository.findById(id).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(),"CartDetail Not Found"));
-
+        cartDetailRepository.delete(cartDetailEntity);
         return this.modelMapper.map(cartDetailEntity, CartDetailDTO.class);
     }
 
