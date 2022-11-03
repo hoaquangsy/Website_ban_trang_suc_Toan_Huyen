@@ -20,7 +20,7 @@ public interface ShoppingCartService {
 
 //    CartDTO getCartId(UUID id);
 
-    List<CartDetailDTO> getListCartDetailByCartId(UUID cartId, UUID id);
+    List<CartDetailDTO> getListCartDetailByCartId(UUID cartId);
 
     Page<CartDetailDTO> getAllCart(int page, int pageSize);
 }

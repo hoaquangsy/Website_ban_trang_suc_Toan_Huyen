@@ -45,8 +45,9 @@ public class CartController {
 
     @Operation(summary = "Get list cart_detail by userId")
     @GetMapping("/{cart_id}/{id}")
-    public ResponseEntity<?> getListCartDetailByCartId(@PathVariable("cart_id") UUID cartId, @PathVariable("id") UUID  id) {
-        List<CartDetailDTO> listCartDetail = shoppingCartService.getListCartDetailByCartId(cartId, id);
+    public ResponseEntity<?> getListCartDetailByCartId(@PathVariable("cart_id") UUID cartId) {
+        List<CartDetailDTO> listCartDetail = shoppingCartService.getListCartDetailByCartId(cartId);
+
         return ResponseEntity.ok(SampleResponse.success(listCartDetail));
     }
 
