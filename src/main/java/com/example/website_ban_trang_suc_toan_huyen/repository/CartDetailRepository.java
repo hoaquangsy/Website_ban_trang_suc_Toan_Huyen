@@ -15,4 +15,6 @@ public interface CartDetailRepository extends JpaRepository<CartDetailEntity,UUI
     List<CartDetailEntity> findAllByCartId(UUID cartId);
 
     Optional<CartDetailEntity> findById(UUID cartId);
+
+    CartDetailEntity findByCartIdAndProductId(UUID cartId, UUID productId);
 }
