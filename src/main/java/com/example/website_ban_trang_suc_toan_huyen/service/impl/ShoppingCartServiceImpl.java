@@ -67,6 +67,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         // Check số lượng của size sản phẩm còn lại
         ProductSizeEntity productSizeEntity = productSizeRepository.findByProductIdAndSizId(cartRequest.getProductId(), cartRequest.getSizeId());
+        if (productSizeEntity.getQuantity()<=0){
+            throw new NotFoundException(HttpStatus.BAD_REQUEST.value(),"Exceed the number of remaining products");
+        }
 
         // Check product in cart
         CartDetailEntity cartDetailEn = cartDetailRepository.findByCartIdAndProductId(cartId, cartDetailEntity.getProductId());
@@ -74,13 +77,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             cartDetailEntity.setId(UUID.randomUUID());
             cartDetailEntity.setCartId(cartId);
             if(cartRequest.getAmount()>productSizeEntity.getQuantity()){
-                System.out.println("Quá số lượng sản phẩm");
+                throw new NotFoundException(HttpStatus.BAD_REQUEST.value(),"Exceed the number of remaining products");
             }else {
                 cartDetailEntity.setAmount(cartRequest.getAmount());
             }
         }else {
             if(cartRequest.getAmount()>productSizeEntity.getQuantity()){
-                System.out.println("Quá số lượng sản phẩm");
+                throw new NotFoundException(HttpStatus.BAD_REQUEST.value(),"Exceed the number of remaining products");
             }else {
                 cartDetailEntity.setAmount(cartRequest.getAmount() + cartDetailEn.getAmount());
             }
