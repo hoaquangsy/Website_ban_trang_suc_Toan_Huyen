@@ -35,8 +35,8 @@ public class ExchangeController {
     }
     @GetMapping("/order/{id}")
     public ResponseEntity<?> getAllExchangeByOrder(
-            @PathVariable(name = "id") UUID id ) {
-        return ResponseEntity.ok(exchangeService.findById(id));
+            @PathVariable(name = "id") UUID orderId) {
+        return ResponseEntity.ok(exchangeService.findById(orderId));
     }
 
     @PostMapping
