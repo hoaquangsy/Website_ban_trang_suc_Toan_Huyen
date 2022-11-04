@@ -18,10 +18,15 @@ public class ProductSizeEntity {
     @Type(type = "uuid-char")
     @Column
     private UUID idProductSize;
+
     @Column
-    private Integer sizId;
+    @Type(type = "uuid-char")
+    private UUID sizId;
+
     @Column
+    @Type(type = "uuid-char")
     private UUID productId;
+
     @Column
     private Integer quantity;
 

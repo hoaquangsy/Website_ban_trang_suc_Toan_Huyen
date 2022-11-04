@@ -39,7 +39,7 @@ public class ProductRequest {
     @JsonProperty("accessory_Id")
     private String accessoryId;
     private String gender;
-    private Integer sizeId;
+    private UUID sizeId;
     private Integer quantity;
     private UUID eventId;
     private UUID materialId;

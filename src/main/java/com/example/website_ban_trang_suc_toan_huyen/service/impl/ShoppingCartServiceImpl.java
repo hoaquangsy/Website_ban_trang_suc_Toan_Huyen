@@ -4,11 +4,13 @@ import com.example.website_ban_trang_suc_toan_huyen.entity.dto.CartDetailDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.CartDetailEntity;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.CartEntity;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductEntity;
+import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductSizeEntity;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.CartRequest;
 import com.example.website_ban_trang_suc_toan_huyen.repository.CartDetailRepository;
 import com.example.website_ban_trang_suc_toan_huyen.repository.CartRepository;
 import com.example.website_ban_trang_suc_toan_huyen.repository.ProductRepository;
+import com.example.website_ban_trang_suc_toan_huyen.repository.ProductSizeRepository;
 import com.example.website_ban_trang_suc_toan_huyen.service.ShoppingCartService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ProductSizeRepository productSizeRepository;
     @Autowired
     private CartRepository cartRepository;
     @Autowired
@@ -61,14 +65,25 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             cartDetailEntity.setProductId(productEntity.getProductId());
         }
 
+        // Check số lượng của size sản phẩm còn lại
+        ProductSizeEntity productSizeEntity = productSizeRepository.findByProductIdAndSizId(cartRequest.getProductId(), cartRequest.getSizeId());
+
         // Check product in cart
         CartDetailEntity cartDetailEn = cartDetailRepository.findByCartIdAndProductId(cartId, cartDetailEntity.getProductId());
         if(ObjectUtils.isEmpty(cartDetailEn)){
             cartDetailEntity.setId(UUID.randomUUID());
             cartDetailEntity.setCartId(cartId);
-            cartDetailEntity.setAmount(cartRequest.getAmount());
+            if(cartRequest.getAmount()>productSizeEntity.getQuantity()){
+                System.out.println("Quá số lượng sản phẩm");
+            }else {
+                cartDetailEntity.setAmount(cartRequest.getAmount());
+            }
         }else {
-            cartDetailEntity.setAmount(cartRequest.getAmount() + cartDetailEn.getAmount());
+            if(cartRequest.getAmount()>productSizeEntity.getQuantity()){
+                System.out.println("Quá số lượng sản phẩm");
+            }else {
+                cartDetailEntity.setAmount(cartRequest.getAmount() + cartDetailEn.getAmount());
+            }
             cartDetailEntity.setId(cartDetailEn.getId());
             cartDetailEntity.setCartId(cartId);
         }

@@ -9,6 +9,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface ProductSizeRepository extends JpaRepository<ProductSizeEntity,Integer> {
-    ProductSizeEntity findByProductIdAndSizId (UUID productId, Integer sizeId);
+public interface ProductSizeRepository extends JpaRepository<ProductSizeEntity,UUID> {
+    ProductSizeEntity findByProductIdAndSizId (UUID productId, UUID sizeId);
 }
