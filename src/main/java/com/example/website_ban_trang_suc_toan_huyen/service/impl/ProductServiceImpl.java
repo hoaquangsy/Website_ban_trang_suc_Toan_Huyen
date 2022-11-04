@@ -148,13 +148,15 @@ public class ProductServiceImpl implements ProductService {
         this.productPropertyRepository.saveAll(productPropertyEntities);
 
         //Lưu Product Image
-        List<ProductImageEntity> productImageDeleted = this.productImageRepository.findByProductId(id);
-        if(!CollectionUtils.isEmpty(productImageDeleted)){
-            this.productImageRepository.deleteAll(productImageDeleted);
+        if(!CollectionUtils.isEmpty(productRequest.getImageUrls())){
+            List<ProductImageEntity> productImageDeleted = this.productImageRepository.findByProductId(id);
+            if(!CollectionUtils.isEmpty(productImageDeleted)){
+                this.productImageRepository.deleteAll(productImageDeleted);
+            }
+            List<ProductImageEntity> productImageEntities = productRequest.getImageUrls().stream()
+                    .map(s -> new ProductImageEntity(UUID.randomUUID(), s, product.getProductId(),Boolean.FALSE)).collect(Collectors.toList());
+            this.productImageRepository.saveAll(productImageEntities);
         }
-        List<ProductImageEntity> productImageEntities = productRequest.getImageUrls().stream()
-                .map(s -> new ProductImageEntity(UUID.randomUUID(), s, product.getProductId(),Boolean.FALSE)).collect(Collectors.toList());
-        this.productImageRepository.saveAll(productImageEntities);
 
         return this.modelMapper.map(product, ProductDto.class);
 
@@ -181,6 +183,7 @@ public class ProductServiceImpl implements ProductService {
                 Optional<SizeEntity> sizeEntity =  this.sizeRepository.getSizeEntitiesBy(productSizeDto.getSizeId());
                 sizeEntity.ifPresent(entity -> productSizeDto.setSize(entity.getSize()));
             });
+            productSizeDtos =  productSizeDtos.stream().sorted(Comparator.comparing(ProductSizeDto::getSize)).collect(Collectors.toList());
             productDto.setProductSizes(productSizeDtos);
         }
         return productDto;
