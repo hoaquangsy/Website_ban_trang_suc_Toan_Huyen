@@ -37,6 +37,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public CartDetailDTO addToCart(CartRequest cartRequest) {
+        // Find cartId
         Optional<CartEntity> cartEntityOptional = this.cartRepository.findByUserId(cartRequest.getUserId());
         CartEntity cartEntity = new CartEntity();
         UUID cartId = null;
@@ -51,6 +52,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             cartId = cartEntityOptional.get().getId();
         }
         CartDetailEntity cartDetailEntity = new CartDetailEntity();
+
+        // Check productId
         ProductEntity productEntity = productRepository.findByProductIdAndStatus(cartRequest.getProductId(), ProductEntity.StatusEnum.ACTIVE.toString());
         if(ObjectUtils.isEmpty(productEntity)){
             throw new NotFoundException(HttpStatus.NOT_FOUND.value(),"Product Not Found");
@@ -58,6 +61,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             cartDetailEntity.setProductId(productEntity.getProductId());
         }
 
+        // Check product in cart
         CartDetailEntity cartDetailEn = cartDetailRepository.findByCartIdAndProductId(cartId, cartDetailEntity.getProductId());
         if(ObjectUtils.isEmpty(cartDetailEn)){
             cartDetailEntity.setId(UUID.randomUUID());

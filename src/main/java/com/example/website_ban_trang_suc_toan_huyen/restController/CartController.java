@@ -25,7 +25,7 @@ public class CartController {
     private ShoppingCartService shoppingCartService;
 
     @Operation(summary = "Get list cart_detail by userId")
-    @GetMapping("/{cart_id}/{id}")
+    @GetMapping("/{cart_id}")
     public ResponseEntity<?> getListCartDetailByCartId(@PathVariable("cart_id") UUID cartId) {
         List<CartDetailDTO> listCartDetail = shoppingCartService.getListCartDetailByCartId(cartId);
 

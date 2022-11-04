@@ -18,8 +18,6 @@ public interface ShoppingCartService {
 
     CartDetailDTO deleteCart(UUID id);
 
-//    CartDTO getCartId(UUID id);
-
     List<CartDetailDTO> getListCartDetailByCartId(UUID cartId);
 
     Page<CartDetailDTO> getAllCart(int page, int pageSize);

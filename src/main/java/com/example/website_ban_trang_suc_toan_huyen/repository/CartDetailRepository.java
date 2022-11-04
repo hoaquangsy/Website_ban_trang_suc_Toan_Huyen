@@ -11,7 +11,6 @@ import java.util.UUID;
 
 @Repository
 public interface CartDetailRepository extends JpaRepository<CartDetailEntity,UUID> {
-//    @Query(value = "select cd from CartEntity c inner join CartDetailEntity cd on c.id = cd.cartId where c.userId = :userId", nativeQuery = true)
     List<CartDetailEntity> findAllByCartId(UUID cartId);
 
     Optional<CartDetailEntity> findById(UUID cartId);
