@@ -51,11 +51,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             cartId = cartEntityOptional.get().getId();
         }
         CartDetailEntity cartDetailEntity = new CartDetailEntity();
-        Optional<ProductEntity> productEntity = productRepository.findById(cartRequest.getProductId());
-        if(productEntity.isEmpty()){
+        ProductEntity productEntity = productRepository.findByProductIdAndStatus(cartRequest.getProductId(), ProductEntity.StatusEnum.ACTIVE.toString());
+        if(ObjectUtils.isEmpty(productEntity)){
             throw new NotFoundException(HttpStatus.NOT_FOUND.value(),"Product Not Found");
         }else {
-            cartDetailEntity.setProductId(productEntity.get().getProductId());
+            cartDetailEntity.setProductId(productEntity.getProductId());
         }
 
         CartDetailEntity cartDetailEn = cartDetailRepository.findByCartIdAndProductId(cartId, cartDetailEntity.getProductId());
@@ -79,9 +79,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         CartDetailEntity cartDetailEntity = this.cartDetailRepository.findById(id).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(),"CartDetail Not Found"));
 
         if(amount<0){
-            throw new NotFoundException(HttpStatus.BAD_REQUEST.value(),"amount >= 0");
+            throw new NotFoundException(HttpStatus.BAD_REQUEST.value(),"amount > 0");
+        }else if (amount==0){
+            cartDetailRepository.delete(cartDetailEntity);
+        }else {
+            cartDetailEntity.setAmount(amount);
         }
-        cartDetailEntity.setAmount(amount);
 
         return this.modelMapper.map(this.cartDetailRepository.save(cartDetailEntity), CartDetailDTO.class);
     }
@@ -98,6 +101,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         List<CartDetailEntity> cartDetailEntityList = this.cartDetailRepository.findAllByCartId(cartId);
 
         if(cartDetailEntityList.isEmpty()){
+            System.out.println("CartDetail is empty");
             return null;
         }
 

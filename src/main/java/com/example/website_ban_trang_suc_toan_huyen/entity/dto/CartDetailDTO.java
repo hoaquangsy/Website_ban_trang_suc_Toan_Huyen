@@ -1,9 +1,6 @@
 package com.example.website_ban_trang_suc_toan_huyen.entity.dto;
 
 import lombok.Data;
-import org.hibernate.annotations.Type;
-
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
