@@ -9,11 +9,9 @@ import com.example.website_ban_trang_suc_toan_huyen.repository.VendorRepository;
 import com.example.website_ban_trang_suc_toan_huyen.service.VendorService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import java.sql.Date;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -68,6 +66,17 @@ public class VendorServiceImpl implements VendorService {
         List<VendorDto> vendorDtos = categoryEntityList.stream()
                 .map(categoryEntity -> modelMapper.map(categoryEntity,VendorDto.class)).collect(Collectors.toList());
         Long count = this.vendorRepository.count(page,pageSize,keyword,sortBy);
+        return new PageDTO<>(vendorDtos,page,pageSize,count);
+    }
+
+    @Override
+    public PageDTO autoComplete(Integer page, Integer pageSize, String keyword, String sortBy) {
+        Long count = this.vendorRepository.count(page,pageSize,keyword,sortBy);
+        pageSize = Integer.parseInt(count.toString());
+        List<VendorEntity> categoryEntityList = this.vendorRepository.search(page,pageSize,keyword,sortBy);
+        List<VendorDto> vendorDtos = categoryEntityList.stream()
+                .map(categoryEntity -> modelMapper.map(categoryEntity,VendorDto.class)).collect(Collectors.toList());
+
         return new PageDTO<>(vendorDtos,page,pageSize,count);
     }
 

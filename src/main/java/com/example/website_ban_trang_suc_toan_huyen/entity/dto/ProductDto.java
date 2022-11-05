@@ -1,29 +1,60 @@
 package com.example.website_ban_trang_suc_toan_huyen.entity.dto;
 
+import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductEntity;
 import lombok.Data;
 
-import javax.persistence.Column;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Data
 public class ProductDto {
+
     private UUID productId;
-    private String categoryId;
-    private String vendorId;
+
+    private UUID categoryId;
+
+    private CategoryDto category;
+
+    private UUID vendorId;
+
+    private VendorDto vendor;
+
     private String code;
+
     private String nameProduct;
-    private float weight;
-    private BigDecimal purchasePrice;
-    private BigDecimal salePrice;
+
+
+    private UUID materialId;
+
+    private MaterialDto material;
+
     private String status;
+
     private String note;
+
     private BigDecimal salary;
-    private String accessoryId;
-    private String gender;
-    private Date createAt;
-    private Date lastModifiedAt;
+
+    private UUID accessoryId;
+
+    private UUID eventID;
+
+    private AccessoryDTO accessory;
+
+    private ProductEntity.ProductGender gender;
+
+    private Instant createAt;
+
+    private Instant lastModifiedAt;
+
     private String lastModifiedBy;
+
+    private List<ProductImageDTO> productImages;
+
+    private List<ProductPropertyDto> productProperties;
+
+    private List<ProductSizeDto> productSizes;
+
 
 }

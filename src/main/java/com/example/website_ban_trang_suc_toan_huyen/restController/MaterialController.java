@@ -38,8 +38,8 @@ public class MaterialController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getMaterialById(@PathVariable("id") Integer id) {
-        return null;
+    public ResponseEntity<?> getMaterialById(@PathVariable("id") UUID id) {
+        return ResponseEntity.ok(SampleResponse.success(this.materialService.getById(id)));
     }
 
     @PostMapping
@@ -52,10 +52,31 @@ public class MaterialController {
         this.materialService.deleteMaterial(id);
         return ResponseEntity.ok(SampleResponse.success(null));
     }
+    @PostMapping("{id}/lock")
+    public ResponseEntity<?> lockUser(@PathVariable("id") UUID id){
+        return ResponseEntity.ok(SampleResponse.success(this.materialService.lock(id)));
+    }
+    @PostMapping("{id}/unlock")
+    public ResponseEntity<?> unlockUser(@PathVariable("id") UUID id){
+        return ResponseEntity.ok(SampleResponse.success(this.materialService.unlock(id)));
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateMaterial(@PathVariable("id") UUID id, @Valid @RequestBody MaterialRequest request) {
 
         return ResponseEntity.ok(SampleResponse.success(this.materialService.updateMaterial(request,id)));
+    }
+    @Operation(summary = "auto complete Chất liệu")
+    @GetMapping("/auto-complete")
+    public PageDTO autoComplete(@RequestParam(value = "pageIndex",defaultValue = "1",required = false) Integer pageIndex,
+                          @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize,
+                          @RequestParam(value = "keyword",defaultValue = "",required = false) String keyword,
+                          @RequestParam(value = "status",required = false) MaterialEntity.StatusEnum status,
+                          @RequestParam(value = "type",required = false) MaterialEntity.MaterialType type,
+                          @RequestParam(value = "startPrice",required = false) BigDecimal startPrice,
+                          @RequestParam(value = "endPrice",required = false) BigDecimal endPrice,
+                          @RequestParam(value = "sortBy",required = false) String sortBy)
+    {
+        return this.materialService.autoComplete(keyword,pageIndex,pageSize,type,status,startPrice,endPrice,sortBy);
     }
 }

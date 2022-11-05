@@ -62,17 +62,29 @@ public class AccessoryServiceImpl implements AccessoryService {
                 .orElseThrow(()->new NotFoundException(400,"NOT FOUND ACCESSORY"));
         return modelMapper.map(accessory,AccessoryDTO.class);
     }
-
     @Override
-    public PageDTO search(String keyword, Integer pageIndex, Integer pageSize,
-                          AccessoryStatus status, String sortBy) {
-        List<AccessoryEntity> accessoryEntities =this.accessoryDAO.search(pageIndex,pageSize,keyword
+    public PageDTO autoComplete(String keyword, Integer page, Integer pageSize,
+                                           AccessoryStatus status, String sortBy) {
+        Long count = this.accessoryDAO.count(page,pageSize,keyword,sortBy,status);
+        pageSize = Integer.parseInt(count.toString());
+        List<AccessoryEntity> accessoryEntities =this.accessoryDAO.search(page,pageSize,keyword
                 ,sortBy,status);
         List<AccessoryDTO> accessoriesDTO = accessoryEntities.stream()
                 .map(accessoryEntity -> modelMapper.map(accessoryEntity,AccessoryDTO.class))
                 .collect(Collectors.toList());
-        Long count = this.accessoryDAO.count(pageIndex,pageSize,keyword,sortBy,status);
-        return new PageDTO<>(accessoriesDTO,pageIndex,pageSize,count);
+        return new PageDTO<>(accessoriesDTO,page,pageSize,count);
+    }
+
+    @Override
+    public PageDTO search(String keyword, Integer page, Integer pageSize,
+                          AccessoryStatus status, String sortBy) {
+        List<AccessoryEntity> accessoryEntities =this.accessoryDAO.search(page,pageSize,keyword
+                ,sortBy,status);
+        List<AccessoryDTO> accessoriesDTO = accessoryEntities.stream()
+                .map(accessoryEntity -> modelMapper.map(accessoryEntity,AccessoryDTO.class))
+                .collect(Collectors.toList());
+        Long count = this.accessoryDAO.count(page,pageSize,keyword,sortBy,status);
+        return new PageDTO<>(accessoriesDTO,page,pageSize,count);
     }
 
     @Override
@@ -102,4 +114,3 @@ public class AccessoryServiceImpl implements AccessoryService {
         return HttpStatus.OK;
     }
 }
-

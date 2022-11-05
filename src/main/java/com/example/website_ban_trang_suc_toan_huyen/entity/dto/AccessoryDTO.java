@@ -15,6 +15,8 @@ public class AccessoryDTO {
 
     private String name;
 
+    private BigDecimal price;
+
     private String description;
 
     private String color;
@@ -29,5 +31,4 @@ public class AccessoryDTO {
 
     private AccessoryStatus status;
 
-    private BigDecimal price;
 }
