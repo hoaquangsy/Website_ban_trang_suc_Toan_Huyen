@@ -4,6 +4,7 @@ import com.example.website_ban_trang_suc_toan_huyen.dao.ExchangeDAO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.ExchangeDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.OrderDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.ProductOrderDto;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.UserDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.*;
 import com.example.website_ban_trang_suc_toan_huyen.exception.BadRequestException;
@@ -42,6 +43,8 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Autowired
     private ExchangeDetailRepository exchangeDetailRepository;
 
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private ExchangeDAO exchangeDAO;
     @Autowired
@@ -126,11 +129,20 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
+    public ExchangeDTO updateExchange(UUID id,ExchangeRequest request) {
+        ExchangeEntity exchangeEntity = this.exchangeRepository.findById(id).orElseThrow(() -> new NotFoundException(HttpStatus.NO_CONTENT.value(), "Hóa đơn đổi trả này không tồn tại"));
+        exchangeEntity.setStatus(request.getStatus());
+        return this.modelMapper.map(this.exchangeRepository.save(exchangeEntity),ExchangeDTO.class);
+    }
+
+    @Override
     public ExchangeDTO findById(UUID id) {
         ExchangeEntity exchangeEntity = this.exchangeRepository.findById(id).orElseThrow(() -> new NotFoundException(HttpStatus.NO_CONTENT.value(), "Hóa đơn đổi trả này không tồn tại"));
         ExchangeDTO exchangeDTO = this.modelMapper.map(exchangeEntity,ExchangeDTO.class);
-        OrderEntity orderDTO = this.orderRepository.findById(exchangeDTO.getOrderId()).get();
-        exchangeDTO.setOrderDTO(this.modelMapper.map(orderDTO,OrderDTO.class));
+        OrderEntity order = this.orderRepository.findById(exchangeDTO.getOrderId()).get();
+        OrderDTO orderDTO = this.modelMapper.map(order,OrderDTO.class);
+        orderDTO.setUser(this.modelMapper.map(this.userRepository.findById(orderDTO.getUserId()).get(), UserDTO.class));
+        exchangeDTO.setOrderDTO(orderDTO);
         List<ProductOrderDto> productOrderDtos = new ArrayList<>();
         List<ExchangeDetailEntity> exchangeDetailEntities = this.exchangeDetailRepository.findByExchangeId(exchangeDTO.getId());
         exchangeDetailEntities.forEach(exchangeDetailEntity -> {

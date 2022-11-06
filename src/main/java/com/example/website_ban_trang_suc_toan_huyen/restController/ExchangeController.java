@@ -36,12 +36,19 @@ public class ExchangeController {
     @GetMapping("/order/{id}")
     public ResponseEntity<?> getAllExchangeByOrder(
             @PathVariable(name = "id") UUID orderId) {
-        return ResponseEntity.ok(exchangeService.findById(orderId));
+        return ResponseEntity.ok(SampleResponse.success(exchangeService.findById(orderId)));
     }
 
     @PostMapping
     public ResponseEntity<?> addExchange(@RequestBody ExchangeRequest request) {
         return ResponseEntity.ok(exchangeService.createExchange(request));
+    }
+
+    @PostMapping("{id}")
+    public ResponseEntity<?> updateExchange(
+            @PathVariable(name = "id") UUID exchangeId,
+            @RequestBody ExchangeRequest request) {
+        return ResponseEntity.ok(exchangeService.updateExchange(exchangeId,request));
     }
 
 
