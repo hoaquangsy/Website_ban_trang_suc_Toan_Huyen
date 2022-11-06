@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Tag(
@@ -81,5 +82,11 @@ public class OrderController {
                           @RequestParam(value = "userId",required = false) UUID userId,
                           @RequestParam(value = "sortBy",required = false) String sortBy) throws ParseException {
         return this.orderService.search(pageIndex,pageSize,keyword,status,payMethod,orderType,startDate,endDate,startPrice,endPrice,userId,sortBy);
+    }
+    @GetMapping("/list")
+    public ResponseEntity<?> getOrderByListId(@RequestParam(value = "status",required = false) OrderEntity.StatusEnum status,
+                                              @RequestParam(value = "userId",required = false) UUID userId
+                                              ) {
+        return ResponseEntity.ok(SampleResponse.success(orderService.findByStatusAndUserId(status,userId)));
     }
 }

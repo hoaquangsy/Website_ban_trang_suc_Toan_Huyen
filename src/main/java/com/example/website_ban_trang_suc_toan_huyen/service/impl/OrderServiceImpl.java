@@ -21,8 +21,6 @@ import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -166,7 +164,18 @@ public class OrderServiceImpl implements OrderService {
            EventEntity entity = this.eventRepository.findId(orderDTO.getEventId()).orElse(new EventEntity());
            orderDTO.setEvent(this.modelMapper.map(entity, EventDto.class));
        });
+
         return new PageDTO(materialDtos,pageIndex,pageSize,count);
     }
-
+    @Override
+    public List<OrderDTO> findByStatusAndUserId( OrderEntity.StatusEnum status ,UUID idUser){
+        List<OrderEntity> orderEntities = orderRepository.findByUserIdAndStatus(idUser,status);
+        List<UUID> idOrders = orderEntities.stream().map(OrderEntity :: getId).collect(Collectors.toList());
+        List<OrderDTO> response = new ArrayList<>();
+        idOrders.forEach(idOrder -> {
+            OrderDTO orderDTO = findOrder(idOrder);
+            response.add(orderDTO);
+        });
+        return response;
+    }
 }
