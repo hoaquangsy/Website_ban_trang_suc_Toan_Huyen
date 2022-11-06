@@ -9,27 +9,29 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "cart_detail")
+@Table(name = "exchange_detail")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartDetailEntity extends BaseEntity{
+public class ExchangeDetailEntity extends BaseEntity{
     @Id
-    @Column(length = 36)
+    @Column
     @Type(type = "uuid-char")
     private UUID id;
     @Column
-    private Integer amount;
-
-    @Column(name = "product_id",length = 36)
+    @Type(type = "uuid-char")
+    private UUID exchangeId;
+    @Column
     @Type(type = "uuid-char")
     private UUID productId;
-
-    @Column(name = "cart_id",length = 36)
+    @Column
     @Type(type = "uuid-char")
-    private UUID cartId;
+    private UUID sizeId;
+
+    @Column
+    private Integer quantity;
+
 }
