@@ -59,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductDto createProduct(ProductRequest productRequest) {
-        validate(productRequest);
+//        validate(productRequest);
         //Luu Product
         ProductEntity product = modelMapper.map(productRequest, ProductEntity.class);
         product.setProductId(UUID.randomUUID());

@@ -1,16 +1,10 @@
 package com.example.website_ban_trang_suc_toan_huyen.service.impl;
 
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.CartDetailDTO;
-import com.example.website_ban_trang_suc_toan_huyen.entity.entity.CartDetailEntity;
-import com.example.website_ban_trang_suc_toan_huyen.entity.entity.CartEntity;
-import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductEntity;
-import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductSizeEntity;
+import com.example.website_ban_trang_suc_toan_huyen.entity.entity.*;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.CartRequest;
-import com.example.website_ban_trang_suc_toan_huyen.repository.CartDetailRepository;
-import com.example.website_ban_trang_suc_toan_huyen.repository.CartRepository;
-import com.example.website_ban_trang_suc_toan_huyen.repository.ProductRepository;
-import com.example.website_ban_trang_suc_toan_huyen.repository.ProductSizeRepository;
+import com.example.website_ban_trang_suc_toan_huyen.repository.*;
 import com.example.website_ban_trang_suc_toan_huyen.service.ShoppingCartService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +31,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Autowired
     private CartDetailRepository cartDetailRepository;
     @Autowired
+    private SizeRepository sizeRepository;
+    @Autowired
     private ModelMapper modelMapper;
 
     @Override
     public CartDetailDTO addToCart(CartRequest cartRequest) {
+//        CartDetailDTO response = new CartDetailDTO();
+
         // Find cartId
         Optional<CartEntity> cartEntityOptional = this.cartRepository.findByUserId(cartRequest.getUserId());
         CartEntity cartEntity = new CartEntity();
@@ -57,25 +55,28 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }
         CartDetailEntity cartDetailEntity = new CartDetailEntity();
 
-         //Check productId
-//        ProductEntity productEntity = productRepository.findByProductIdAndStatus(cartRequest.getProductId(), ProductEntity.StatusEnum.ACTIVE.toString());
-//        if(ObjectUtils.isEmpty(productEntity)){
-//            throw new NotFoundException(HttpStatus.NOT_FOUND.value(),"Product Not Found");
-//        }else {
-//            cartDetailEntity.setProductId(productEntity.getProductId());
-//        }
+
+        // Check productId
+        ProductEntity productEntity = productRepository.findByProductIdAndStatus(cartRequest.getProductId(), ProductEntity.StatusEnum.ACTIVE);
+        System.out.println(productEntity.getStatus());
+        if(ObjectUtils.isEmpty(productEntity)){
+            throw new NotFoundException(HttpStatus.NOT_FOUND.value(),"Product Not Found");
+        }else {
+            cartDetailEntity.setProductId(productEntity.getProductId());
+        }
 
         // Check số lượng của size sản phẩm còn lại
-        ProductSizeEntity productSizeEntity = productSizeRepository.findByProductIdAndSizeId(cartRequest.getProductId(), cartRequest.getSizeId());
+        ProductSizeEntity productSizeEntity = productSizeRepository.findByProductIdAndSizeId(productEntity.getProductId(), cartRequest.getSizeId());
         if (productSizeEntity.getQuantity()<=0){
             throw new NotFoundException(HttpStatus.BAD_REQUEST.value(),"Exceed the number of remaining products");
         }
 
         // Check product in cart
-        CartDetailEntity cartDetailEn = cartDetailRepository.findByCartIdAndProductId(cartId, cartRequest.getProductId());
+        CartDetailEntity cartDetailEn = cartDetailRepository.findByCartIdAndProductIdAndSizeId(cartId, cartRequest.getProductId(), cartRequest.getSizeId());
         if(ObjectUtils.isEmpty(cartDetailEn)){
             cartDetailEntity.setId(UUID.randomUUID());
             cartDetailEntity.setCartId(cartId);
+            cartDetailEntity.setSizeId(cartRequest.getSizeId());
             if(cartRequest.getAmount()>productSizeEntity.getQuantity()){
                 throw new NotFoundException(HttpStatus.BAD_REQUEST.value(),"Exceed the number of remaining products");
             }else {
@@ -89,11 +90,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             }
             cartDetailEntity.setId(cartDetailEn.getId());
             cartDetailEntity.setCartId(cartId);
+            cartDetailEntity.setSizeId(cartRequest.getSizeId());
         }
+
+        SizeEntity sizeEntity = this.sizeRepository.findById(productSizeEntity.getSizeId()).get();
+        CartDetailDTO.Size size = new CartDetailDTO.Size();
+        size.setId(sizeEntity.getSizeId());
+        size.setName(sizeEntity.getDescription());
 
         CartDetailEntity cartDetail = this.cartDetailRepository.save(cartDetailEntity);
 
-        return this.modelMapper.map(cartDetail, CartDetailDTO.class);
+        CartDetailDTO cartDetailDTO = this.modelMapper.map(cartDetail, CartDetailDTO.class);
+        cartDetailDTO.setSize(size);
+
+        return cartDetailDTO;
     }
 
     @Override
@@ -121,7 +131,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public List<CartDetailDTO> getListCartDetailByCartId(UUID cartId) {
         List<CartDetailEntity> cartDetailEntityList = this.cartDetailRepository.findAllByCartId(cartId);
-
         if(cartDetailEntityList.isEmpty()){
             System.out.println("CartDetail is empty");
             return null;

@@ -25,6 +25,7 @@ public class ProductDto {
 
     private String nameProduct;
 
+
     private UUID materialId;
 
     private MaterialDto material;

@@ -14,7 +14,7 @@ public interface ExchangeService {
 
     PageDTO search(ExchangeSearchRequest exchangeSearchRequest) throws ParseException;
     ExchangeDTO createExchange(ExchangeRequest request);
-
+    ExchangeDTO updateExchange(UUID id,ExchangeRequest request);
     ExchangeDTO findById(UUID id);
     List<ExchangeEntity> getAllExchangeByTime(UUID orderId);
 

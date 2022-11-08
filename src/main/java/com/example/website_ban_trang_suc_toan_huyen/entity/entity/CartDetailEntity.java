@@ -32,4 +32,8 @@ public class CartDetailEntity extends BaseEntity{
     @Column(name = "cart_id",length = 36)
     @Type(type = "uuid-char")
     private UUID cartId;
+
+    @Column(name = "size_id",length = 36)
+    @Type(type = "uuid-char")
+    private UUID sizeId;
 }
