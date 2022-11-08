@@ -161,7 +161,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             cartDetailResponse.setImage(productImageEntity.getImageUrl());
             cartDetailResponse.setSizeId(cartDetail.getSizeId());
 
-
             SizeEntity sizeEntity = this.sizeRepository.findById(cartDetail.getSizeId()).get();
             cartDetailResponse.setSizeName(sizeEntity.getDescription());
 
