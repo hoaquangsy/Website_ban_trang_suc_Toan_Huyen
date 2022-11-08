@@ -2,6 +2,7 @@ package com.example.website_ban_trang_suc_toan_huyen.restController;
 
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.CartDetailDTO;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.CartRequest;
+import com.example.website_ban_trang_suc_toan_huyen.payload.response.GetCartResponse;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.SampleResponse;
 import com.example.website_ban_trang_suc_toan_huyen.service.ShoppingCartService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,11 +26,11 @@ public class CartController {
     private ShoppingCartService shoppingCartService;
 
     @Operation(summary = "Get list cart_detail by userId")
-    @GetMapping("/{cart_id}")
-    public ResponseEntity<?> getListCartDetailByCartId(@PathVariable("cart_id") UUID cartId) {
-        List<CartDetailDTO> listCartDetail = shoppingCartService.getListCartDetailByCartId(cartId);
+    @GetMapping("/{user_id}")
+    public ResponseEntity<?> getListCartDetailByCartId(@PathVariable("user_id") UUID userId) {
+        GetCartResponse getCartResponse = shoppingCartService.getListCartDetailByCartId(userId);
 
-        return ResponseEntity.ok(SampleResponse.success(listCartDetail));
+        return ResponseEntity.ok(SampleResponse.success(getCartResponse));
     }
 
     @PostMapping

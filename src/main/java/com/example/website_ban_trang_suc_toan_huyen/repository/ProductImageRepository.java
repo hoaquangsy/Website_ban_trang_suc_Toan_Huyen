@@ -13,4 +13,5 @@ public interface ProductImageRepository extends JpaRepository<ProductImageEntity
 
     @Query("select  p from ProductImageEntity p where p.productId = :id and p.deleted = false")
     List<ProductImageEntity> findByProductId(UUID id);
+
 }
