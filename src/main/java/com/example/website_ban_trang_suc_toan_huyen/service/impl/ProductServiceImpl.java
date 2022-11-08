@@ -148,15 +148,16 @@ public class ProductServiceImpl implements ProductService {
         this.productPropertyRepository.saveAll(productPropertyEntities);
 
         //Lưu Product Image
-        if(!CollectionUtils.isEmpty(productRequest.getImageUrls())) {
+        if(!CollectionUtils.isEmpty(productRequest.getImageUrls())){
             List<ProductImageEntity> productImageDeleted = this.productImageRepository.findByProductId(id);
-            if (!CollectionUtils.isEmpty(productImageDeleted)) {
+            if(!CollectionUtils.isEmpty(productImageDeleted)){
                 this.productImageRepository.deleteAll(productImageDeleted);
             }
             List<ProductImageEntity> productImageEntities = productRequest.getImageUrls().stream()
-                    .map(s -> new ProductImageEntity(UUID.randomUUID(), s, product.getProductId(), Boolean.FALSE)).collect(Collectors.toList());
+                    .map(s -> new ProductImageEntity(UUID.randomUUID(), s, product.getProductId(),Boolean.FALSE)).collect(Collectors.toList());
             this.productImageRepository.saveAll(productImageEntities);
         }
+
         return this.modelMapper.map(product, ProductDto.class);
 
     }
@@ -165,10 +166,6 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto getProductById(UUID productId) {
         ProductEntity product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "ProductId not found"));
        ProductDto productDto = modelMapper.map(product, ProductDto.class);
-        productDto.setCategory(this.modelMapper.map(this.categoryRepository.findId(productDto.getCategoryId()).get(), CategoryDto.class));
-        productDto.setAccessory(this.modelMapper.map(this.accessoryRepository.findById(productDto.getAccessoryId()).get(), AccessoryDTO.class));
-        productDto.setMaterial(this.modelMapper.map(this.materialRepository.findByID(productDto.getMaterialId()).get(),MaterialDto.class));
-        productDto.setVendor(this.modelMapper.map(this.vendorRepository.findByID(productDto.getVendorId()).get(), VendorDto.class));
        if(!CollectionUtils.isEmpty( this.productImageRepository.findByProductId(productId))){
            List<ProductImageDTO> imageDTOList =  this.productImageRepository.findByProductId(productId).stream()
                    .map(productImage -> this.modelMapper.map(productImage,ProductImageDTO.class)).collect(Collectors.toList());

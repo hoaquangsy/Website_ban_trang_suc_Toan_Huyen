@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Repository
 public interface ProductSizeRepository extends JpaRepository<ProductSizeEntity,UUID> {
-    ProductSizeEntity findByProductIdAndSizeId (UUID productId, Integer sizeId);
+    ProductSizeEntity findByProductIdAndSizeId (UUID productId, UUID sizeId);
     @Query("select  p from ProductSizeEntity p where p.productId = :id and p.deleted = false")
     List<ProductSizeEntity> findByProductId(UUID id);
 

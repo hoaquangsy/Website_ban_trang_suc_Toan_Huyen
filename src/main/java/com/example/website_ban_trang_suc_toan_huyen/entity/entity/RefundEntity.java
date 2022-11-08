@@ -29,5 +29,8 @@ public class RefundEntity extends BaseEntity {
     @Column(length = 255)
     private String note;
 
-
+    public enum StatusEnum {
+        ACTIVE,
+        INACTIVE
+    }
 }
