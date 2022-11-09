@@ -4,6 +4,7 @@ import com.example.website_ban_trang_suc_toan_huyen.entity.dto.CartDetailDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.*;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.CartRequest;
+import com.example.website_ban_trang_suc_toan_huyen.payload.response.GetCartResponse;
 import com.example.website_ban_trang_suc_toan_huyen.repository.*;
 import com.example.website_ban_trang_suc_toan_huyen.service.ShoppingCartService;
 import org.modelmapper.ModelMapper;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,6 +34,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private CartDetailRepository cartDetailRepository;
     @Autowired
     private SizeRepository sizeRepository;
+    @Autowired
+    private ProductImageRepository productImageRepository;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -129,14 +133,42 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public List<CartDetailDTO> getListCartDetailByCartId(UUID cartId) {
-        List<CartDetailEntity> cartDetailEntityList = this.cartDetailRepository.findAllByCartId(cartId);
+    public GetCartResponse getListCartDetailByCartId(UUID userId) {
+        GetCartResponse response = new GetCartResponse();
+        response.setUserId(userId);
+
+        Optional<CartEntity> cartEntity = this.cartRepository.findByUserId(userId);
+        response.setCartId(cartEntity.get().getId());
+
+        List<CartDetailEntity> cartDetailEntityList = this.cartDetailRepository.findAllByCartId(cartEntity.get().getId());
+        List<GetCartResponse.CartDetailResponse> cartDetailResponseList = new ArrayList<>();
+
         if(cartDetailEntityList.isEmpty()){
-            System.out.println("CartDetail is empty");
-            return null;
+            return response;
         }
 
-        return cartDetailEntityList.stream().map(entity -> this.modelMapper.map(entity, CartDetailDTO.class)).collect(Collectors.toList());
+        for (CartDetailEntity cartDetail: cartDetailEntityList){
+            GetCartResponse.CartDetailResponse cartDetailResponse = new GetCartResponse.CartDetailResponse();
+            cartDetailResponse.setCartDetailId(cartDetail.getId());
+            cartDetailResponse.setProductId(cartDetail.getProductId());
+
+            ProductEntity productEntity = this.productRepository.findById(cartDetail.getProductId()).get();
+            cartDetailResponse.setProductName(productEntity.getNameProduct());
+            cartDetailResponse.setCode(productEntity.getCode());
+            cartDetailResponse.setAmount(cartDetail.getAmount());
+
+            ProductImageEntity productImageEntity = this.productImageRepository.findByProductId(cartDetail.getProductId()).get(0);
+            cartDetailResponse.setImage(productImageEntity.getImageUrl());
+            cartDetailResponse.setSizeId(cartDetail.getSizeId());
+
+            SizeEntity sizeEntity = this.sizeRepository.findById(cartDetail.getSizeId()).get();
+            cartDetailResponse.setSizeName(sizeEntity.getDescription());
+
+            cartDetailResponseList.add(cartDetailResponse);
+        }
+        response.setCartDetailResponseList(cartDetailResponseList);
+
+        return response;
     }
 
     @Override
