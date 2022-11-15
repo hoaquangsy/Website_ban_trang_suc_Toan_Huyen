@@ -14,7 +14,7 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
-    @Query(value = "SELECT * FROM user u WHERE  u.username = :username  and u.deleted = false", nativeQuery = true)
+    @Query(value = "SELECT u FROM UserEntity u WHERE  u.userName = :username  and u.deleted = false")
     UserEntity finUserEntitybyUsername(@Param("username") String name);
 
     @Query(value = "SELECT u FROM UserEntity u where u.deleted = false")
@@ -37,4 +37,11 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
     @Query(value = "SELECT u FROM UserEntity u WHERE  u.userName = :username and u.userId <> :id")
     Optional<UserEntity> findUserEntitiesbyUserName(String username,UUID id);
+    @Query("select  u from UserEntity  u where u.role = 'EMPLOYEE' and u.maNV is not null")
+    List<UserEntity> getUserEmployee();
+    
+
+
+
+
 }

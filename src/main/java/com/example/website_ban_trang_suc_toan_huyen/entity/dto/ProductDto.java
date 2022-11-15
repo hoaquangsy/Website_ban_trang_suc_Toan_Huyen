@@ -25,7 +25,6 @@ public class ProductDto {
 
     private String nameProduct;
 
-
     private UUID materialId;
 
     private MaterialDto material;
@@ -55,6 +54,5 @@ public class ProductDto {
     private List<ProductPropertyDto> productProperties;
 
     private List<ProductSizeDto> productSizes;
-
 
 }

@@ -49,4 +49,6 @@ public class OrderDTO {
     private String lastModifiedBy;
 
     private List<ProductOrderDto> orderDetailDTOList;
+
+    private Boolean isRepurchase;
 }

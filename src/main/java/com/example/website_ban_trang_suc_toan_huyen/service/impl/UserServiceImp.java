@@ -14,8 +14,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -38,10 +40,21 @@ public class UserServiceImp implements UserService {
         if(this.userRepository.findUserEntitiesByEmail(userRequest.getEmail()).isPresent()){
             throw new BadRequestException("Email đã tồn tại");
         }
-        if(this.userRepository.finUserEntitybyUsername(userRequest.getUserName()) != null){
+        if(this.userRepository.finUserEntitybyUsername(userRequest.getUserName()) != null) {
             throw new BadRequestException("Username đã tồn tại");
         }
-       UserEntity user = this.modelMapper.map(userRequest,UserEntity.class);
+        UserEntity user = this.modelMapper.map(userRequest,UserEntity.class);
+        if(user.getRole() == UserEntity.Role.EMPLOYEE){
+          List<UserEntity> userLast = userRepository.getUserEmployee();
+          if(!CollectionUtils.isEmpty(userLast) && userLast.size() > 0){
+              userLast =  userLast.stream().sorted((o1, o2) -> o2.getMaNV().compareTo(o1.getMaNV())).collect(Collectors.toList());
+            UserEntity user1 =   userLast.get(0);
+            int maNv = Integer.parseInt(user1.getMaNV().substring(2));
+            user.setMaNV("NV"+(maNv+1));
+          }else{
+              user.setMaNV("NV1");
+          }
+        }
         user.setUserId(UUID.randomUUID());
         user.setDeleted(Boolean.FALSE);
         user.setStatus(Boolean.FALSE);
@@ -88,21 +101,14 @@ public class UserServiceImp implements UserService {
         if(this.userRepository.findUserEntitiesByEmail(userRequest.getEmail(),id).isPresent()){
             throw new BadRequestException("Email đã tồn tại");
         }
-        if(this.userRepository.findUserEntitiesbyUserName(userRequest.getUserName(),id).isPresent()){
-            throw new BadRequestException("Username đã tồn tại");
-        }
         UserEntity user = this.userRepository.findUserEntitiesById(id).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND.value(), "User not found"));
-        user.setUserName(userRequest.getUserName());
-        user.setPassword(userRequest.getPassword());
         user.setGender(userRequest.getGender());
         user.setRole(userRequest.getRole());
         user.setAddress(userRequest.getAddress());
         user.setPhoneNumber(userRequest.getPhoneNumber());
-        user.setDeleted(Boolean.FALSE);
-        user.setStatus(Boolean.FALSE);
-        user.setCccd(user.getCccd());
+        user.setCccd(userRequest.getCccd());
         user.setFullName(userRequest.getFullName());
-        user.setBirthday(user.getBirthday());
+        user.setBirthday(userRequest.getBirthday());
         user.setImageUrl(userRequest.getImageUrl());
         user.setEmail(userRequest.getEmail());
         user.setNote(userRequest.getNote());

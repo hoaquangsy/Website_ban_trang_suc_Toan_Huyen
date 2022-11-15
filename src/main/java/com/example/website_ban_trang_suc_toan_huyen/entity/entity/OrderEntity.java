@@ -42,7 +42,8 @@ public class OrderEntity extends BaseEntity{
     private OrderType purchaseType;
     @Column
     private String address;
-
+    @Column
+    private Boolean isRepurchase;
     @Column
     @Type(type ="uuid-char")
     private UUID eventId;
