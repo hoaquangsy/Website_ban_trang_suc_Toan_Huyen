@@ -1,7 +1,10 @@
 package com.example.website_ban_trang_suc_toan_huyen.service.impl;
 
 import com.example.website_ban_trang_suc_toan_huyen.dao.OrderDao;
-import com.example.website_ban_trang_suc_toan_huyen.entity.dto.*;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.EventDto;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.OrderDTO;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.ProductOrderDto;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.UserDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.*;
 import com.example.website_ban_trang_suc_toan_huyen.exception.BadRequestException;
@@ -9,6 +12,7 @@ import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.OrderRequest;
 import com.example.website_ban_trang_suc_toan_huyen.repository.*;
 import com.example.website_ban_trang_suc_toan_huyen.service.OrderService;
+import com.example.website_ban_trang_suc_toan_huyen.service.RepurchaseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +25,11 @@ import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class OrderServiceImpl implements OrderService {
+public class RepurchaseServiceImpl implements RepurchaseService {
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
@@ -59,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderRequest saveOrder(OrderRequest orderRequest) {
+    public OrderRequest saveRepurchase(OrderRequest orderRequest) {
         if (userRepository.findById(orderRequest.getUserId()).isEmpty()) {
             throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "User not exist");
         }
@@ -68,16 +70,13 @@ public class OrderServiceImpl implements OrderService {
             if(productEntity.isEmpty()){
                 throw  new NotFoundException(HttpStatus.NOT_FOUND.value(),"Sản phẩm không tồn tại");
             }
-            if(productEntity.get().getQuantity() < orderDetailRq.getQuantity()){
-                throw new BadRequestException("Số lượng sản phẩm không đủ");
-            }
         });
         OrderEntity orderRequestEntity = new OrderEntity();
 
         BeanUtils.copyProperties(orderRequest, orderRequestEntity);
         orderRequestEntity.setId(UUID.randomUUID());
         orderRequestEntity.setOrderCode(new  Date().getTime());
-        orderRequestEntity.setIsRepurchase(Boolean.FALSE);
+        orderRequestEntity.setIsRepurchase(Boolean.TRUE);
         OrderEntity order = orderRepository.save(orderRequestEntity);
 
         List<OrderDetailEntity> orderDetailEntityList = new ArrayList<>();
@@ -92,24 +91,24 @@ public class OrderServiceImpl implements OrderService {
         orderDetailEntityList.forEach(orderDetailEntity -> {
             Optional<ProductSizeEntity> productSize = this.productSizeRepository.findByProductAndSize(orderDetailEntity.getProductId(),orderDetailEntity.getSizeId());
             ProductSizeEntity sizeEntity = productSize.orElseThrow(() -> new BadRequestException("Lỗi hệ thống"));
-            sizeEntity.setQuantity(sizeEntity.getQuantity() - orderDetailEntity.getQuantity());
+            sizeEntity.setQuantity(sizeEntity.getQuantity() + orderDetailEntity.getQuantity());
             this.productSizeRepository.save(sizeEntity);
         });
         return orderRequest;
     }
 
     @Override
-    public OrderDTO update(UUID idOrder, OrderEntity.StatusEnum status) {
+    public OrderDTO updateRepurchase(UUID idOrder, OrderEntity.StatusEnum status) {
         OrderEntity orderEntity = orderRepository.findById(idOrder).get();
         if (ObjectUtils.isEmpty(orderEntity)){
-            throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "Order not exist");
+            throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "Repurchase not exist");
         }
         orderEntity.setStatus(status);
         return    modelMapper.map(orderRepository.save(orderEntity),OrderDTO.class);
     }
 
     @Override
-    public OrderDTO findOrder(UUID idOrder){
+    public OrderDTO findRepurchase(UUID idOrder){
         OrderEntity orderEntity = orderRepository.findById(idOrder).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "Order không tồn tại"));
        OrderDTO orderDTO =  modelMapper.map(orderEntity,OrderDTO.class);
        List<ProductOrderDto> productOrderDtos = new ArrayList<>();
@@ -125,7 +124,6 @@ public class OrderServiceImpl implements OrderService {
        productOrderDto.setNameProduct(productEntity.getNameProduct());
        productOrderDto.setQuantity(orderDetailEntity.getQuantity());
        productOrderDto.setPrice(orderDetailEntity.getPrice());
-       productOrderDto.setSalary(productEntity.getSalary());
        List<ProductImageEntity> productImageEntity = this.productImageRepository.findByProductId(orderDetailEntity.getProductId());
        productOrderDto.setImageUrl(productImageEntity.stream().map(ProductImageEntity::getImageUrl).collect(Collectors.toList()));
       productOrderDtos.add(productOrderDto);
@@ -154,11 +152,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public PageDTO search(Integer pageIndex, Integer pageSize, String keyword, OrderEntity.StatusEnum status, OrderEntity.PaymentMethod payMethod, OrderEntity.OrderType orderType, String startDate, String endDate, BigDecimal startPrice, BigDecimal endPrice, UUID userId, String sortBy) throws ParseException {
-        Long count = this.orderDao.count(pageIndex,pageSize,keyword,status,payMethod,orderType,startDate,endDate,startPrice,endPrice,userId,sortBy,Boolean.FALSE);
+        Long count = this.orderDao.count(pageIndex,pageSize,keyword,status,payMethod,orderType,startDate,endDate,startPrice,endPrice,userId,sortBy,Boolean.TRUE);
        if(count == 0L){
            return PageDTO.empty();
        }
-        List<OrderEntity> orderEntities = this.orderDao.search(pageIndex,pageSize,keyword,status,payMethod,orderType,startDate,endDate,startPrice,endPrice,userId,sortBy,Boolean.FALSE);
+        List<OrderEntity> orderEntities = this.orderDao.search(pageIndex,pageSize,keyword,status,payMethod,orderType,startDate,endDate,startPrice,endPrice,userId,sortBy,Boolean.TRUE);
         List<OrderDTO> materialDtos = orderEntities.stream()
                 .map(orderEntitie -> modelMapper.map(orderEntitie,OrderDTO.class)).collect(Collectors.toList());
        materialDtos.forEach(orderDTO -> {

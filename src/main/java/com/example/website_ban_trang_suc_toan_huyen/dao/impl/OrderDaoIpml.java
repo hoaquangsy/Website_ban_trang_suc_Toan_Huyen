@@ -24,10 +24,10 @@ public class OrderDaoIpml implements OrderDao {
     private EntityManager entityManager;
 
     @Override
-    public List<OrderEntity> search(Integer pageIndex, Integer pageSize, String keyword, OrderEntity.StatusEnum status, OrderEntity.PaymentMethod payMethod, OrderEntity.OrderType orderType, String startDate, String endDate, BigDecimal startPrice, BigDecimal endPrice, UUID userId, String sortBy) throws ParseException {
+    public List<OrderEntity> search(Integer pageIndex, Integer pageSize, String keyword, OrderEntity.StatusEnum status, OrderEntity.PaymentMethod payMethod, OrderEntity.OrderType orderType, String startDate, String endDate, BigDecimal startPrice, BigDecimal endPrice, UUID userId, String sortBy,Boolean isRepurchase) throws ParseException {
         Map<String, Object> values = new HashMap<>();
         StringBuilder sql = new StringBuilder("SELECT C FROM OrderEntity C");
-        sql.append(createWhereQuery(keyword, values,status,payMethod,orderType,startDate,endDate,startPrice,endPrice,userId));
+        sql.append(createWhereQuery(keyword, values,status,payMethod,orderType,startDate,endDate,startPrice,endPrice,userId,isRepurchase));
         sql.append(createOrderQuery(sortBy));
         Query query = entityManager.createQuery(sql.toString(), OrderEntity.class);
         values.forEach(query::setParameter);
@@ -39,17 +39,17 @@ public class OrderDaoIpml implements OrderDao {
     @Override
     public Long count(Integer pageIndex, Integer pageSize, String keyword, OrderEntity.StatusEnum status,
                       OrderEntity.PaymentMethod payMethod, OrderEntity.OrderType orderType, String startDate,
-                      String endDate, BigDecimal startPrice, BigDecimal endPrice, UUID userId, String sortBy) throws ParseException {
+                      String endDate, BigDecimal startPrice, BigDecimal endPrice, UUID userId, String sortBy,Boolean isRepurchase) throws ParseException {
         Map<String, Object> values = new HashMap<>();
         StringBuilder sql = new StringBuilder("SELECT COUNT(C) FROM OrderEntity C");
-        sql.append(createWhereQuery(keyword, values,status,payMethod,orderType,startDate,endDate,startPrice,endPrice,userId));
+        sql.append(createWhereQuery(keyword, values,status,payMethod,orderType,startDate,endDate,startPrice,endPrice,userId,isRepurchase));
         Query query = entityManager.createQuery(sql.toString(), Long.class);
         values.forEach(query::setParameter);
         System.out.println(sql.toString());
         return (Long) query.getSingleResult();
     }
-    private String createWhereQuery(String keyword, Map<String, Object> values,OrderEntity.StatusEnum status, OrderEntity.PaymentMethod payMethod, OrderEntity.OrderType orderType, String startDate, String endDate, BigDecimal startPrice, BigDecimal endPrice, UUID userId
-                                  ) throws ParseException {
+    private String createWhereQuery(String keyword, Map<String, Object> values,OrderEntity.StatusEnum status, OrderEntity.PaymentMethod payMethod, OrderEntity.OrderType orderType, String startDate, String endDate, BigDecimal startPrice, BigDecimal endPrice, UUID userId,
+                                  Boolean isRepurchase) throws ParseException {
         StringBuilder sql = new StringBuilder(" WHERE 1 = 1");
         if (!keyword.trim().equals("")) {
             sql.append(" AND  C.address like :address ");
@@ -86,6 +86,10 @@ public class OrderDaoIpml implements OrderDao {
         if (Objects.nonNull(userId)) {
             sql.append(" AND  C.userId = :userId ");
             values.put("userId", userId);
+        }
+        if (Objects.nonNull(isRepurchase)) {
+            sql.append(" AND  C.isRepurchase = :isRepurchase ");
+            values.put("isRepurchase", isRepurchase);
         }
 
         return sql.toString();

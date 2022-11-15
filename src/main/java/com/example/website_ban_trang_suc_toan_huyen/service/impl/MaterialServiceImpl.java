@@ -4,10 +4,14 @@ import com.example.website_ban_trang_suc_toan_huyen.dao.MaterialDao;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.MaterialDto;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.MaterialEntity;
+import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductEntity;
+import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductSizeEntity;
 import com.example.website_ban_trang_suc_toan_huyen.exception.BadRequestException;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.MaterialRequest;
 import com.example.website_ban_trang_suc_toan_huyen.repository.MaterialRepository;
+import com.example.website_ban_trang_suc_toan_huyen.repository.ProductRepository;
+import com.example.website_ban_trang_suc_toan_huyen.repository.ProductSizeRepository;
 import com.example.website_ban_trang_suc_toan_huyen.service.MaterialService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -17,8 +21,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -26,6 +32,12 @@ import java.util.stream.Collectors;
 public class MaterialServiceImpl implements MaterialService {
     @Autowired
     private MaterialRepository materialRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private ProductSizeRepository productSizeRepository;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -45,13 +57,28 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
+    @Transactional
     public MaterialDto updateMaterial(MaterialRequest request, UUID id) {
         MaterialEntity entity = materialRepository.findById(id).orElseThrow(() -> new NotFoundException(400,"Not found material"));
         if (materialRepository.checkMaterialDuplicate(request.getMaterialName(), request.getType(),id ).isPresent()) {
            throw new BadRequestException("Material is existed");
         }
+        BigDecimal priceSale= entity.getSalePrice();
+        BigDecimal pricePurchase = entity.getPurchasePrice();
         BeanUtils.copyProperties(request,entity);
-        return modelMapper.map(materialRepository.save(entity),MaterialDto.class);
+        MaterialDto materialDto =  modelMapper.map(materialRepository.save(entity),MaterialDto.class);
+        if(!Objects.equals(priceSale, request.getSalePrice()) || !Objects.equals(pricePurchase,request.getPurchasePrice())) {
+            List<ProductEntity> productEntities = this.productRepository.findMaterial(materialDto.getMaterialId());
+            productEntities.forEach(productEntity -> {
+                List<ProductSizeEntity> productSizeEntities = this.productSizeRepository.findByProductId(productEntity.getProductId());
+                productSizeEntities.forEach(productSizeEntity -> {
+                    productSizeEntity.setSalePrice(productSizeEntity.getSalePrice().subtract(priceSale).add(materialDto.getSalePrice()));
+                    productSizeEntity.setPurchasePrice(productSizeEntity.getPurchasePrice().subtract(pricePurchase).add(materialDto.getPurchasePrice()));
+                });
+                this.productSizeRepository.saveAll(productSizeEntities);
+            });
+        }
+        return materialDto;
     }
 
     @Override

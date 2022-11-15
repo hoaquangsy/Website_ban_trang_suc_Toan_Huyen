@@ -24,22 +24,24 @@ public class UserEntity extends BaseEntity {
     private String fullName;
     @Column
     private LocalDate birthday;
-    @Column(length = 12,nullable = false)
+    @Column(length = 12)
     private String phoneNumber;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    @Column(length = 30,nullable = false)
+    @Column(name = "user_name",length = 30)
     private String userName;
     @Column(nullable = false)
     private Boolean status;
-    @Column(length = 30,nullable = false)
+    @Column(length = 30)
     private String password;
-    @Column(length = 20,nullable = false)
+    @Column(length = 20)
     private String cccd;
+    @Column
+    private String maNV;
     @Column(nullable = false)
     private Boolean deleted;
-    @Column(length = 100,nullable = false)
+    @Column(length = 100)
     private String note;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
