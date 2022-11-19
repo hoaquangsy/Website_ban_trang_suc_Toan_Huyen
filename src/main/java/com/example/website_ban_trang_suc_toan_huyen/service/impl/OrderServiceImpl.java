@@ -169,8 +169,14 @@ public class OrderServiceImpl implements OrderService {
     }
     @Override
     public List<OrderDTO> findByStatusAndUserId( OrderEntity.StatusEnum status ,UUID idUser){
-        List<OrderEntity> orderEntities = orderRepository.findByUserIdAndStatus(idUser,status);
-        List<UUID> idOrders = orderEntities.stream().map(OrderEntity :: getId).collect(Collectors.toList());
+        List<UUID> idOrders;
+        if( ObjectUtils.isEmpty(status)){
+            List<OrderEntity> orderEntities = orderRepository.findByUserId(idUser);
+            idOrders = orderEntities.stream().map(OrderEntity :: getId).collect(Collectors.toList());
+        }else {
+            List<OrderEntity> orderEntities = orderRepository.findByUserIdAndStatus(idUser,status);
+            idOrders = orderEntities.stream().map(OrderEntity :: getId).collect(Collectors.toList());
+        }
         List<OrderDTO> response = new ArrayList<>();
         idOrders.forEach(idOrder -> {
             OrderDTO orderDTO = findOrder(idOrder);
