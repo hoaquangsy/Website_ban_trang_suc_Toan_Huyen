@@ -18,6 +18,8 @@ public class UserDTO {
 
     private String phoneNumber;
 
+    private String maNV;
+
     private UserEntity.Gender gender;
 
     private String userName;
