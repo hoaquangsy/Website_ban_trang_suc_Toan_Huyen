@@ -12,7 +12,7 @@ import java.util.UUID;
 @Repository
 public interface CartDetailRepository extends JpaRepository<CartDetailEntity,String> {
     List<CartDetailEntity> findAllByCartId(UUID cartId);
-    CartDetailEntity findByCartId(UUID cartId);
+    List<CartDetailEntity> findByCartId(UUID cartId);
     Optional<CartDetailEntity> findById(UUID cartId);
 
     CartDetailEntity findByCartIdAndProductIdAndSizeId(UUID cartId, UUID productId, UUID sizeId);
