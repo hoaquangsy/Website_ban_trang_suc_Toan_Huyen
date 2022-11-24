@@ -109,7 +109,7 @@ public class UserServiceImp implements UserService {
         user.setCccd(userRequest.getCccd());
         user.setFullName(userRequest.getFullName());
         user.setBirthday(userRequest.getBirthday());
-        user.setImageUrl(userRequest.getImageUrl());
+        user.setImageUrl(userRequest.getImageUrl() == null || userRequest.getImageUrl().equals("") ? user.getImageUrl() : userRequest.getImageUrl());
         user.setEmail(userRequest.getEmail());
         user.setNote(userRequest.getNote());
         return this.modelMapper.map(  userRepository.save(user),UserDTO.class);

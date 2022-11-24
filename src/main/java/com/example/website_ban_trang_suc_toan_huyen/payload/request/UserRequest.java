@@ -31,9 +31,9 @@ public class UserRequest {
     private String email;
     @NotBlank(message = "Adress không để trống")
     private String address;
-    @NotBlank(message = "Avatar không để trống")
+
     private String imageUrl;
-    @NotBlank(message = "Avatar không để trống")
+
     private String note;
 
 }

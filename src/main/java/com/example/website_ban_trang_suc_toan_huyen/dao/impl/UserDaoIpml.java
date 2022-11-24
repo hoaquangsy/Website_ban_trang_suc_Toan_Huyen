@@ -39,7 +39,7 @@ public class UserDaoIpml implements UserDao {
             sql.append(" OR C.phoneNumber like :phoneNumber ");
             values.put("phoneNumber", "%"+keyword+"%");
             sql.append(" OR C.userName like :userName ");
-            values.put("username", "%"+keyword+"%");
+            values.put("userName", "%"+keyword+"%");
             sql.append(" OR C.email like :email ");
             values.put("email", "%"+keyword+"%");
             sql.append(" OR C.address like :address )");

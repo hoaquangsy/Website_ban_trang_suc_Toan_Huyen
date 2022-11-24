@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
     @Query(value = "SELECT * FROM user u WHERE  u.phonenumber = :phonenumber and u.deleted = false", nativeQuery = true)
     List<UserEntity> finUserEntityByPhoneNumber(@Param("phonenumber") String phoneNumber);
-    @Query(value = "SELECT u FROM UserEntity u WHERE  u.role = 'CUSTOMER' and u.deleted = false")
+    @Query(value = "SELECT u FROM UserEntity u WHERE  u.role = 'CUSTOMER' and u.status = false and u.deleted = false")
     List<UserEntity> findCustomer();
 
     @Query(value = "SELECT u FROM UserEntity u WHERE  u.email = :email  and u.deleted = false ")

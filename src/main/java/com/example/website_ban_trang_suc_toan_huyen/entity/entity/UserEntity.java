@@ -29,7 +29,7 @@ public class UserEntity extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    @Column(name = "user_name",length = 30)
+    @Column(length = 30)
     private String userName;
     @Column(nullable = false)
     private Boolean status;
@@ -46,11 +46,11 @@ public class UserEntity extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
-    @Column(nullable = false)
+    @Column
     private String address;
-    @Column(nullable = false)
+    @Column()
     private String email;
-    @Column(nullable = false)
+    @Column()
     private String imageUrl;
     @Getter
     @AllArgsConstructor

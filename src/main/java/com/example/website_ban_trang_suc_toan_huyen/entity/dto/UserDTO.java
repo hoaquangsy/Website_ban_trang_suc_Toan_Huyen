@@ -44,6 +44,8 @@ public class UserDTO {
 
     private String createBy;
 
+    private String imageUrl;
+
     private Instant lastModifiedAt;
 
     private String lastModifiedBy;

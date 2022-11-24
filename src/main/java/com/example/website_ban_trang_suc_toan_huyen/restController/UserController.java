@@ -22,7 +22,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/add")
+    @PostMapping("")
     public ResponseEntity<?> addUser(@Validated @RequestBody UserRequest userRequest){
         return ResponseEntity.ok(SampleResponse.success(userService.addUser(userRequest)));
     }
