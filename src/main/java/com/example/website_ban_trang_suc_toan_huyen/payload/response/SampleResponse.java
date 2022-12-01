@@ -18,4 +18,10 @@ public class SampleResponse<T> {
         response.setData(body);
         return response;
     }
+    public static <T> SampleResponse<T> success() {
+        SampleResponse<T> response = new SampleResponse<>();
+        response.setStatus(ResponseStatusConstant.SUCCESS.getCode());
+        response.setMessage(ResponseStatusConstant.SUCCESS.getMessage());
+        return response;
+    }
 }
