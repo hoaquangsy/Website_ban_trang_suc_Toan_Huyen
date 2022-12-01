@@ -56,8 +56,4 @@ public class OrderRequest {
         @NotNull
         private UUID sizeId;
     }
-
-
-
-
 }

@@ -5,6 +5,8 @@ import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,5 +18,8 @@ public interface ProductRepository extends JpaRepository<ProductEntity, UUID> {
     @Query("select  p from ProductEntity p where  p.productId = :id and p.deleted = false")
     Optional<ProductEntity> findID(UUID id);
 
-    ProductEntity findByProductIdAndStatus (UUID id, String status);
+    ProductEntity findByProductIdAndStatus (UUID id, ProductEntity.StatusEnum status);
+
+    @Query("select  p from ProductEntity p where  p.materialId = :id")
+    List<ProductEntity> findMaterial(UUID id);
 }

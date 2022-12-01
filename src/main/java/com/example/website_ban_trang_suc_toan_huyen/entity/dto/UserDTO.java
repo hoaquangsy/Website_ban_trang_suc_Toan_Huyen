@@ -18,6 +18,8 @@ public class UserDTO {
 
     private String phoneNumber;
 
+    private String maNV;
+
     private UserEntity.Gender gender;
 
     private String userName;
@@ -45,5 +47,6 @@ public class UserDTO {
     private Instant lastModifiedAt;
 
     private String lastModifiedBy;
+    private String imageUrl;
 
 }
