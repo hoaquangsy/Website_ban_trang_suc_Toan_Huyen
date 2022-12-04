@@ -2,6 +2,7 @@ package com.example.website_ban_trang_suc_toan_huyen.entity.dto;
 
 
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.UserEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.time.Instant;
@@ -23,7 +24,7 @@ public class UserDTO {
     private UserEntity.Gender gender;
 
     private String userName;
-
+    @JsonIgnore
     private String password;
 
     private Boolean deleted;

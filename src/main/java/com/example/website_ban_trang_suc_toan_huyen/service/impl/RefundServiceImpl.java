@@ -21,6 +21,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import javax.servlet.http.HttpSession;
+
 @Service
 public class RefundServiceImpl implements RefundService {
     private final RefundRepository refundRepository;
@@ -29,11 +31,14 @@ public class RefundServiceImpl implements RefundService {
 
     private final ProductRepository productRepository;
 
-    public RefundServiceImpl(RefundRepository refundRepository, ModelMapper modelMapper, OrderRepository orderRepository, ProductRepository productRepository) {
+    private final HttpSession session;
+
+    public RefundServiceImpl(RefundRepository refundRepository, HttpSession session, ModelMapper modelMapper, OrderRepository orderRepository, ProductRepository productRepository) {
         this.refundRepository = refundRepository;
         this.modelMapper = modelMapper;
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
+        this.session = session;
     }
 
     @Override

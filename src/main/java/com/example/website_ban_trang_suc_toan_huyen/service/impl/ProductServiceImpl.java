@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -55,6 +56,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductDao productDao;
+
+    @Autowired
+    private HttpSession session;
 
     @Override
     @Transactional
@@ -166,6 +170,10 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto getProductById(UUID productId) {
         ProductEntity product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "ProductId not found"));
        ProductDto productDto = modelMapper.map(product, ProductDto.class);
+        productDto.setCategory(this.modelMapper.map(this.categoryRepository.findId(productDto.getCategoryId()).get(), CategoryDto.class));
+        productDto.setAccessory(this.modelMapper.map(this.accessoryRepository.findById(productDto.getAccessoryId()).get(), AccessoryDTO.class));
+        productDto.setMaterial(this.modelMapper.map(this.materialRepository.findByID(productDto.getMaterialId()).get(),MaterialDto.class));
+        productDto.setVendor(this.modelMapper.map(this.vendorRepository.findByID(productDto.getVendorId()).get(), VendorDto.class));
        if(!CollectionUtils.isEmpty( this.productImageRepository.findByProductId(productId))){
            List<ProductImageDTO> imageDTOList =  this.productImageRepository.findByProductId(productId).stream()
                    .map(productImage -> this.modelMapper.map(productImage,ProductImageDTO.class)).collect(Collectors.toList());
@@ -245,7 +253,7 @@ public class ProductServiceImpl implements ProductService {
                 .map(productEntity -> modelMapper.map(productEntity,ProductDto.class)).collect(Collectors.toList());
         Long count = this.productDao.count(pageIndex,pageSize,keyword,status,materialId,vendorId,accessoryId,categoryId,startPrice,endPrice,sortBy,gender);
         proProductDtos.forEach(productDto -> {
-            productDto.setCategory(this.modelMapper.map(this.categoryRepository.findId(productDto.getCategoryId()).get(), CategoryDto.class));
+            productDto.setCategory(this.modelMapper.map(this.categoryRepository.findId(productDto.getCategoryId()).orElse(new CategoryEntity()), CategoryDto.class));
             productDto.setAccessory(this.modelMapper.map(this.accessoryRepository.findById(productDto.getAccessoryId()).get(), AccessoryDTO.class));
             productDto.setMaterial(this.modelMapper.map(this.materialRepository.findByID(productDto.getMaterialId()).get(),MaterialDto.class));
             productDto.setVendor(this.modelMapper.map(this.vendorRepository.findByID(productDto.getVendorId()).get(), VendorDto.class));

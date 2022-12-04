@@ -14,6 +14,8 @@ public interface UserService {
      UserDTO deleteUser(UUID id);
      UserResponse getAllUser(UserRequest userRequest);
      UserResponse getUserByPhoneNumber(UserRequest userRequest);
+
+     UserDTO getUserByUserName(String userName);
      UserDTO updateUser(UUID id,UserRequest userRequest);
 
      UserDTO lock(UUID uuid);

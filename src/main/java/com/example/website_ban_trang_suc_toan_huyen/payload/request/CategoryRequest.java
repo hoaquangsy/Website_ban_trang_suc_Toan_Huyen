@@ -16,6 +16,10 @@ public class CategoryRequest implements Serializable {
 
    private  String description;
 
+    private  String createBy;
+
+    private String lastModifiedBy;
+
    private List<String>  properties;
 
 }

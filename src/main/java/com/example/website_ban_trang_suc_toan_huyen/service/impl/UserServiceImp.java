@@ -13,9 +13,12 @@ import com.example.website_ban_trang_suc_toan_huyen.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,6 +34,12 @@ public class UserServiceImp implements UserService {
 
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private HttpSession session;
 
     @Override
     public UserDTO addUser(UserRequest userRequest) {
@@ -57,6 +66,7 @@ public class UserServiceImp implements UserService {
         }
         user.setUserId(UUID.randomUUID());
         user.setDeleted(Boolean.FALSE);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setStatus(Boolean.FALSE);
         return this.modelMapper.map(this.userRepository.save(user),UserDTO.class);
     }
@@ -91,6 +101,12 @@ public class UserServiceImp implements UserService {
         response.setUserEntity(user);
         response.setMessage("Tìm kiếm tài khoản thành công");
         return response;
+    }
+
+    @Override
+    public UserDTO getUserByUserName(String userName) {
+        UserEntity user = this.userRepository.finUserEntitybyUsername(userName);
+        return this.modelMapper.map(user,UserDTO.class);
     }
 
     @Override

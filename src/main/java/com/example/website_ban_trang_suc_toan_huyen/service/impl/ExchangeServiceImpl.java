@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.time.Instant;
@@ -62,6 +63,8 @@ public class ExchangeServiceImpl implements ExchangeService {
     private ModelMapper modelMapper;
 
 
+    @Autowired
+    private HttpSession session;
     @Override
     public PageDTO search(ExchangeSearchRequest exchangeSearchRequest) throws ParseException {
         Long count = this.exchangeDAO.count(exchangeSearchRequest);

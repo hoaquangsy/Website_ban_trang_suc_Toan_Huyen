@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
 @Tag(
@@ -25,6 +26,9 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private HttpSession session;
+
     @Operation(summary = "Lấy tất cả category", description =
             "page: trang hiện tại (bắt đầu từ 0), page_size: số record trong trang hiện tại ")
     @GetMapping
@@ -34,6 +38,7 @@ public class CategoryController {
                                             @RequestParam(value = "sortBy",required = false) String sortBy
                                             ) {
             PageDTO categoryDtoPage=categoryService.search(pageIndex,pageSize,keyword,sortBy);
+        System.out.println(session.getAttribute("userName"));
         return ResponseEntity.ok(categoryDtoPage);
     }
 

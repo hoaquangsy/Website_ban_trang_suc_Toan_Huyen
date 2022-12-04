@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -23,6 +24,9 @@ public class EventServiceImpl implements EventService {
     private EventRepository eventRepository;
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private HttpSession session;
     @Override
     public EventDto createEvent(EventRequest newEvent) {
         EventEntity eventEntity = this.modelMapper.map(newEvent,EventEntity.class);

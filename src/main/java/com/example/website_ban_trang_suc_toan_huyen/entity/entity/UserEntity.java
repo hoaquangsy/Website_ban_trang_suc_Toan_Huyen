@@ -33,7 +33,7 @@ public class UserEntity extends BaseEntity {
     private String userName;
     @Column(nullable = false)
     private Boolean status;
-    @Column(length = 30)
+    @Column(length = 200)
     private String password;
     @Column(length = 20)
     private String cccd;

@@ -47,6 +47,11 @@ public class UserController {
     public UserResponse findUserByPhoneNumber(UserRequest userRequest){
         return userService.getUserByPhoneNumber(userRequest);
     }
+
+    @GetMapping("/findByUsername")
+    public ResponseEntity<?> find(@RequestParam("userName") String username){
+        return ResponseEntity.ok(SampleResponse.success(userService.getUserByUserName(username)));
+    }
     @PostMapping("/getAll")
     public UserResponse getAllUser(UserRequest userRequest){
         return userService.getAllUser(userRequest);

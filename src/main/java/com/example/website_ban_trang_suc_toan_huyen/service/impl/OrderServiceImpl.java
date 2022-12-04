@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.Instant;
@@ -55,6 +56,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ProductImageRepository productImageRepository;
+
+
+    @Autowired
+    private HttpSession session;
 
 
     @Override

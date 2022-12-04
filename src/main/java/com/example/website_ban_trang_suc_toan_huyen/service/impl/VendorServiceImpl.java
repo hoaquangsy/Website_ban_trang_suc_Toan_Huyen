@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -22,6 +23,9 @@ public class VendorServiceImpl implements VendorService {
     private VendorRepository vendorRepository;
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private HttpSession session;
 
     @Override
     public VendorDto createVendor(VendorRequest vendorRequest) {

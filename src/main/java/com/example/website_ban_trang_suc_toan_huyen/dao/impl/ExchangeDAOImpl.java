@@ -65,6 +65,8 @@ public class ExchangeDAOImpl implements ExchangeDAO {
         StringBuilder sql = new StringBuilder(" ");
         if (StringUtils.hasLength(sortBy)) {
             sql.append(" order by C.").append(sortBy.replace(".", " "));
+        }else{
+            sql.append(" order by C.createAt desc");
         }
         return sql.toString();
     }

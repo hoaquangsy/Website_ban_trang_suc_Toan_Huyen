@@ -11,11 +11,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WaitingProductRequest {
-    @Type(type = "uuid-char")
-    private UUID Id;
+
     @Type(type = "uuid-char")
     private UUID productId;
-    private String name;
     private Integer quantity;
     @Type(type = "uuid-char")
     private UUID sizeId;

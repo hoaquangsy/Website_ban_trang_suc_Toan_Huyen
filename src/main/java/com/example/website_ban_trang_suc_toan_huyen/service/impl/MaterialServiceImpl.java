@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
@@ -43,6 +44,9 @@ public class MaterialServiceImpl implements MaterialService {
 
     @Autowired
     private MaterialDao materialDao;
+
+    @Autowired
+    private HttpSession session;
 
     @Override
     public MaterialDto createMaterial(MaterialRequest request) {
