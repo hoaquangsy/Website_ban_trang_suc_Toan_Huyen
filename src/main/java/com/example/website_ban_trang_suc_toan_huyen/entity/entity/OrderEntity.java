@@ -67,7 +67,8 @@ public class OrderEntity extends BaseEntity{
     @Getter
     public enum OrderType {
        DIRECT_TYPE,
-        ONLINE
+        ONLINE,
+        DEPOSIT
     }
 
 
