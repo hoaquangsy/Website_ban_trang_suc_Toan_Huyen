@@ -27,6 +27,11 @@ public class SizeController {
      return ResponseEntity.ok(SampleResponse.success(this.sizeService.getAllSize()));
     }
 
+    @GetMapping("/{id}/product")
+    public ResponseEntity<?> getSizebyproductId(@PathVariable("id") UUID productId){
+        return ResponseEntity.ok(SampleResponse.success(this.sizeService.getByProductId(productId)));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getSizeById(@PathVariable("id") UUID id) {
 

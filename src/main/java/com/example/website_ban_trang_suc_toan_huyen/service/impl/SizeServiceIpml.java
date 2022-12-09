@@ -2,9 +2,11 @@ package com.example.website_ban_trang_suc_toan_huyen.service.impl;
 
 
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.SizeDto;
+import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductSizeEntity;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.SizeEntity;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.SizeRequest;
+import com.example.website_ban_trang_suc_toan_huyen.repository.ProductSizeRepository;
 import com.example.website_ban_trang_suc_toan_huyen.repository.SizeRepository;
 import com.example.website_ban_trang_suc_toan_huyen.service.SizeService;
 import org.modelmapper.ModelMapper;
@@ -22,6 +24,11 @@ public class SizeServiceIpml implements SizeService {
     @Autowired
     private SizeRepository sizeRepository;
 
+    @Autowired
+    private ProductSizeRepository productSizeRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Autowired
     private ModelMapper mapper;
@@ -61,5 +68,15 @@ public class SizeServiceIpml implements SizeService {
         return this.sizeRepository.getAllBy().stream().
                 map(sizeEntity -> this.mapper.map(sizeEntity,SizeDto.class)).collect(Collectors.toList());
 
+    }
+
+    @Override
+    public List<SizeDto> getByProductId(UUID productId) {
+        List<ProductSizeEntity> productSizeEntities = this.productSizeRepository.findByProductId(productId);
+
+        List<UUID> sizeIds = productSizeEntities.stream().map(productSizeEntity -> productSizeEntity.getSizeId()).collect(Collectors.toList());
+
+        List<SizeEntity> sizeEntities = this.sizeRepository.findAllById(sizeIds);
+        return sizeEntities.stream().map(sizeEntity -> this.modelMapper.map(sizeEntity,SizeDto.class)).collect(Collectors.toList());
     }
 }

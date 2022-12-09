@@ -42,6 +42,8 @@ public class OrderEntity extends BaseEntity{
     private OrderType purchaseType;
     @Column
     private String address;
+    @Column()
+    private BigDecimal datcoc;
     @Column
     private Boolean isRepurchase;
     @Column
