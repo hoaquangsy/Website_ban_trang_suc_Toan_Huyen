@@ -104,6 +104,55 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
+    public OrderRequest updateWaitOrder(UUID idOrder,OrderRequest orderRequest) {
+        if (userRepository.findById(orderRequest.getUserId()).isEmpty()) {
+            throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "User not exist");
+        }
+        orderRequest.getOrderDetailList().forEach(orderDetailRq -> {
+            Optional<ProductSizeEntity> productEntity = this.productSizeRepository.findByProductAndSize(orderDetailRq.getProductId(),orderDetailRq.getSizeId());
+            if(productEntity.isEmpty()){
+                throw  new NotFoundException(HttpStatus.NOT_FOUND.value(),"Sản phẩm không tồn tại");
+            }
+            if(productEntity.get().getQuantity() < orderDetailRq.getQuantity()){
+                throw new BadRequestException("Số lượng sản phẩm không đủ");
+            }
+        });
+        OrderEntity orderRequestEntity = orderRepository.findById(idOrder).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "Order không tồn tại"));
+        BeanUtils.copyProperties(orderRequest, orderRequestEntity);
+        orderRepository.save(orderRequestEntity);
+        List<UUID> uuids = orderDetailRepository.findByOrderId(orderRequestEntity.getId()).stream().map(OrderDetailEntity::getId).collect(Collectors.toList());
+       List<OrderDetailEntity> orderDetailEntities = orderDetailRepository.findByOrderId(orderRequestEntity.getId());
+       List<ProductSizeEntity> productSizeEntities = new ArrayList<>();
+       orderDetailEntities.forEach(orderDetailEntity -> {
+           Optional<ProductSizeEntity> sizeEntity = this.productSizeRepository.findByProductAndSize(orderDetailEntity.getProductId(),orderDetailEntity.getSizeId());
+           if(sizeEntity.isPresent()){
+               ProductSizeEntity sizeEntity1 =   sizeEntity.get();
+               sizeEntity1.setQuantity(sizeEntity.get().getQuantity() + orderDetailEntity.getQuantity());
+               productSizeEntities.add(sizeEntity1);
+           }
+           this.productSizeRepository.saveAll(productSizeEntities);
+       });
+        orderDetailRepository.deleteAllById(uuids);
+        List<OrderDetailEntity> orderDetailEntityList = new ArrayList<>();
+        orderRequest.getOrderDetailList().forEach(orderDetailRq -> {
+            OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
+            BeanUtils.copyProperties(orderDetailRq, orderDetailEntity);
+            orderDetailEntity.setId(UUID.randomUUID());
+            orderDetailEntity.setOrderId(orderRequestEntity.getId());
+            orderDetailEntityList.add(orderDetailEntity);
+        });
+        orderDetailRepository.saveAll(orderDetailEntityList);
+        orderDetailEntityList.forEach(orderDetailEntity -> {
+            Optional<ProductSizeEntity> productSize = this.productSizeRepository.findByProductAndSize(orderDetailEntity.getProductId(),orderDetailEntity.getSizeId());
+            ProductSizeEntity sizeEntity = productSize.orElseThrow(() -> new BadRequestException("Lỗi hệ thống"));
+            sizeEntity.setQuantity(sizeEntity.getQuantity() - orderDetailEntity.getQuantity());
+            this.productSizeRepository.save(sizeEntity);
+        });
+        return orderRequest;
+    }
+
+    @Override
     public OrderDTO update(UUID idOrder, OrderEntity.StatusEnum status) {
         OrderEntity orderEntity = orderRepository.findById(idOrder).get();
         if (ObjectUtils.isEmpty(orderEntity)){

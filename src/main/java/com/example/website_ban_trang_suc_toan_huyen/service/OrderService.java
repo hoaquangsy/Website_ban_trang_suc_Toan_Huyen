@@ -18,6 +18,8 @@ public interface OrderService {
     @Transactional
     OrderRequest saveOrder(OrderRequest orderRequest);
 
+    OrderRequest updateWaitOrder(UUID idOrder,OrderRequest orderRequest);
+
     OrderDTO update(UUID idOrder, OrderEntity.StatusEnum status);
 
     OrderDTO findOrder(UUID idOrder);

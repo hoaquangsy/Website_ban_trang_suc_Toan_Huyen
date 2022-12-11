@@ -170,10 +170,10 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto getProductById(UUID productId) {
         ProductEntity product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "ProductId not found"));
        ProductDto productDto = modelMapper.map(product, ProductDto.class);
-        productDto.setCategory(this.modelMapper.map(this.categoryRepository.findId(productDto.getCategoryId()).get(), CategoryDto.class));
-        productDto.setAccessory(this.modelMapper.map(this.accessoryRepository.findById(productDto.getAccessoryId()).get(), AccessoryDTO.class));
-        productDto.setMaterial(this.modelMapper.map(this.materialRepository.findByID(productDto.getMaterialId()).get(),MaterialDto.class));
-        productDto.setVendor(this.modelMapper.map(this.vendorRepository.findByID(productDto.getVendorId()).get(), VendorDto.class));
+        productDto.setCategory(this.modelMapper.map(this.categoryRepository.findId(productDto.getCategoryId()).orElse(new CategoryEntity()), CategoryDto.class));
+        productDto.setAccessory(this.modelMapper.map(this.accessoryRepository.findById(productDto.getAccessoryId()).orElse(new AccessoryEntity()), AccessoryDTO.class));
+        productDto.setMaterial(this.modelMapper.map(this.materialRepository.findByID(productDto.getMaterialId()).orElse(new MaterialEntity()),MaterialDto.class));
+        productDto.setVendor(this.modelMapper.map(this.vendorRepository.findByID(productDto.getVendorId()).orElse(new VendorEntity()), VendorDto.class));
        if(!CollectionUtils.isEmpty( this.productImageRepository.findByProductId(productId))){
            List<ProductImageDTO> imageDTOList =  this.productImageRepository.findByProductId(productId).stream()
                    .map(productImage -> this.modelMapper.map(productImage,ProductImageDTO.class)).collect(Collectors.toList());

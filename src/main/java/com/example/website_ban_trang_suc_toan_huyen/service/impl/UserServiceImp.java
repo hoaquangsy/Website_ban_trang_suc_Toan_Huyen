@@ -111,9 +111,6 @@ public class UserServiceImp implements UserService {
 
     @Override
     public UserDTO updateUser(UUID id ,UserRequest userRequest){
-        if(!userRequest.getPassword().equals(userRequest.getConfirmPassword())){
-            throw new BadRequestException("Confirm password không chính xác");
-        }
         if(this.userRepository.findUserEntitiesByEmail(userRequest.getEmail(),id).isPresent()){
             throw new BadRequestException("Email đã tồn tại");
         }

@@ -66,6 +66,12 @@ public class OrderController {
                                          @RequestBody OrderUpdate  update) {
         return ResponseEntity.ok(SampleResponse.success(orderService.update(id,update.getStatus())));
     }
+    @Operation(summary = "update wait order", description = "update wait order")
+    @PostMapping("/{id}/orderwait")
+    public ResponseEntity<?> updateOrderWait(@PathVariable("id") UUID id,
+                                         @RequestBody OrderRequest  update) {
+        return ResponseEntity.ok(SampleResponse.success(orderService.updateWaitOrder(id,update)));
+    }
     @Operation(summary = "Search Chất liệu")
     @GetMapping
     public PageDTO search(@RequestParam(value = "pageIndex",defaultValue = "1",required = false) Integer pageIndex,
