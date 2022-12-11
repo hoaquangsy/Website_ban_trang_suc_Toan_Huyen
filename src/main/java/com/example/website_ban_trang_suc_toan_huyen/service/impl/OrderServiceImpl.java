@@ -41,6 +41,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private MaterialRepository materialRepository;
 
     @Autowired
     private ProductSizeRepository productSizeRepository;
@@ -185,5 +187,25 @@ public class OrderServiceImpl implements OrderService {
             response.add(orderDTO);
         });
         return response;
+    }
+    public void exportPdf(UUID orderId){
+        OrderEntity orderEntity = orderRepository.findById(orderId).get();
+        BigDecimal total = orderEntity.getTotal();
+        List<OrderDetailEntity> orderDetailEntityList = orderDetailRepository.findByOrderId(orderId);
+        List<ExportPdfDTO> exportPdfDTOS = new ArrayList<>();
+        orderDetailEntityList.forEach(orderDetailEntity -> {
+            ProductEntity productEntity = productRepository.findID(orderDetailEntity.getProductId()).get();
+            MaterialEntity materialEntity = materialRepository.findByID(productEntity.getMaterialId()).get();
+            ProductSizeEntity productSizeEntity = productSizeRepository.findByProductIdAndSalePrice(productEntity.getProductId(),orderDetailEntity.getPrice());
+            ExportPdfDTO exportPdfDTO = new ExportPdfDTO();
+            exportPdfDTO.setTotal(orderDetailEntity.getTotal());
+            exportPdfDTO.setName(productEntity.getNameProduct());
+            exportPdfDTO.setQuantity(orderDetailEntity.getQuantity());
+            exportPdfDTO.setAge(materialEntity.getAge());
+            exportPdfDTO.setWight(productSizeEntity.getWeight());
+            exportPdfDTO.setWage(productEntity.getSalary());
+            exportPdfDTO.setTotal(orderDetailEntity.getTotal());
+            exportPdfDTOS.add(exportPdfDTO);
+        });
     }
 }
