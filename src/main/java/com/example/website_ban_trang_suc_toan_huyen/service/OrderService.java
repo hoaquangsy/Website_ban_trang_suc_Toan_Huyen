@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 public interface OrderService {
@@ -23,10 +24,13 @@ public interface OrderService {
     OrderDTO update(UUID idOrder, OrderEntity.StatusEnum status);
 
     OrderDTO findOrder(UUID idOrder);
+    void exportPdf(UUID idOrder);
 
     Page<OrderDTO> getAllOrder(int page, int pageSize);
 
     Page<OrderDTO> findByUser(int page, int pageSize, UUID userId);
+
+    List<OrderDTO> findByStatusAndUserId(OrderEntity.StatusEnum status , UUID idUser);
 
     PageDTO search(Integer pageIndex, Integer pageSize, String keyword,
                    OrderEntity.StatusEnum status,
