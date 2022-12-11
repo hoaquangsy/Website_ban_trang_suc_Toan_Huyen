@@ -17,7 +17,7 @@ public interface ShoppingCartService {
 
     CartDetailDTO updateCart(UUID id, Integer amount);
 
-    CartDetailDTO deleteCart(UUID id);
+    void deleteCart(UUID id);
 
     GetCartResponse getListCartDetailByCartId(UUID userId);
 

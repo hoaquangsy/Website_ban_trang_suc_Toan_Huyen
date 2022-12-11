@@ -52,4 +52,6 @@ public interface ProductService {
                    String sortBy,
                    ProductEntity.ProductGender gender);
     List<ProductOrderDto> getProductOrder();
+
+    List<ProductDto> getProductTrending();
 }

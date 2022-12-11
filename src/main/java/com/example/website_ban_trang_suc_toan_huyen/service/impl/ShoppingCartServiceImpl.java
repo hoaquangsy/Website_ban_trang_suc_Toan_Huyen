@@ -126,10 +126,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public CartDetailDTO deleteCart(UUID id) {
-        CartDetailEntity cartDetailEntity = this.cartDetailRepository.findById(id).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(),"CartDetail Not Found"));
-        cartDetailRepository.delete(cartDetailEntity);
-        return this.modelMapper.map(cartDetailEntity, CartDetailDTO.class);
+    public void deleteCart(UUID id) {
+        List<CartDetailEntity> cartDetailEntity = this.cartDetailRepository.findAllByCartId(id);
+        cartDetailRepository.deleteAll(cartDetailEntity);
     }
 
     @Override

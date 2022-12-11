@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,7 +19,10 @@ public interface ProductSizeRepository extends JpaRepository<ProductSizeEntity,U
 
     @Query("select  p from ProductSizeEntity p where  p.deleted = false and p.productId not in (select s from  ProductEntity  s where s.deleted = false and s.status = 'INACTIVE')")
     List<ProductSizeEntity> findAllProductOrder();
+    @Query("select  p from ProductSizeEntity p where  p.deleted = false and p.productId = :productIds")
+    List<ProductSizeEntity> findAllProductId(UUID productId);
 
     @Query("select  p from ProductSizeEntity p where p.productId = :id and p.sizeId = :sizeId and  p.deleted = false")
     Optional<ProductSizeEntity> findByProductAndSize(UUID id,UUID sizeId);
+    ProductSizeEntity findByProductIdAndSalePrice(UUID productId, BigDecimal salePrice);
 }

@@ -15,6 +15,7 @@ public interface UserService {
      UserResponse getAllUser(UserRequest userRequest);
      UserResponse getUserByPhoneNumber(UserRequest userRequest);
      UserDTO updateUser(UUID id,UserRequest userRequest);
+     UserDTO changPass(UUID id,UserRequest userRequest);
 
      UserDTO lock(UUID uuid);
 
@@ -22,4 +23,6 @@ public interface UserService {
      PageDTO search(String keyword, UserEntity.Role role, Integer pageNumber, Integer pageSize, String sortBy,Boolean status);
 
      List<UserDTO> getCustomer();
+
+     UserDTO getById(UUID uuid);
 }

@@ -9,6 +9,7 @@ import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.OrderRequest;
 import com.example.website_ban_trang_suc_toan_huyen.repository.*;
 import com.example.website_ban_trang_suc_toan_huyen.service.OrderService;
+import com.example.website_ban_trang_suc_toan_huyen.util.ExportPDFUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,6 @@ import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,6 +42,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private MaterialRepository materialRepository;
 
     @Autowired
     private ProductSizeRepository productSizeRepository;
@@ -168,7 +169,49 @@ public class OrderServiceImpl implements OrderService {
            EventEntity entity = this.eventRepository.findId(orderDTO.getEventId()).orElse(new EventEntity());
            orderDTO.setEvent(this.modelMapper.map(entity, EventDto.class));
        });
+
         return new PageDTO(materialDtos,pageIndex,pageSize,count);
     }
+    @Override
+    public List<OrderDTO> findByStatusAndUserId( OrderEntity.StatusEnum status ,UUID idUser){
+        List<UUID> idOrders;
+        if( ObjectUtils.isEmpty(status)){
+            List<OrderEntity> orderEntities = orderRepository.findByUserId(idUser);
+            idOrders = orderEntities.stream().map(OrderEntity :: getId).collect(Collectors.toList());
+        }else {
+            List<OrderEntity> orderEntities = orderRepository.findByUserIdAndStatus(idUser,status);
+            idOrders = orderEntities.stream().map(OrderEntity :: getId).collect(Collectors.toList());
+        }
+        List<OrderDTO> response = new ArrayList<>();
+        idOrders.forEach(idOrder -> {
+            OrderDTO orderDTO = findOrder(idOrder);
+            response.add(orderDTO);
+        });
+        return response;
+    }
+    @Override
+    public void exportPdf(UUID orderId){
+        OrderEntity orderEntity = orderRepository.findById(orderId).get();
+        BigDecimal total = orderEntity.getTotal();
+        List<OrderDetailEntity> orderDetailEntityList = orderDetailRepository.findByOrderId(orderId);
+        UserEntity user = userRepository.findById(orderEntity.getUserId()).get();
+        List<ExportPdfDTO> exportPdfDTOS = new ArrayList<>();
+        orderDetailEntityList.forEach(orderDetailEntity -> {
+            ProductEntity productEntity = productRepository.findID(orderDetailEntity.getProductId()).get();
+            MaterialEntity materialEntity = materialRepository.findByID(productEntity.getMaterialId()).get();
+            ProductSizeEntity productSizeEntity = productSizeRepository.findByProductIdAndSalePrice(productEntity.getProductId(),orderDetailEntity.getPrice());
+            ExportPdfDTO exportPdfDTO = new ExportPdfDTO();
+            exportPdfDTO.setTotal(orderDetailEntity.getTotal());
+            exportPdfDTO.setName(productEntity.getNameProduct());
+            exportPdfDTO.setQuantity(orderDetailEntity.getQuantity());
+            exportPdfDTO.setAge(materialEntity.getAge());
+            exportPdfDTO.setWight(productSizeEntity.getWeight());
+            exportPdfDTO.setWage(productEntity.getSalary());
+            exportPdfDTO.setTotal(orderDetailEntity.getTotal());
+            exportPdfDTOS.add(exportPdfDTO);
+        });
+        ExportPDFUtils exportPDFUtils = new ExportPDFUtils();
+        exportPDFUtils.exportPdf(exportPdfDTOS,total, user.getUserName(), user.getAddress());
 
+    }
 }

@@ -68,8 +68,8 @@ public class UserServiceImp implements UserService {
         return this.modelMapper.map(this.userRepository.save(user),UserDTO.class);
 
     }
-
-    private UserDTO getById(UUID id){
+    @Override
+    public UserDTO getById(UUID id){
         UserEntity user = this.userRepository.findUserEntitiesById(id).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "User not found"));
         return this.modelMapper.map(user,UserDTO.class);
     }
@@ -116,6 +116,23 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public UserDTO changPass(UUID id, UserRequest userRequest) {
+        UserEntity user = this.userRepository.findUserEntitiesById(id).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND.value(), "User not found"));
+        user.setGender(userRequest.getGender());
+        user.setRole(userRequest.getRole());
+        user.setAddress(userRequest.getAddress());
+        user.setPhoneNumber(userRequest.getPhoneNumber());
+        user.setCccd(userRequest.getCccd());
+        user.setFullName(userRequest.getFullName());
+        user.setBirthday(userRequest.getBirthday());
+        user.setImageUrl(userRequest.getImageUrl());
+        user.setEmail(userRequest.getEmail());
+        user.setNote(userRequest.getNote());
+        user.setPassword(userRequest.getPassword());
+        return this.modelMapper.map(  userRepository.save(user),UserDTO.class);
+    }
+
+    @Override
     public UserDTO lock(UUID uuid) {
         UserEntity user  = this.userRepository.findUserEntitiesById(uuid).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND.value(), "User not found"));
         user.setStatus(Boolean.TRUE);
@@ -142,4 +159,5 @@ public class UserServiceImp implements UserService {
         List<UserEntity> userEntities =  this.userRepository.findCustomer();
         return userEntities.stream().map(userEntity -> this.modelMapper.map(userEntity,UserDTO.class)).collect(Collectors.toList());
     }
+
 }

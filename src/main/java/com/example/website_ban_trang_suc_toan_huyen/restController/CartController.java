@@ -42,13 +42,19 @@ public class CartController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCart(@PathVariable("id") UUID id) {
-        CartDetailDTO cartDetailDTO = shoppingCartService.deleteCart(id);
-        return ResponseEntity.ok(SampleResponse.success(cartDetailDTO));
+        shoppingCartService.deleteCart(id);
+        return ResponseEntity.ok(SampleResponse.success());
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCart(@PathVariable("id") UUID id, @RequestParam("amount") Integer amount) {
         CartDetailDTO cartDetailDTO = shoppingCartService.updateCart(id, amount);
+        return ResponseEntity.ok(SampleResponse.success(cartDetailDTO));
+    }
+
+    @DeleteMapping("/detail/{id}")
+    public ResponseEntity<?> deleteCartDetailByUserId(@PathVariable("id") UUID id) {
+        CartDetailDTO cartDetailDTO = shoppingCartService.deleteCartDetailByUserId(id);
         return ResponseEntity.ok(SampleResponse.success(cartDetailDTO));
     }
 }
