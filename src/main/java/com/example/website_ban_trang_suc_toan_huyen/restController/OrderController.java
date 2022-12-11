@@ -34,11 +34,12 @@ import java.util.UUID;
 public class OrderController {
     @Autowired
     private OrderService orderService;
+
     @Operation(summary = "Lấy all order", description = "Lấy all order")
     @GetMapping("/all")
     public ResponseEntity<?> getAllOrder(@RequestParam(value = "page") int page,
                                          @RequestParam(value = "page_size") int pageSize) {
-        Page<OrderDTO> productDtoPage = orderService.getAllOrder(page,pageSize);
+        Page<OrderDTO> productDtoPage = orderService.getAllOrder(page, pageSize);
         return ResponseEntity.ok(productDtoPage);
     }
 
@@ -47,12 +48,13 @@ public class OrderController {
     public ResponseEntity<?> getOrderById(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(SampleResponse.success(orderService.findOrder(id)));
     }
+
     @Operation(summary = "Lấy order theo  useId", description = "Lấy order theo  useId")
     @GetMapping("/user")
     public ResponseEntity<?> getOrderByUserId(@RequestParam(value = "page") int page,
                                               @RequestParam(value = "page_size") int pageSize,
                                               @RequestParam("user_id") UUID userId) {
-        return ResponseEntity.ok(SampleResponse.success(orderService.findByUser(page,pageSize,userId)));
+        return ResponseEntity.ok(SampleResponse.success(orderService.findByUser(page, pageSize, userId)));
     }
 
     @Operation(summary = "Lưu order", description = "Lưu order")
@@ -64,29 +66,39 @@ public class OrderController {
     @Operation(summary = "update order", description = "update order")
     @PostMapping("/{id}")
     public ResponseEntity<?> updateOrder(@PathVariable("id") UUID id,
-                                         @RequestBody OrderUpdate  update) {
-        return ResponseEntity.ok(SampleResponse.success(orderService.update(id,update.getStatus())));
+                                         @RequestBody OrderUpdate update) {
+        return ResponseEntity.ok(SampleResponse.success(orderService.update(id, update.getStatus())));
     }
+
+    @Operation(summary = "export order", description = "export order")
+    @PostMapping("export/{id}")
+    public ResponseEntity<?> exportOrder(@PathVariable("id") UUID id
+    ) {
+        orderService.exportPdf(id);
+        return ResponseEntity.ok(SampleResponse.success());
+    }
+
     @Operation(summary = "Search Chất liệu")
     @GetMapping
-    public PageDTO search(@RequestParam(value = "pageIndex",defaultValue = "1",required = false) Integer pageIndex,
-                          @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize,
-                          @RequestParam(value = "keyword",defaultValue = "",required = false) String keyword,
-                          @RequestParam(value = "status",required = false) OrderEntity.StatusEnum status,
-                          @RequestParam(value = "payMethod",required = false) OrderEntity.PaymentMethod payMethod,
-                          @RequestParam(value = "purchaseType",required = false) OrderEntity.OrderType orderType,
-                          @RequestParam(value = "startDate",required = false) String startDate,
-                          @RequestParam(value = "endDate",required = false) String endDate,
-                          @RequestParam(value = "startPrice",required = false) BigDecimal startPrice,
-                          @RequestParam(value = "endPrice",required = false) BigDecimal endPrice,
-                          @RequestParam(value = "userId",required = false) UUID userId,
-                          @RequestParam(value = "sortBy",required = false) String sortBy) throws ParseException {
-        return this.orderService.search(pageIndex,pageSize,keyword,status,payMethod,orderType,startDate,endDate,startPrice,endPrice,userId,sortBy);
+    public PageDTO search(@RequestParam(value = "pageIndex", defaultValue = "1", required = false) Integer pageIndex,
+                          @RequestParam(value = "pageSize", defaultValue = "10", required = false) Integer pageSize,
+                          @RequestParam(value = "keyword", defaultValue = "", required = false) String keyword,
+                          @RequestParam(value = "status", required = false) OrderEntity.StatusEnum status,
+                          @RequestParam(value = "payMethod", required = false) OrderEntity.PaymentMethod payMethod,
+                          @RequestParam(value = "purchaseType", required = false) OrderEntity.OrderType orderType,
+                          @RequestParam(value = "startDate", required = false) String startDate,
+                          @RequestParam(value = "endDate", required = false) String endDate,
+                          @RequestParam(value = "startPrice", required = false) BigDecimal startPrice,
+                          @RequestParam(value = "endPrice", required = false) BigDecimal endPrice,
+                          @RequestParam(value = "userId", required = false) UUID userId,
+                          @RequestParam(value = "sortBy", required = false) String sortBy) throws ParseException {
+        return this.orderService.search(pageIndex, pageSize, keyword, status, payMethod, orderType, startDate, endDate, startPrice, endPrice, userId, sortBy);
     }
+
     @GetMapping("/list")
-    public ResponseEntity<?> getOrderByListId(@RequestParam(value = "status",required = false) OrderEntity.StatusEnum status,
-                                              @RequestParam(value = "userId",required = false) UUID userId
-                                              ) {
-        return ResponseEntity.ok(SampleResponse.success(orderService.findByStatusAndUserId(status,userId)));
+    public ResponseEntity<?> getOrderByListId(@RequestParam(value = "status", required = false) OrderEntity.StatusEnum status,
+                                              @RequestParam(value = "userId", required = false) UUID userId
+    ) {
+        return ResponseEntity.ok(SampleResponse.success(orderService.findByStatusAndUserId(status, userId)));
     }
 }

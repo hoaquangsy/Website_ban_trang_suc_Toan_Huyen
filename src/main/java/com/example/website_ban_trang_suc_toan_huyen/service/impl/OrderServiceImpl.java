@@ -9,6 +9,7 @@ import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.OrderRequest;
 import com.example.website_ban_trang_suc_toan_huyen.repository.*;
 import com.example.website_ban_trang_suc_toan_huyen.service.OrderService;
+import com.example.website_ban_trang_suc_toan_huyen.util.ExportPDFUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -188,10 +189,12 @@ public class OrderServiceImpl implements OrderService {
         });
         return response;
     }
+    @Override
     public void exportPdf(UUID orderId){
         OrderEntity orderEntity = orderRepository.findById(orderId).get();
         BigDecimal total = orderEntity.getTotal();
         List<OrderDetailEntity> orderDetailEntityList = orderDetailRepository.findByOrderId(orderId);
+        UserEntity user = userRepository.findById(orderEntity.getUserId()).get();
         List<ExportPdfDTO> exportPdfDTOS = new ArrayList<>();
         orderDetailEntityList.forEach(orderDetailEntity -> {
             ProductEntity productEntity = productRepository.findID(orderDetailEntity.getProductId()).get();
@@ -207,5 +210,8 @@ public class OrderServiceImpl implements OrderService {
             exportPdfDTO.setTotal(orderDetailEntity.getTotal());
             exportPdfDTOS.add(exportPdfDTO);
         });
+        ExportPDFUtils exportPDFUtils = new ExportPDFUtils();
+        exportPDFUtils.exportPdf(exportPdfDTOS,total, user.getUserName(), user.getAddress());
+
     }
 }

@@ -22,6 +22,7 @@ public interface OrderService {
     OrderDTO update(UUID idOrder, OrderEntity.StatusEnum status);
 
     OrderDTO findOrder(UUID idOrder);
+    void exportPdf(UUID idOrder);
 
     Page<OrderDTO> getAllOrder(int page, int pageSize);
 
