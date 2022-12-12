@@ -22,4 +22,6 @@ public interface ShoppingCartService {
     GetCartResponse getListCartDetailByCartId(UUID userId);
 
     Page<CartDetailDTO> getAllCart(int page, int pageSize);
+
+    CartDetailDTO deleteCartDetailByUserId(UUID id);
 }
