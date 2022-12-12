@@ -47,14 +47,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Optional<CartEntity> cartEntityOptional = this.cartRepository.findByUserId(cartRequest.getUserId());
         CartEntity cartEntity = new CartEntity();
         UUID cartId = null;
-        if(cartEntityOptional.isEmpty()){
+        if (cartEntityOptional.isEmpty()) {
             cartEntity.setId(UUID.randomUUID());
             cartEntity.setUserId(cartRequest.getUserId());
 
             cartId = cartEntity.getId();
             this.cartRepository.save(cartEntity);
-        }
-        else {
+        } else {
             cartId = cartEntityOptional.get().getId();
         }
         CartDetailEntity cartDetailEntity = new CartDetailEntity();
@@ -63,33 +62,33 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         // Check productId
         ProductEntity productEntity = productRepository.findByProductIdAndStatus(cartRequest.getProductId(), ProductEntity.StatusEnum.ACTIVE);
         System.out.println(productEntity.getStatus());
-        if(ObjectUtils.isEmpty(productEntity)){
-            throw new NotFoundException(HttpStatus.NOT_FOUND.value(),"Product Not Found");
-        }else {
+        if (ObjectUtils.isEmpty(productEntity)) {
+            throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "Product Not Found");
+        } else {
             cartDetailEntity.setProductId(productEntity.getProductId());
         }
 
         // Check số lượng của size sản phẩm còn lại
         ProductSizeEntity productSizeEntity = productSizeRepository.findByProductIdAndSizeId(productEntity.getProductId(), cartRequest.getSizeId());
-        if (productSizeEntity.getQuantity()<=0){
-            throw new NotFoundException(HttpStatus.BAD_REQUEST.value(),"Exceed the number of remaining products");
+        if (productSizeEntity.getQuantity() <= 0) {
+            throw new NotFoundException(HttpStatus.BAD_REQUEST.value(), "Exceed the number of remaining products");
         }
 
         // Check product in cart
         CartDetailEntity cartDetailEn = cartDetailRepository.findByCartIdAndProductIdAndSizeId(cartId, cartRequest.getProductId(), cartRequest.getSizeId());
-        if(ObjectUtils.isEmpty(cartDetailEn)){
+        if (ObjectUtils.isEmpty(cartDetailEn)) {
             cartDetailEntity.setId(UUID.randomUUID());
             cartDetailEntity.setCartId(cartId);
             cartDetailEntity.setSizeId(cartRequest.getSizeId());
-            if(cartRequest.getAmount()>productSizeEntity.getQuantity()){
-                throw new NotFoundException(HttpStatus.BAD_REQUEST.value(),"Exceed the number of remaining products");
-            }else {
+            if (cartRequest.getAmount() > productSizeEntity.getQuantity()) {
+                throw new NotFoundException(HttpStatus.BAD_REQUEST.value(), "Exceed the number of remaining products");
+            } else {
                 cartDetailEntity.setAmount(cartRequest.getAmount());
             }
-        }else {
-            if(cartRequest.getAmount()>productSizeEntity.getQuantity()){
-                throw new NotFoundException(HttpStatus.BAD_REQUEST.value(),"Exceed the number of remaining products");
-            }else {
+        } else {
+            if (cartRequest.getAmount() > productSizeEntity.getQuantity()) {
+                throw new NotFoundException(HttpStatus.BAD_REQUEST.value(), "Exceed the number of remaining products");
+            } else {
                 cartDetailEntity.setAmount(cartRequest.getAmount() + cartDetailEn.getAmount());
             }
             cartDetailEntity.setId(cartDetailEn.getId());
@@ -112,13 +111,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public CartDetailDTO updateCart(UUID id, Integer amount) {
-        CartDetailEntity cartDetailEntity = this.cartDetailRepository.findById(id).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(),"CartDetail Not Found"));
+        CartDetailEntity cartDetailEntity = this.cartDetailRepository.findById(id).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "CartDetail Not Found"));
 
-        if(amount<0){
-            throw new NotFoundException(HttpStatus.BAD_REQUEST.value(),"amount > 0");
-        }else if (amount==0){
+        if (amount < 0) {
+            throw new NotFoundException(HttpStatus.BAD_REQUEST.value(), "amount > 0");
+        } else if (amount == 0) {
             cartDetailRepository.delete(cartDetailEntity);
-        }else {
+        } else {
             cartDetailEntity.setAmount(amount);
         }
 
@@ -132,6 +131,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
+    public CartDetailDTO deleteCartDetailByUserId(UUID id) {
+        CartEntity cartEntity = this.cartRepository.findByUserId(id).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "Cart not found"));
+        List<CartDetailEntity> cartDetailEntities = this.cartDetailRepository.findByCartId(cartEntity.getId());
+        this.cartDetailRepository.deleteAll(cartDetailEntities);
+        return this.modelMapper.map(cartDetailEntities, CartDetailDTO.class);
+    }
+
+    @Override
     public GetCartResponse getListCartDetailByCartId(UUID userId) {
         GetCartResponse response = new GetCartResponse();
         response.setUserId(userId);
@@ -142,11 +149,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         List<CartDetailEntity> cartDetailEntityList = this.cartDetailRepository.findAllByCartId(cartEntity.get().getId());
         List<GetCartResponse.CartDetailResponse> cartDetailResponseList = new ArrayList<>();
 
-        if(cartDetailEntityList.isEmpty()){
+        if (cartDetailEntityList.isEmpty()) {
             return response;
         }
 
-        for (CartDetailEntity cartDetail: cartDetailEntityList){
+        for (CartDetailEntity cartDetail : cartDetailEntityList) {
             GetCartResponse.CartDetailResponse cartDetailResponse = new GetCartResponse.CartDetailResponse();
             cartDetailResponse.setCartDetailId(cartDetail.getId());
             cartDetailResponse.setProductId(cartDetail.getProductId());
@@ -163,7 +170,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             SizeEntity sizeEntity = this.sizeRepository.findById(cartDetail.getSizeId()).get();
             cartDetailResponse.setSizeName(sizeEntity.getDescription());
 
-            ProductSizeEntity productSizeEntity = productSizeRepository.findByProductIdAndSizeId(productEntity.getProductId(),sizeEntity.getSizeId());
+            ProductSizeEntity productSizeEntity = productSizeRepository.findByProductIdAndSizeId(productEntity.getProductId(), sizeEntity.getSizeId());
             cartDetailResponse.setPrice(productSizeEntity.getSalePrice());
 
             cartDetailResponseList.add(cartDetailResponse);
