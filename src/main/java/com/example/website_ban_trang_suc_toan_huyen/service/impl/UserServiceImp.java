@@ -3,11 +3,13 @@ package com.example.website_ban_trang_suc_toan_huyen.service.impl;
 import com.example.website_ban_trang_suc_toan_huyen.dao.UserDao;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.UserDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
+import com.example.website_ban_trang_suc_toan_huyen.entity.entity.CartEntity;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.UserEntity;
 import com.example.website_ban_trang_suc_toan_huyen.exception.BadRequestException;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.UserRequest;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.UserResponse;
+import com.example.website_ban_trang_suc_toan_huyen.repository.CartRepository;
 import com.example.website_ban_trang_suc_toan_huyen.repository.UserRepository;
 import com.example.website_ban_trang_suc_toan_huyen.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -34,6 +36,8 @@ public class UserServiceImp implements UserService {
 
     @Autowired
     UserDao userDao;
+    @Autowired
+    private CartRepository cartRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -68,6 +72,11 @@ public class UserServiceImp implements UserService {
         user.setDeleted(Boolean.FALSE);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setStatus(Boolean.FALSE);
+
+        CartEntity cartEntity = new CartEntity();
+        cartEntity.setId(UUID.randomUUID());
+        cartEntity.setUserId(user.getUserId());
+        cartRepository.save(cartEntity);
         return this.modelMapper.map(this.userRepository.save(user),UserDTO.class);
     }
 
