@@ -91,10 +91,14 @@ public class RepurchaseServiceImpl implements RepurchaseService {
         List<OrderDetailEntity> orderDetailEntityList = new ArrayList<>();
         orderRequest.getOrderDetailList().forEach(orderDetailRq -> {
             OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
+            Optional<ProductSizeEntity> productEntity = this.productSizeRepository.findByProductAndSize(orderDetailRq.getProductId(),orderDetailRq.getSizeId());
             BeanUtils.copyProperties(orderDetailRq, orderDetailEntity);
             orderDetailEntity.setId(UUID.randomUUID());
             orderDetailEntity.setOrderId(order.getId());
             orderDetailEntityList.add(orderDetailEntity);
+            orderDetailEntity.setPriceSale(productEntity.isPresent() ? productEntity.get().getSalePrice() : new BigDecimal(0));
+            orderDetailEntity.setPricePurchase(productEntity.isPresent() ? productEntity.get().getPurchasePrice() : new BigDecimal(0));
+
         });
         orderDetailRepository.saveAll(orderDetailEntityList);
         orderDetailEntityList.forEach(orderDetailEntity -> {

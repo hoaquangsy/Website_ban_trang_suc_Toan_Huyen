@@ -60,8 +60,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
 
         // Check productId
-        ProductEntity productEntity = productRepository.findByProductIdAndStatus(cartRequest.getProductId(), ProductEntity.StatusEnum.ACTIVE.toString());
-        System.out.println(productEntity.getStatus());
+        ProductEntity productEntity = productRepository.findByProductIdAndStatus(cartRequest.getProductId(), ProductEntity.StatusEnum.ACTIVE);
         if (ObjectUtils.isEmpty(productEntity)) {
             throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "Product Not Found");
         } else {

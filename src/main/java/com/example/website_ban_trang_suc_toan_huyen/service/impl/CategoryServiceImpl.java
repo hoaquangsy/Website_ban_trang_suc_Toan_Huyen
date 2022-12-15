@@ -57,6 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryEntity category = this.modelMapper.map(dto,CategoryEntity.class);
         category.setCategoryId(id);
         category.setDeleted(Boolean.FALSE);
+        category.setLastModifiedBy(dto.getLastModifiedBy());
         List<UUID> categoryPropertyEntities =
                 this.categoryPropertyRepository.findCategoryPropertyEntitiesByCategoryId(id);
         this.categoryPropertyRepository.deleteAllById(categoryPropertyEntities);

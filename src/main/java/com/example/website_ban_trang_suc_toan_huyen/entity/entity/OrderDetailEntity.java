@@ -33,6 +33,10 @@ public class OrderDetailEntity {
     @Column
     private BigDecimal price;
     @Column
+    private BigDecimal priceSale;
+    @Column
+    private BigDecimal pricePurchase;
+    @Column
     private BigDecimal discount;
     @Column
     private BigDecimal total;
