@@ -126,8 +126,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public void deleteCart(UUID id) {
-        List<CartDetailEntity> cartDetailEntity = this.cartDetailRepository.findAllByCartId(id);
-        cartDetailRepository.deleteAll(cartDetailEntity);
+        CartDetailEntity cartDetailEntity = this.cartDetailRepository.findById(id).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(),"CartDetail Not Found"));
+        cartDetailRepository.delete(cartDetailEntity);
     }
 
     @Override
@@ -168,7 +168,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             cartDetailResponse.setSizeId(cartDetail.getSizeId());
 
             SizeEntity sizeEntity = this.sizeRepository.findById(cartDetail.getSizeId()).get();
-            cartDetailResponse.setSizeName(sizeEntity.getDescription());
+            cartDetailResponse.setSizeName(sizeEntity.getSize());
 
             ProductSizeEntity productSizeEntity = productSizeRepository.findByProductIdAndSizeId(productEntity.getProductId(), sizeEntity.getSizeId());
             cartDetailResponse.setPrice(productSizeEntity.getSalePrice());

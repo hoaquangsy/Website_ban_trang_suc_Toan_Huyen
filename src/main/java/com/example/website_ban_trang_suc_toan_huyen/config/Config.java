@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 public class Config {
 
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:4200/success-payment";;
+    public static String vnp_ReturnUrl = "http://localhost:9990/success-payment";;
 
 //    Mã website của merchant trên hệ thống của VNPAY
     public static String vnp_TmnCode = "NMQYCTRU";
