@@ -12,12 +12,16 @@ import com.example.website_ban_trang_suc_toan_huyen.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.Instant;
@@ -76,11 +80,13 @@ public class OrderController {
         return ResponseEntity.ok(SampleResponse.success(orderService.updateWaitOrder(id,update)));
     }
     @Operation(summary = "export order", description = "export order")
-    @PostMapping("export/{id}")
+    @GetMapping("export/{id}")
     public ResponseEntity<?> exportOrder(@PathVariable("id") UUID id
     ) {
-        orderService.exportPdf(id);
-        return ResponseEntity.ok(SampleResponse.success(HttpStatus.OK));
+        ByteArrayInputStream byteArrayInputStream = orderService.exportPdf(id);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Content-Despoisition","inline; filename:order.pdf");
+        return ResponseEntity.ok().headers(httpHeaders).contentType(MediaType.APPLICATION_PDF).body(new InputStreamResource(byteArrayInputStream));
     }
     @Operation(summary = "Search Chất liệu")
     @GetMapping

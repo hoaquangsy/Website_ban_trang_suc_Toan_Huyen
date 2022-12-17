@@ -8,6 +8,7 @@ import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.Instant;
@@ -24,7 +25,7 @@ public interface OrderService {
     OrderDTO update(UUID idOrder, OrderEntity.StatusEnum status);
 
     OrderDTO findOrder(UUID idOrder);
-    void exportPdf(UUID idOrder);
+    ByteArrayInputStream exportPdf(UUID idOrder);
 
     Page<OrderDTO> getAllOrder(int page, int pageSize);
 

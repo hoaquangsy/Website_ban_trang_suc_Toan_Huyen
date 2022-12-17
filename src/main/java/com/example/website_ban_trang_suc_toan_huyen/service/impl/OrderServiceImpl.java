@@ -21,11 +21,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpSession;
+import java.awt.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -255,16 +259,16 @@ public class OrderServiceImpl implements OrderService {
         return response;
     }
     @Override
-    public void exportPdf(UUID orderId){
-        OrderEntity orderEntity = orderRepository.findById(orderId).get();
+    public ByteArrayInputStream exportPdf(UUID orderId){
+        OrderEntity orderEntity = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "Hoá đơn không tồn tại"));
         BigDecimal total = orderEntity.getTotal();
         List<OrderDetailEntity> orderDetailEntityList = orderDetailRepository.findByOrderId(orderId);
-        UserEntity user = userRepository.findById(orderEntity.getUserId()).get();
+        UserEntity user = userRepository.findById(orderEntity.getUserId()).orElse(new UserEntity());
         List<ExportPdfDTO> exportPdfDTOS = new ArrayList<>();
         orderDetailEntityList.forEach(orderDetailEntity -> {
             ProductEntity productEntity = productRepository.findID(orderDetailEntity.getProductId()).get();
             MaterialEntity materialEntity = materialRepository.findByID(productEntity.getMaterialId()).get();
-            ProductSizeEntity productSizeEntity = productSizeRepository.findByProductIdAndSalePrice(productEntity.getProductId(),orderDetailEntity.getPrice());
+            ProductSizeEntity productSizeEntity = productSizeRepository.findByProductIdAndSizeId(productEntity.getProductId(),orderDetailEntity.getSizeId());
             ExportPdfDTO exportPdfDTO = new ExportPdfDTO();
             exportPdfDTO.setTotal(orderDetailEntity.getTotal());
             exportPdfDTO.setName(productEntity.getNameProduct());
@@ -272,11 +276,11 @@ public class OrderServiceImpl implements OrderService {
             exportPdfDTO.setAge(materialEntity.getAge());
             exportPdfDTO.setWight(productSizeEntity.getWeight());
             exportPdfDTO.setWage(productEntity.getSalary());
-            exportPdfDTO.setTotal(orderDetailEntity.getTotal());
+            exportPdfDTO.setPrice(orderDetailEntity.getPrice().subtract(productEntity.getSalary()));
             exportPdfDTOS.add(exportPdfDTO);
         });
         ExportPDFUtils exportPDFUtils = new ExportPDFUtils();
-        exportPDFUtils.exportPdf(exportPdfDTOS,total, user.getUserName(), user.getAddress());
+      return   exportPDFUtils.exportPdf(exportPdfDTOS,total, user.getFullName(), user.getAddress());
 
     }
 }
