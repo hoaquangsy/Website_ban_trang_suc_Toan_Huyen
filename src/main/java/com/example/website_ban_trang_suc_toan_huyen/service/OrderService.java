@@ -8,6 +8,7 @@ import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.Instant;
@@ -19,14 +20,18 @@ public interface OrderService {
     @Transactional
     OrderRequest saveOrder(OrderRequest orderRequest);
 
+    OrderRequest updateWaitOrder(UUID idOrder,OrderRequest orderRequest);
+
     OrderDTO update(UUID idOrder, OrderEntity.StatusEnum status);
 
     OrderDTO findOrder(UUID idOrder);
-    void exportPdf(UUID idOrder);
+    ByteArrayInputStream exportPdf(UUID idOrder);
 
     Page<OrderDTO> getAllOrder(int page, int pageSize);
 
     Page<OrderDTO> findByUser(int page, int pageSize, UUID userId);
+
+    List<OrderDTO> findByStatusAndUserId(OrderEntity.StatusEnum status , UUID idUser);
 
     PageDTO search(Integer pageIndex, Integer pageSize, String keyword,
                    OrderEntity.StatusEnum status,
@@ -35,5 +40,4 @@ public interface OrderService {
                    BigDecimal startPrice, BigDecimal endPrice, UUID userId,
                    String sortBy) throws ParseException;
 
-    List<OrderDTO> findByStatusAndUserId(OrderEntity.StatusEnum status ,UUID idUser);
 }

@@ -18,9 +18,5 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetailEntity, 
     @Query(" select o from OrderDetailEntity o where o.orderId = :orderId and o.productId in :productId")
     List<OrderDetailEntity> findByOrderIdAndProductIdIn(UUID orderId, List<UUID> productId);
 
-    @Query(value = "SELECT * FROM `order_detail` GROUP BY order_id \n" +
-            "ORDER BY COUNT(quantity)",nativeQuery = true)
-    List<OrderDetailEntity> findByProductTrending();
-
      Optional<OrderDetailEntity> findByOrderIdAndProductIdAndSizeId(UUID orderId, UUID productId,UUID sizeId);
 }

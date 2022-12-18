@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Data
-public class AccessoryRequest {
+public class AccessoryRequest extends BaseRequest {
 
     @NotBlank(message = "Accessory name is required")
     private String name;

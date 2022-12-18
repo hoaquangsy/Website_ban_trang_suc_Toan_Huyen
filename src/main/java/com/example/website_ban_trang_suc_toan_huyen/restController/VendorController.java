@@ -10,6 +10,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +38,8 @@ public class VendorController {
                                           @RequestParam(value = "keyword",required = false,defaultValue = "") String keyword,
                                           @RequestParam(value = "sortBy",required = false) String sortBy) {
         PageDTO vendorDtoPage= vendorService.getAllVendor(pageNumber,pageSize , keyword, sortBy);
+        SecurityContext authentication = SecurityContextHolder.getContext();
+        System.out.println(  SecurityContextHolder.getContext().getAuthentication().getName());
         return ResponseEntity.ok(SampleResponse.success(vendorDtoPage));
     }
 

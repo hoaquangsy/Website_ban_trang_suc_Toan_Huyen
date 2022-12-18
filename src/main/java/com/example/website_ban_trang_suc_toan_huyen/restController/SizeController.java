@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 @RestController
@@ -18,9 +19,17 @@ public class SizeController {
 
     @Autowired
     private SizeService sizeService;
+
+    @Autowired
+    HttpServletRequest request;
     @GetMapping
     public ResponseEntity<?> getAllSize() {
      return ResponseEntity.ok(SampleResponse.success(this.sizeService.getAllSize()));
+    }
+
+    @GetMapping("/{id}/product")
+    public ResponseEntity<?> getSizebyproductId(@PathVariable("id") UUID productId){
+        return ResponseEntity.ok(SampleResponse.success(this.sizeService.getByProductId(productId)));
     }
 
     @GetMapping("/{id}")

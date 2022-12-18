@@ -61,7 +61,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         // Check productId
         ProductEntity productEntity = productRepository.findByProductIdAndStatus(cartRequest.getProductId(), ProductEntity.StatusEnum.ACTIVE);
-        System.out.println(productEntity.getStatus());
         if (ObjectUtils.isEmpty(productEntity)) {
             throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "Product Not Found");
         } else {
@@ -125,9 +124,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void deleteCart(UUID id) {
+    public CartDetailDTO deleteCart(UUID id) {
         CartDetailEntity cartDetailEntity = this.cartDetailRepository.findById(id).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(),"CartDetail Not Found"));
         cartDetailRepository.delete(cartDetailEntity);
+        return this.modelMapper.map(cartDetailEntity, CartDetailDTO.class);
     }
 
     @Override

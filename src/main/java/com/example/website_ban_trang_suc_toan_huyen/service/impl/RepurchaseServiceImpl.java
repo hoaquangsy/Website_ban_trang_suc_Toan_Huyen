@@ -10,9 +10,11 @@ import com.example.website_ban_trang_suc_toan_huyen.entity.entity.*;
 import com.example.website_ban_trang_suc_toan_huyen.exception.BadRequestException;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.OrderRequest;
+import com.example.website_ban_trang_suc_toan_huyen.payload.request.WaitingProductRequest;
 import com.example.website_ban_trang_suc_toan_huyen.repository.*;
 import com.example.website_ban_trang_suc_toan_huyen.service.OrderService;
 import com.example.website_ban_trang_suc_toan_huyen.service.RepurchaseService;
+import com.example.website_ban_trang_suc_toan_huyen.service.WaitingProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
@@ -53,10 +56,16 @@ public class RepurchaseServiceImpl implements RepurchaseService {
     private OrderDao orderDao;
 
     @Autowired
+    private WaitingProductService productService;
+
+    @Autowired
     private SizeRepository sizeRepository;
 
     @Autowired
     private ProductImageRepository productImageRepository;
+
+    @Autowired
+    private HttpSession session;
 
 
     @Override
@@ -82,17 +91,24 @@ public class RepurchaseServiceImpl implements RepurchaseService {
         List<OrderDetailEntity> orderDetailEntityList = new ArrayList<>();
         orderRequest.getOrderDetailList().forEach(orderDetailRq -> {
             OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
+            Optional<ProductSizeEntity> productEntity = this.productSizeRepository.findByProductAndSize(orderDetailRq.getProductId(),orderDetailRq.getSizeId());
             BeanUtils.copyProperties(orderDetailRq, orderDetailEntity);
             orderDetailEntity.setId(UUID.randomUUID());
             orderDetailEntity.setOrderId(order.getId());
             orderDetailEntityList.add(orderDetailEntity);
+            orderDetailEntity.setPriceSale(productEntity.isPresent() ? productEntity.get().getSalePrice() : new BigDecimal(0));
+            orderDetailEntity.setPricePurchase(productEntity.isPresent() ? productEntity.get().getPurchasePrice() : new BigDecimal(0));
+
         });
         orderDetailRepository.saveAll(orderDetailEntityList);
         orderDetailEntityList.forEach(orderDetailEntity -> {
-            Optional<ProductSizeEntity> productSize = this.productSizeRepository.findByProductAndSize(orderDetailEntity.getProductId(),orderDetailEntity.getSizeId());
-            ProductSizeEntity sizeEntity = productSize.orElseThrow(() -> new BadRequestException("Lỗi hệ thống"));
-            sizeEntity.setQuantity(sizeEntity.getQuantity() + orderDetailEntity.getQuantity());
-            this.productSizeRepository.save(sizeEntity);
+            WaitingProductRequest waitingProductRequest = new WaitingProductRequest();
+            waitingProductRequest.setProductId(orderDetailEntity.getProductId());
+            waitingProductRequest.setQuantity(orderDetailEntity.getQuantity());
+            waitingProductRequest.setNote("Chưa có chú thích");
+            waitingProductRequest.setSizeId(orderDetailEntity.getSizeId());
+            this.productService.createWaitingProduct(waitingProductRequest);
+
         });
         return orderRequest;
     }

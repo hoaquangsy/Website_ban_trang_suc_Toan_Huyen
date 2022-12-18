@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,6 +36,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryPropertyRepository categoryPropertyRepository;
 
+    @Autowired
+    private HttpSession session;
 
     @Override
     @Transactional
@@ -54,6 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryEntity category = this.modelMapper.map(dto,CategoryEntity.class);
         category.setCategoryId(id);
         category.setDeleted(Boolean.FALSE);
+        category.setLastModifiedBy(dto.getLastModifiedBy());
         List<UUID> categoryPropertyEntities =
                 this.categoryPropertyRepository.findCategoryPropertyEntitiesByCategoryId(id);
         this.categoryPropertyRepository.deleteAllById(categoryPropertyEntities);
@@ -71,7 +75,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     private CategoryDto getCategoryDto(CategoryRequest dto, CategoryEntity category) {
         categoryRepository.save(category);
-
         List<CategoryPropertyEntity> categoryPropertyEntities = dto.getProperties().stream()
                 .map(s -> new CategoryPropertyEntity(UUID.randomUUID(), s, category.getCategoryId()))
                 .collect(Collectors.toList());

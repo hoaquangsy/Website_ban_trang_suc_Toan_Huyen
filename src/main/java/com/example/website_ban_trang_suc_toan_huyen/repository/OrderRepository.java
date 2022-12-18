@@ -22,5 +22,4 @@ public interface OrderRepository extends JpaRepository<OrderEntity, UUID> {
     List<OrderEntity> findByUserId(UUID userId);
 
     List<OrderEntity> findByUserIdAndStatus(UUID userId, OrderEntity.StatusEnum status);
-
 }

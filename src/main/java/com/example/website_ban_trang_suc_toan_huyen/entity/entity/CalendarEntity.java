@@ -6,11 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -25,32 +24,30 @@ public class CalendarEntity extends BaseEntity{
     @Column(length = 36)
     private UUID id;
     @Column
-    @Type(type ="uuid-char")
-    private UUID orderId;
+    private LocalDateTime time;
     @Column
-    private Date time;
-    @Column
-    private Integer status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     @Column
     private String userName;
     @Column(length = 12)
     private String phoneNumber;
     @Column
-    private BigDecimal customerMoney;
+    private String email;
     @Column
-    private BigDecimal arrears;
+    @Type(type = "uuid-char")
+    private UUID productId;
+    @Column
+    @Type(type = "uuid-char")
+    private UUID sizeId;
+
+    @Column
+    private String note;
     @Getter
     public enum Status{
-        WAIT_CONFIRM(0),
-        ACTIVE(1),
-        DONE(100),
-        CLOSE(101);
-
-
-        private int code;
-
-        Status(int code) {
-            code=this.code;
-        }
+        WAIT_CONFIRM,
+        ACTIVE,
+        DONE,
+        CLOSE;
     }
 }

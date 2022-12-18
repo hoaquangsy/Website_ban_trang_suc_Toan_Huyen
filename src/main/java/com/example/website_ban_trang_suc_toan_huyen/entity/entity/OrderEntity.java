@@ -35,6 +35,9 @@ public class OrderEntity extends BaseEntity{
     private BigDecimal transportFee;
     @Column
     private BigDecimal total;
+
+    @Column
+    private BigDecimal cost;
     @Column
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
@@ -42,6 +45,8 @@ public class OrderEntity extends BaseEntity{
     private OrderType purchaseType;
     @Column
     private String address;
+    @Column()
+    private BigDecimal datcoc;
     @Column
     private Boolean isRepurchase;
     @Column
@@ -57,6 +62,7 @@ public class OrderEntity extends BaseEntity{
     @AllArgsConstructor
     @Getter
     public enum StatusEnum {
+        HOA_DON_CHO,
         CHO_XAC_NHAN,
         XAC_NHAN,
         DANG_GIAO,
@@ -67,8 +73,7 @@ public class OrderEntity extends BaseEntity{
     @Getter
     public enum OrderType {
        DIRECT_TYPE,
-        ONLINE,
-        DEPOSIT
+        ONLINE
     }
 
 

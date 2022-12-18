@@ -20,9 +20,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import javax.servlet.http.HttpSession;
+import java.awt.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,6 +65,10 @@ public class OrderServiceImpl implements OrderService {
     private ProductImageRepository productImageRepository;
 
 
+    @Autowired
+    private HttpSession session;
+
+
     @Override
     @Transactional
     public OrderRequest saveOrder(OrderRequest orderRequest) {
@@ -87,7 +98,63 @@ public class OrderServiceImpl implements OrderService {
             BeanUtils.copyProperties(orderDetailRq, orderDetailEntity);
             orderDetailEntity.setId(UUID.randomUUID());
             orderDetailEntity.setOrderId(order.getId());
+            Optional<ProductSizeEntity> sizeEntity = this.productSizeRepository.findByProductAndSize(orderDetailEntity.getProductId(),orderDetailEntity.getSizeId());
+            orderDetailEntity.setPriceSale(sizeEntity.isPresent() ? sizeEntity.get().getSalePrice() : new BigDecimal(0));
+            orderDetailEntity.setPricePurchase(sizeEntity.isPresent() ? sizeEntity.get().getPurchasePrice() : new BigDecimal(0));
+
             orderDetailEntityList.add(orderDetailEntity);
+        });
+        orderDetailRepository.saveAll(orderDetailEntityList);
+        orderDetailEntityList.forEach(orderDetailEntity -> {
+            Optional<ProductSizeEntity> productSize = this.productSizeRepository.findByProductAndSize(orderDetailEntity.getProductId(),orderDetailEntity.getSizeId());
+            ProductSizeEntity sizeEntity = productSize.orElseThrow(() -> new BadRequestException("Lỗi hệ thống"));
+            sizeEntity.setQuantity(sizeEntity.getQuantity() - orderDetailEntity.getQuantity());
+            this.productSizeRepository.save(sizeEntity);
+        });
+        return orderRequest;
+    }
+
+    @Override
+    @Transactional
+    public OrderRequest updateWaitOrder(UUID idOrder,OrderRequest orderRequest) {
+        if (userRepository.findById(orderRequest.getUserId()).isEmpty()) {
+            throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "User not exist");
+        }
+        orderRequest.getOrderDetailList().forEach(orderDetailRq -> {
+            Optional<ProductSizeEntity> productEntity = this.productSizeRepository.findByProductAndSize(orderDetailRq.getProductId(),orderDetailRq.getSizeId());
+            if(productEntity.isEmpty()){
+                throw  new NotFoundException(HttpStatus.NOT_FOUND.value(),"Sản phẩm không tồn tại");
+            }
+            if(productEntity.get().getQuantity() < orderDetailRq.getQuantity()){
+                throw new BadRequestException("Số lượng sản phẩm không đủ");
+            }
+        });
+        OrderEntity orderRequestEntity = orderRepository.findById(idOrder).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "Order không tồn tại"));
+        BeanUtils.copyProperties(orderRequest, orderRequestEntity);
+        orderRepository.save(orderRequestEntity);
+        List<UUID> uuids = orderDetailRepository.findByOrderId(orderRequestEntity.getId()).stream().map(OrderDetailEntity::getId).collect(Collectors.toList());
+       List<OrderDetailEntity> orderDetailEntities = orderDetailRepository.findByOrderId(orderRequestEntity.getId());
+       List<ProductSizeEntity> productSizeEntities = new ArrayList<>();
+       orderDetailEntities.forEach(orderDetailEntity -> {
+           Optional<ProductSizeEntity> sizeEntity = this.productSizeRepository.findByProductAndSize(orderDetailEntity.getProductId(),orderDetailEntity.getSizeId());
+           if(sizeEntity.isPresent()){
+               ProductSizeEntity sizeEntity1 =   sizeEntity.get();
+               sizeEntity1.setQuantity(sizeEntity.get().getQuantity() + orderDetailEntity.getQuantity());
+               productSizeEntities.add(sizeEntity1);
+           }
+           this.productSizeRepository.saveAll(productSizeEntities);
+       });
+        orderDetailRepository.deleteAllById(uuids);
+        List<OrderDetailEntity> orderDetailEntityList = new ArrayList<>();
+        orderRequest.getOrderDetailList().forEach(orderDetailRq -> {
+            OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
+            Optional<ProductSizeEntity> sizeEntity = this.productSizeRepository.findByProductAndSize(orderDetailEntity.getProductId(),orderDetailEntity.getSizeId());
+            BeanUtils.copyProperties(orderDetailRq, orderDetailEntity);
+            orderDetailEntity.setId(UUID.randomUUID());
+            orderDetailEntity.setOrderId(orderRequestEntity.getId());
+            orderDetailEntityList.add(orderDetailEntity);
+            orderDetailEntity.setPriceSale(sizeEntity.isPresent() ? sizeEntity.get().getSalePrice() : new BigDecimal(0));
+            orderDetailEntity.setPricePurchase(sizeEntity.isPresent() ? sizeEntity.get().getPurchasePrice() : new BigDecimal(0));
         });
         orderDetailRepository.saveAll(orderDetailEntityList);
         orderDetailEntityList.forEach(orderDetailEntity -> {
@@ -114,14 +181,17 @@ public class OrderServiceImpl implements OrderService {
         OrderEntity orderEntity = orderRepository.findById(idOrder).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "Order không tồn tại"));
        OrderDTO orderDTO =  modelMapper.map(orderEntity,OrderDTO.class);
        List<ProductOrderDto> productOrderDtos = new ArrayList<>();
-   List<OrderDetailEntity> orderDetailEntities = this.orderDetailRepository.findByOrderId(orderDTO.getId());
+       List<OrderDetailEntity> orderDetailEntities = this.orderDetailRepository.findByOrderId(orderDTO.getId());
+       
    orderDetailEntities.forEach(orderDetailEntity -> {
        ProductOrderDto productOrderDto = new ProductOrderDto();
+       productOrderDto.setPricePurchase(orderDetailEntity.getPricePurchase());
+       productOrderDto.setPriceSale(orderDetailEntity.getPriceSale());
        productOrderDto.setProductId(orderDetailEntity.getProductId());
        productOrderDto.setSizeId(orderDetailEntity.getSizeId());
        productOrderDto.setId(orderDetailEntity.getId());
-       ProductEntity productEntity = this.productRepository.findID(orderDetailEntity.getProductId()).get();
-       SizeEntity entity = this.sizeRepository.getSizeEntitiesBy(orderDetailEntity.getSizeId()).get();
+       ProductEntity productEntity = this.productRepository.findID(orderDetailEntity.getProductId()).orElse(new ProductEntity());
+       SizeEntity entity = this.sizeRepository.getSizeEntitiesBy(orderDetailEntity.getSizeId()).orElse(new SizeEntity());
        productOrderDto.setSize(entity.getSize());
        productOrderDto.setNameProduct(productEntity.getNameProduct());
        productOrderDto.setQuantity(orderDetailEntity.getQuantity());
@@ -169,7 +239,6 @@ public class OrderServiceImpl implements OrderService {
            EventEntity entity = this.eventRepository.findId(orderDTO.getEventId()).orElse(new EventEntity());
            orderDTO.setEvent(this.modelMapper.map(entity, EventDto.class));
        });
-
         return new PageDTO(materialDtos,pageIndex,pageSize,count);
     }
     @Override
@@ -190,16 +259,16 @@ public class OrderServiceImpl implements OrderService {
         return response;
     }
     @Override
-    public void exportPdf(UUID orderId){
-        OrderEntity orderEntity = orderRepository.findById(orderId).get();
+    public ByteArrayInputStream exportPdf(UUID orderId){
+        OrderEntity orderEntity = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "Hoá đơn không tồn tại"));
         BigDecimal total = orderEntity.getTotal();
         List<OrderDetailEntity> orderDetailEntityList = orderDetailRepository.findByOrderId(orderId);
-        UserEntity user = userRepository.findById(orderEntity.getUserId()).get();
+        UserEntity user = userRepository.findById(orderEntity.getUserId()).orElse(new UserEntity());
         List<ExportPdfDTO> exportPdfDTOS = new ArrayList<>();
         orderDetailEntityList.forEach(orderDetailEntity -> {
             ProductEntity productEntity = productRepository.findID(orderDetailEntity.getProductId()).get();
             MaterialEntity materialEntity = materialRepository.findByID(productEntity.getMaterialId()).get();
-            ProductSizeEntity productSizeEntity = productSizeRepository.findByProductIdAndSalePrice(productEntity.getProductId(),orderDetailEntity.getPrice());
+            ProductSizeEntity productSizeEntity = productSizeRepository.findByProductIdAndSizeId(productEntity.getProductId(),orderDetailEntity.getSizeId());
             ExportPdfDTO exportPdfDTO = new ExportPdfDTO();
             exportPdfDTO.setTotal(orderDetailEntity.getTotal());
             exportPdfDTO.setName(productEntity.getNameProduct());
@@ -207,11 +276,11 @@ public class OrderServiceImpl implements OrderService {
             exportPdfDTO.setAge(materialEntity.getAge());
             exportPdfDTO.setWight(productSizeEntity.getWeight());
             exportPdfDTO.setWage(productEntity.getSalary());
-            exportPdfDTO.setTotal(orderDetailEntity.getTotal());
+            exportPdfDTO.setPrice(orderDetailEntity.getPrice().subtract(productEntity.getSalary()));
             exportPdfDTOS.add(exportPdfDTO);
         });
         ExportPDFUtils exportPDFUtils = new ExportPDFUtils();
-        exportPDFUtils.exportPdf(exportPdfDTOS,total, user.getUserName(), user.getAddress());
+      return   exportPDFUtils.exportPdf(exportPdfDTOS,total, user.getFullName(), user.getAddress());
 
     }
 }

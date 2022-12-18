@@ -14,9 +14,9 @@ public class UserRequest {
     private String fullName;
     @NotNull(message = "birthday không để trống")
     private LocalDate birthday;
-    @NotBlank(message = "Password không để trống")
+
     private String password;
-    @NotBlank(message = "confirmPassword không để trống")
+
     private String confirmPassword;
     @NotNull(message = "Gender không để trống")
     private UserEntity.Gender gender;
@@ -31,9 +31,9 @@ public class UserRequest {
     private String email;
     @NotBlank(message = "Adress không để trống")
     private String address;
-    @NotBlank(message = "Avatar không để trống")
+
     private String imageUrl;
-    @NotBlank(message = "Avatar không để trống")
+
     private String note;
 
 }

@@ -42,8 +42,8 @@ public class CartController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCart(@PathVariable("id") UUID id) {
-        shoppingCartService.deleteCart(id);
-        return ResponseEntity.ok(SampleResponse.success());
+        CartDetailDTO cartDetailDTO = shoppingCartService.deleteCart(id);
+        return ResponseEntity.ok(SampleResponse.success(cartDetailDTO));
     }
 
     @PutMapping("/{id}")

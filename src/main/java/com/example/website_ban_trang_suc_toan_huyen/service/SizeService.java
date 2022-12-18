@@ -19,6 +19,8 @@ public interface SizeService {
 
     List<SizeDto> getAllSize();
 
+    List<SizeDto> getByProductId(UUID productId);
+
 
 
 }

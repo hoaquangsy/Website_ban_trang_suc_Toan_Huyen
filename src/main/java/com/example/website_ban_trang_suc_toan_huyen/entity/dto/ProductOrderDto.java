@@ -25,6 +25,8 @@ public class ProductOrderDto {
 
     private BigDecimal pricePurchase;
 
+    private BigDecimal priceSale;
+
     private Integer quantity;
 
     private BigDecimal salary;

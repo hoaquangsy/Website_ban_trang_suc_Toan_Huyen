@@ -15,9 +15,12 @@ import com.example.website_ban_trang_suc_toan_huyen.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,6 +38,12 @@ public class UserServiceImp implements UserService {
     UserDao userDao;
     @Autowired
     private CartRepository cartRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private HttpSession session;
 
     @Override
     public UserDTO addUser(UserRequest userRequest) {
@@ -61,6 +70,7 @@ public class UserServiceImp implements UserService {
         }
         user.setUserId(UUID.randomUUID());
         user.setDeleted(Boolean.FALSE);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setStatus(Boolean.FALSE);
 
         CartEntity cartEntity = new CartEntity();
@@ -77,8 +87,8 @@ public class UserServiceImp implements UserService {
         return this.modelMapper.map(this.userRepository.save(user),UserDTO.class);
 
     }
-    @Override
-    public UserDTO getById(UUID id){
+
+    private UserDTO getById(UUID id){
         UserEntity user = this.userRepository.findUserEntitiesById(id).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "User not found"));
         return this.modelMapper.map(user,UserDTO.class);
     }
@@ -103,10 +113,13 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public UserDTO getUserByUserName(String userName) {
+        UserEntity user = this.userRepository.finUserEntitybyUsername(userName);
+        return this.modelMapper.map(user,UserDTO.class);
+    }
+
+    @Override
     public UserDTO updateUser(UUID id ,UserRequest userRequest){
-        if(!userRequest.getPassword().equals(userRequest.getConfirmPassword())){
-            throw new BadRequestException("Confirm password không chính xác");
-        }
         if(this.userRepository.findUserEntitiesByEmail(userRequest.getEmail(),id).isPresent()){
             throw new BadRequestException("Email đã tồn tại");
         }
@@ -118,26 +131,9 @@ public class UserServiceImp implements UserService {
         user.setCccd(userRequest.getCccd());
         user.setFullName(userRequest.getFullName());
         user.setBirthday(userRequest.getBirthday());
-        user.setImageUrl(userRequest.getImageUrl());
+        user.setImageUrl(userRequest.getImageUrl() == null || userRequest.getImageUrl().equals("") ? user.getImageUrl() : userRequest.getImageUrl());
         user.setEmail(userRequest.getEmail());
         user.setNote(userRequest.getNote());
-        return this.modelMapper.map(  userRepository.save(user),UserDTO.class);
-    }
-
-    @Override
-    public UserDTO changPass(UUID id, UserRequest userRequest) {
-        UserEntity user = this.userRepository.findUserEntitiesById(id).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND.value(), "User not found"));
-        user.setGender(userRequest.getGender());
-        user.setRole(userRequest.getRole());
-        user.setAddress(userRequest.getAddress());
-        user.setPhoneNumber(userRequest.getPhoneNumber());
-        user.setCccd(userRequest.getCccd());
-        user.setFullName(userRequest.getFullName());
-        user.setBirthday(userRequest.getBirthday());
-        user.setImageUrl(userRequest.getImageUrl());
-        user.setEmail(userRequest.getEmail());
-        user.setNote(userRequest.getNote());
-        user.setPassword(userRequest.getPassword());
         return this.modelMapper.map(  userRepository.save(user),UserDTO.class);
     }
 
@@ -168,5 +164,4 @@ public class UserServiceImp implements UserService {
         List<UserEntity> userEntities =  this.userRepository.findCustomer();
         return userEntities.stream().map(userEntity -> this.modelMapper.map(userEntity,UserDTO.class)).collect(Collectors.toList());
     }
-
 }

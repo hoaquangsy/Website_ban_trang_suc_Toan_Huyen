@@ -7,6 +7,8 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -15,18 +17,19 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ExportPDFUtils {
-    public void exportPdf(List<ExportPdfDTO> exportPdfDTOS, BigDecimal total, String userName, String dis) {
+    public ByteArrayInputStream exportPdf(List<ExportPdfDTO> exportPdfDTOS, BigDecimal total, String userName, String dis) {
         // tạo một document
         Document document = new Document();
+        ByteArrayOutputStream ot = new ByteArrayOutputStream();
         try {
             // khởi tạo một PdfWriter truyền vào document và FileOutputStream
-            PdfWriter.getInstance(document, new FileOutputStream("HelloWorld.pdf"));
+            PdfWriter.getInstance(document, ot);
 
             // mở file để thực hiện viết
             document.open();
             // thêm nội dung sử dụng add function
 
-            Font font = new Font(BaseFont.createFont("C:\\Users\\Admin\\OneDrive\\Desktop\\arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
+            Font font = new Font(BaseFont.createFont("arial/arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
             font.setColor(220, 20, 60);
             font.setStyle(Font.BOLD);
 
@@ -61,7 +64,7 @@ public class ExportPDFUtils {
             paragraph4.setIndentationRight(55);
 
             font.setSize(10.5f);
-            Paragraph paragraph5 = new Paragraph("Bán cho ông (bà): +"+userName +"                                            Địa chỉ:......................."+dis, new Font(font));
+            Paragraph paragraph5 = new Paragraph("Bán cho ông (bà): +"+userName +"                                            Địa chỉ:  "+dis, new Font(font));
             paragraph5.setSpacingBefore(15);
             paragraph5.setAlignment(Element.ALIGN_LEFT);
             paragraph5.setIndentationLeft(55);
@@ -170,5 +173,6 @@ public class ExportPDFUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return new ByteArrayInputStream(ot.toByteArray());
     }
 }

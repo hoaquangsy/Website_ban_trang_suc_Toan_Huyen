@@ -46,11 +46,6 @@ public class ProductController {
     public ResponseEntity<?> getProductById(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(SampleResponse.success(productService.getProductById(id)));
     }
-    @Operation(summary = "Lấy thể loại theo Id", description = "Lấy sản phẩm theo Id")
-    @GetMapping("/trending")
-    public ResponseEntity<?> getProductTrending() {
-        return ResponseEntity.ok(SampleResponse.success(productService.getProductTrending()));
-    }
 
     @PostMapping
     public ResponseEntity<?> addProduct(@Validated @RequestBody ProductRequest productRequest) {

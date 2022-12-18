@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.time.Instant;
@@ -55,13 +56,15 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Autowired
     private ProductImageRepository productImageRepository;
+
     @Autowired
     private ProductSizeRepository productSizeRepository;
 
     @Autowired
     private ModelMapper modelMapper;
 
-
+    @Autowired
+    private HttpSession session;
     @Override
     public PageDTO search(ExchangeSearchRequest exchangeSearchRequest) throws ParseException {
         Long count = this.exchangeDAO.count(exchangeSearchRequest);
@@ -73,6 +76,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         exchangeEntities.forEach(exchangeEntity -> {
             ExchangeDTO exchangeDTO = this.modelMapper.map(exchangeEntity,ExchangeDTO.class);
             exchangeDTO.setOrderDTO(this.modelMapper.map(this.orderRepository.findById(exchangeDTO.getOrderId()).get(), OrderDTO.class));
+            exchangeDTO.getOrderDTO().setUser(this.modelMapper.map(this.userRepository.findById(exchangeDTO.getOrderDTO().getUserId()).orElse(new UserEntity()),UserDTO.class));
             exchangeDTOS.add(exchangeDTO);
         });
         return new PageDTO(exchangeDTOS,exchangeSearchRequest.getPageIndex(),exchangeSearchRequest.getPageSize(),count);

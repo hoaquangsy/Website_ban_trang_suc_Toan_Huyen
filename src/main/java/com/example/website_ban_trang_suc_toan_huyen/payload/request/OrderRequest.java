@@ -37,6 +37,8 @@ public class OrderRequest {
     @NotNull(message = "Địa chỉ không để trống")
     private String address;
 
+    private BigDecimal cost;
+
     @NotEmpty(message = "Hiện không có sản phẩm trong hóa đơn này")
     private List<OrderDetailRq> orderDetailList;
 
@@ -56,4 +58,8 @@ public class OrderRequest {
         @NotNull
         private UUID sizeId;
     }
+
+
+
+
 }

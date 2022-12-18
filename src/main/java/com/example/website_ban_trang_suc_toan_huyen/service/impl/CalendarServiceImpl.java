@@ -1,18 +1,30 @@
 package com.example.website_ban_trang_suc_toan_huyen.service.impl;
 
+import com.example.website_ban_trang_suc_toan_huyen.dao.CalendarDAO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.CalendarDTO;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.ProductDto;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.SizeDto;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.CalendarEntity;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.OrderEntity;
+import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductEntity;
+import com.example.website_ban_trang_suc_toan_huyen.entity.entity.SizeEntity;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
+import com.example.website_ban_trang_suc_toan_huyen.payload.request.CalendarRequest;
+import com.example.website_ban_trang_suc_toan_huyen.payload.request.CalendarSearchRequest;
 import com.example.website_ban_trang_suc_toan_huyen.repository.CalendarRepository;
 import com.example.website_ban_trang_suc_toan_huyen.repository.OrderRepository;
+import com.example.website_ban_trang_suc_toan_huyen.repository.ProductRepository;
+import com.example.website_ban_trang_suc_toan_huyen.repository.SizeRepository;
 import com.example.website_ban_trang_suc_toan_huyen.service.CalendarService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,47 +32,39 @@ import java.util.UUID;
 public class CalendarServiceImpl implements CalendarService {
     @Autowired
     private CalendarRepository calendarRepository;
+
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private CalendarDAO calendarDAO;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private SizeRepository sizeRepository;
+
     @Override
-    public CalendarDTO createCalendar(CalendarDTO calendarDTO) {
-        Optional<OrderEntity> orderEntity = orderRepository.findById(calendarDTO.getOrderId());
-        if (orderEntity.isEmpty()) {
-            throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "Order không tồn tại");
-        }
-        if (!orderEntity.get().getPurchaseType().equals(OrderEntity.OrderType.DEPOSIT)) {
-            throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "Order phải order đặt cọc");
-        }
-        CalendarEntity calendar = new CalendarEntity();
-        calendar.setTime(calendarDTO.getTime());
-        calendar.setArrears(calendarDTO.getArrears());
-        calendar.setCustomerMoney(orderEntity.get().getCustomerMoney());
-        calendar.setUserName(calendarDTO.getUserName());
-        calendar.setPhoneNumber(calendarDTO.getPhoneNumber());
-        calendar.setOrderId(orderEntity.get().getId());
+    public CalendarDTO createCalendar(CalendarRequest calendarRequest) {
+        CalendarEntity calendar = modelMapper.map(calendarRequest,CalendarEntity.class);
+        calendar.setTime(calendar.getTime().plusHours(7));
         calendar.setId(UUID.randomUUID());
-        calendar.setStatus(CalendarEntity.Status.WAIT_CONFIRM.getCode());
         return modelMapper.map(calendarRepository.save(calendar), CalendarDTO.class);
     }
 
     @Override
-    public CalendarDTO updateCalendarByUser(UUID calendarId, Integer status) {
-        CalendarEntity calendar = calendarRepository.findById(calendarId).get();
-        if (ObjectUtils.isEmpty(calendar)) {
-            throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "Calendar không tồn tại");
-        }
-        OrderEntity orderEntity = orderRepository.findById(calendar.getOrderId()).get();
-        if (calendar.getStatus().equals(CalendarEntity.Status.ACTIVE.getCode()) && status.equals(CalendarEntity.Status.CLOSE.getCode())){
-            throw new NotFoundException(HttpStatus.BAD_REQUEST.value(), "Không thể hủy calendar đã xác nhận");
-        }
-        calendar.setStatus(status);
-        if (status.equals(CalendarEntity.Status.CLOSE.getCode())) {
-            orderEntity.setStatus(OrderEntity.StatusEnum.HUY);
-        }
-        orderRepository.save(orderEntity);
+    public CalendarDTO updateCalendarByUser(UUID calendarId, CalendarRequest calendarRequest) {
+        CalendarEntity calendar = calendarRepository.findById(calendarId).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "Sản phẩm không tồn tại"));
+        calendar.setTime(calendar.getTime().plusHours(7));
+        calendar.setUserName(calendarRequest.getUserName());
+        calendar.setPhoneNumber(calendarRequest.getPhoneNumber());
+        calendar.setEmail(calendarRequest.getEmail());
+        calendar.setNote(calendar.getNote());
+        calendar.setProductId(calendar.getProductId());
+        calendar.setSizeId(calendar.getSizeId());
         return modelMapper.map(calendarRepository.save(calendar), CalendarDTO.class);
     }
     @Override
@@ -73,20 +77,28 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
-    public CalendarDTO updateCalendarByAdmin(UUID calendarId, Integer status) {
-        CalendarEntity calendar = calendarRepository.findById(calendarId).get();
-        if (ObjectUtils.isEmpty(calendar)) {
-            throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "Calendar không tồn tại");
-        }
-        OrderEntity orderEntity = orderRepository.findById(calendar.getOrderId()).get();
-        calendar.setStatus(status);
-        if (status.equals(CalendarEntity.Status.DONE.getCode())) {
-            orderEntity.setStatus(OrderEntity.StatusEnum.DA_GIAO);
-        }
-        if (status.equals(CalendarEntity.Status.CLOSE.getCode())) {
-            orderEntity.setStatus(OrderEntity.StatusEnum.HUY);
-        }
-        orderRepository.save(orderEntity);
+    public CalendarDTO changeStatus(UUID calendarId, CalendarRequest calendarRequest) {
+        CalendarEntity calendar = calendarRepository.findById(calendarId).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "Sản phẩm không tồn tại"));
+        //  calendar.setTime(calendarRequest.getTime());
+        calendar.setStatus(calendarRequest.getStatus());
         return modelMapper.map(calendarRepository.save(calendar), CalendarDTO.class);
+    }
+
+    @Override
+    public PageDTO search(CalendarSearchRequest calendarSearchRequest) throws ParseException {
+        Long count = this.calendarDAO.count(calendarSearchRequest);
+        if(count == 0L){
+            return PageDTO.empty();
+        }
+        List<CalendarEntity> calendarEntities = this.calendarDAO.search(calendarSearchRequest);
+        List<CalendarDTO> calendarDTOS  = new ArrayList<>();
+        calendarEntities.forEach(exchangeEntity -> {
+            CalendarDTO calendarDTO = this.modelMapper.map(exchangeEntity,CalendarDTO.class);
+            calendarDTO.setSize(this.modelMapper.map(this.sizeRepository.findById(calendarDTO.getSizeId()).orElse(new SizeEntity()), SizeDto.class));
+            calendarDTO.setProduct(this.modelMapper.map(this.productRepository.findID(calendarDTO.getProductId()).orElse(new ProductEntity()), ProductDto.class));
+            calendarDTOS.add(calendarDTO);
+        });
+        return new PageDTO(calendarDTOS,calendarSearchRequest.getPageIndex(),calendarSearchRequest.getPageSize(),count);
+
     }
 }
