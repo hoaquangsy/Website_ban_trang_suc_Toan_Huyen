@@ -281,7 +281,7 @@ public class ProductServiceImpl implements ProductService {
         return new PageDTO(proProductDtos,pageIndex,pageSize,count);
     }
     @Override
-    public PageDTO searchV2(Integer pageIndex, Integer pageSize, String keyword, ProductEntity.StatusEnum status, List<UUID> materialId, UUID vendorId, UUID categoryId, UUID accessoryId, BigDecimal startPrice, BigDecimal endPrice, String sortBy, ProductEntity.ProductGender gender) {
+    public PageDTO searchV2(Integer pageIndex, Integer pageSize, String keyword, ProductEntity.StatusEnum status, List<UUID> materialId, List<UUID> vendorId, List<UUID> categoryId, List<UUID> accessoryId, BigDecimal startPrice, BigDecimal endPrice, String sortBy, ProductEntity.ProductGender gender) {
         List<ProductEntity> productEntities = this.productDao.searchV2(pageIndex,pageSize,keyword,status,materialId,vendorId,accessoryId,categoryId,startPrice,endPrice,sortBy,gender);
         List<ProductDto> proProductDtos = productEntities.stream()
                 .map(productEntity -> modelMapper.map(productEntity,ProductDto.class)).collect(Collectors.toList());
