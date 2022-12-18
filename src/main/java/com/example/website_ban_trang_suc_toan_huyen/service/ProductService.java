@@ -39,6 +39,18 @@ public interface ProductService {
                    BigDecimal endPrice,
                    String sortBy,
                    ProductEntity.ProductGender gender);
+    PageDTO searchV2(Integer pageIndex,
+                   Integer pageSize,
+                   String keyword,
+                   ProductEntity.StatusEnum status,
+                   List<UUID> materialId,
+                   UUID vendorId,
+                   UUID categoryId,
+                   UUID accessoryId,
+                   BigDecimal startPrice,
+                   BigDecimal endPrice,
+                   String sortBy,
+                   ProductEntity.ProductGender gender);
     PageDTO autoComplete(Integer pageIndex,
                    Integer pageSize,
                    String keyword,

@@ -20,12 +20,37 @@ public interface ProductDao {
                                String sortBy,
                                ProductEntity.ProductGender gender
                                );
+    List<ProductEntity> searchV2(Integer pageIndex,
+                               Integer pageSize,
+                               String keyword,
+                               ProductEntity.StatusEnum status,
+                               List<UUID> materialId,
+                               UUID vendorId,
+                               UUID categoryId,
+                               UUID accessoryId,
+                               BigDecimal startPrice,
+                               BigDecimal endPrice,
+                               String sortBy,
+                               ProductEntity.ProductGender gender
+    );
 
     Long count(Integer pageIndex,
                Integer pageSize,
                String keyword,
                ProductEntity.StatusEnum status,
                UUID materialId,
+               UUID vendorId,
+               UUID categoryId,
+               UUID accessoryId,
+               BigDecimal startPrice,
+               BigDecimal endPrice,
+               String sortBy,
+               ProductEntity.ProductGender gender);
+    Long countV2(Integer pageIndex,
+               Integer pageSize,
+               String keyword,
+               ProductEntity.StatusEnum status,
+               List<UUID> materialId,
                UUID vendorId,
                UUID categoryId,
                UUID accessoryId,
