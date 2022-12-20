@@ -88,7 +88,7 @@ public class UserServiceImp implements UserService {
 
     }
 
-    private UserDTO getById(UUID id){
+    public UserDTO getById(UUID id){
         UserEntity user = this.userRepository.findUserEntitiesById(id).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "User not found"));
         return this.modelMapper.map(user,UserDTO.class);
     }
