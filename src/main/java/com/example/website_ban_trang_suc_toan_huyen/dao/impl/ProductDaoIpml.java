@@ -17,24 +17,49 @@ public class ProductDaoIpml implements ProductDao {
 
     @Override
     public List<ProductEntity> search(Integer pageIndex,
-                                       Integer pageSize,
-                                       String keyword,
-                                       ProductEntity.StatusEnum status,
-                                       UUID materialId,
-                                       UUID vendorId,
-                                       UUID categoryId,
-                                       UUID accessoryId,
-                                       BigDecimal startPrice,
-                                       BigDecimal endPrice,
-                                       String sortBy,
+                                      Integer pageSize,
+                                      String keyword,
+                                      ProductEntity.StatusEnum status,
+                                      UUID materialId,
+                                      UUID vendorId,
+                                      UUID categoryId,
+                                      UUID accessoryId,
+                                      BigDecimal startPrice,
+                                      BigDecimal endPrice,
+                                      String sortBy,
                                       ProductEntity.ProductGender gender) {
         Map<String, Object> values = new HashMap<>();
         StringBuilder sql = new StringBuilder("select  p from ProductEntity p ");
-        sql.append(createWhereQuery(values,keyword,status,materialId,vendorId,categoryId,accessoryId,startPrice,endPrice,gender));
+        sql.append(createWhereQuery(values, keyword, status, materialId, vendorId, categoryId, accessoryId, startPrice, endPrice, gender));
         sql.append(createOrderQuery(sortBy));
         Query query = entityManager.createQuery(sql.toString(), ProductEntity.class);
         values.forEach(query::setParameter);
-        System.out.println(sql.toString() + "       "  + values);
+        System.out.println(sql.toString() + "       " + values);
+        query.setFirstResult((pageIndex - 1) * pageSize);
+        query.setMaxResults(pageSize);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<ProductEntity> searchV2(Integer pageIndex,
+                                        Integer pageSize,
+                                        String keyword,
+                                        ProductEntity.StatusEnum status,
+                                        List<UUID> materialId,
+                                        List<UUID> vendorId,
+                                        List<UUID> categoryId,
+                                        List<UUID> accessoryId,
+                                        BigDecimal startPrice,
+                                        BigDecimal endPrice,
+                                        String sortBy,
+                                        ProductEntity.ProductGender gender) {
+        Map<String, Object> values = new HashMap<>();
+        StringBuilder sql = new StringBuilder("select  p from ProductEntity p ");
+        sql.append(createWhereQueryV2(values, keyword, status, materialId, vendorId, categoryId, accessoryId, startPrice, endPrice, gender));
+        sql.append(createOrderQuery(sortBy));
+        Query query = entityManager.createQuery(sql.toString(), ProductEntity.class);
+        values.forEach(query::setParameter);
+        System.out.println(sql.toString() + "       " + values);
         query.setFirstResult((pageIndex - 1) * pageSize);
         query.setMaxResults(pageSize);
         return query.getResultList();
@@ -55,61 +80,72 @@ public class ProductDaoIpml implements ProductDao {
                       ProductEntity.ProductGender gender) {
         Map<String, Object> values = new HashMap<>();
         StringBuilder sql = new StringBuilder("SELECT COUNT(p) FROM ProductEntity p ");
-        sql.append(createWhereQuery(values,keyword,status,materialId,vendorId,categoryId,accessoryId,startPrice,endPrice,gender));
+        sql.append(createWhereQuery(values, keyword, status, materialId, vendorId, categoryId, accessoryId, startPrice, endPrice, gender));
         Query query = entityManager.createQuery(sql.toString(), Long.class);
         values.forEach(query::setParameter);
         System.out.println(sql.toString());
         return (Long) query.getSingleResult();
     }
 
-    private String createWhereQuery(Map<String,Object> values,
-                                     String keyword,
-                                     ProductEntity.StatusEnum status,
-                                     UUID materialId,
-                                     UUID vendorId,
-                                     UUID categoryId,
-                                     UUID accessoryId,
-                                     BigDecimal startPrice,
-                                     BigDecimal endPrice,
+    @Override
+    public Long countV2(Integer pageIndex, Integer pageSize, String keyword, ProductEntity.StatusEnum status, List<UUID> materialId,  List<UUID> vendorId,  List<UUID> categoryId,  List<UUID> accessoryId, BigDecimal startPrice, BigDecimal endPrice, String sortBy, ProductEntity.ProductGender gender) {
+        Map<String, Object> values = new HashMap<>();
+        StringBuilder sql = new StringBuilder("SELECT COUNT(p) FROM ProductEntity p ");
+        sql.append(createWhereQueryV2(values, keyword, status, materialId, vendorId, categoryId, accessoryId, startPrice, endPrice, gender));
+        Query query = entityManager.createQuery(sql.toString(), Long.class);
+        values.forEach(query::setParameter);
+        System.out.println(sql.toString());
+        return (Long) query.getSingleResult();
+    }
+
+    private String createWhereQuery(Map<String, Object> values,
+                                    String keyword,
+                                    ProductEntity.StatusEnum status,
+                                    UUID materialId,
+                                    UUID vendorId,
+                                    UUID categoryId,
+                                    UUID accessoryId,
+                                    BigDecimal startPrice,
+                                    BigDecimal endPrice,
                                     ProductEntity.ProductGender gender) {
         StringBuilder sql = new StringBuilder(" WHERE 1 = 1 ");
         if (!keyword.trim().equals("")) {
             sql.append(" AND ( p.nameProduct like :name ");
-            values.put("name", "%"+keyword+"%");
+            values.put("name", "%" + keyword + "%");
             sql.append(" OR p.code like :code  ");
-            values.put("code", "%"+keyword+"%");
+            values.put("code", "%" + keyword + "%");
             sql.append(" OR p.note like :note ) ");
-            values.put("note", "%"+keyword+"%");
+            values.put("note", "%" + keyword + "%");
         }
-        if(Objects.nonNull(vendorId)){
+        if (Objects.nonNull(vendorId)) {
             sql.append(" AND  p.vendorId = :vendorId ");
             values.put("vendorId", vendorId);
         }
-        if(Objects.nonNull(materialId)){
+        if (Objects.nonNull(materialId)) {
             sql.append(" AND  p.materialId = :materialId ");
             values.put("materialId", materialId);
         }
-        if(Objects.nonNull(categoryId)){
+        if (Objects.nonNull(categoryId)) {
             sql.append(" AND  p.categoryId = :categoryId ");
             values.put("categoryId", categoryId);
         }
-        if(Objects.nonNull(accessoryId)){
+        if (Objects.nonNull(accessoryId)) {
             sql.append(" AND  p.accessoryId = :accessoryId ");
             values.put("accessoryId", accessoryId);
         }
-        if(Objects.nonNull(gender)){
+        if (Objects.nonNull(gender)) {
             sql.append(" AND  p.gender = :gender ");
             values.put("gender", gender);
         }
-        if(Objects.nonNull(status)) {
+        if (Objects.nonNull(status)) {
             sql.append(" AND  p.status = :status ");
             values.put("status", status);
         }
-        if(Objects.nonNull(startPrice)) {
+        if (Objects.nonNull(startPrice)) {
             sql.append(" AND  p.productId in ( select s.productId from ProductSizeEntity s where s.purchasePrice >= :startPrice) ");
             values.put("startPrice", startPrice);
         }
-        if(Objects.nonNull(endPrice)) {
+        if (Objects.nonNull(endPrice)) {
             sql.append(" AND  p.productId in ( select s.productId from ProductSizeEntity s where s.purchasePrice <= :endPrice) ");
             values.put("endPrice", endPrice);
         }
@@ -117,6 +153,63 @@ public class ProductDaoIpml implements ProductDao {
         values.put("delete", Boolean.FALSE);
         return sql.toString();
     }
+
+    private String createWhereQueryV2(Map<String, Object> values,
+                                      String keyword,
+                                      ProductEntity.StatusEnum status,
+                                      List<UUID> materialId,
+                                      List<UUID> vendorId,
+                                      List<UUID> categoryId,
+                                      List<UUID> accessoryId,
+                                      BigDecimal startPrice,
+                                      BigDecimal endPrice,
+                                      ProductEntity.ProductGender gender) {
+        StringBuilder sql = new StringBuilder(" WHERE 1 = 1 ");
+        if (!keyword.trim().equals("")) {
+            sql.append(" AND ( p.nameProduct like :name ");
+            values.put("name", "%" + keyword + "%");
+            sql.append(" OR p.code like :code  ");
+            values.put("code", "%" + keyword + "%");
+            sql.append(" OR p.note like :note ) ");
+            values.put("note", "%" + keyword + "%");
+        }
+        if (Objects.nonNull(vendorId)) {
+            sql.append(" AND  p.vendorId IN :vendorId ");
+            values.put("vendorId", vendorId);
+        }
+        if (Objects.nonNull(materialId)) {
+            sql.append(" AND  p.materialId IN :materialId ");
+            values.put("materialId", materialId);
+        }
+        if (Objects.nonNull(categoryId)) {
+            sql.append(" AND  p.categoryId IN :categoryId ");
+            values.put("categoryId", categoryId);
+        }
+        if (Objects.nonNull(accessoryId)) {
+            sql.append(" AND  p.accessoryId IN :accessoryId ");
+            values.put("accessoryId", accessoryId);
+        }
+        if (Objects.nonNull(gender)) {
+            sql.append(" AND  p.gender = :gender ");
+            values.put("gender", gender);
+        }
+        if (Objects.nonNull(status)) {
+            sql.append(" AND  p.status = :status ");
+            values.put("status", status);
+        }
+        if (Objects.nonNull(startPrice)) {
+            sql.append(" AND  p.productId in ( select s.productId from ProductSizeEntity s where s.purchasePrice >= :startPrice) ");
+            values.put("startPrice", startPrice);
+        }
+        if (Objects.nonNull(endPrice)) {
+            sql.append(" AND  p.productId in ( select s.productId from ProductSizeEntity s where s.purchasePrice <= :endPrice) ");
+            values.put("endPrice", endPrice);
+        }
+        sql.append(" AND  p.deleted = :delete ");
+        values.put("delete", Boolean.FALSE);
+        return sql.toString();
+    }
+
     private StringBuilder createOrderQuery(String sortBy) {
         StringBuilder sql = new StringBuilder(" ");
         if (!sortBy.trim().equals("")) {

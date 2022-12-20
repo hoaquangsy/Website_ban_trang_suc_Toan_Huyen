@@ -280,6 +280,40 @@ public class ProductServiceImpl implements ProductService {
         });
         return new PageDTO(proProductDtos,pageIndex,pageSize,count);
     }
+    @Override
+    public PageDTO searchV2(Integer pageIndex, Integer pageSize, String keyword, ProductEntity.StatusEnum status, List<UUID> materialId, List<UUID> vendorId, List<UUID> categoryId, List<UUID> accessoryId, BigDecimal startPrice, BigDecimal endPrice, String sortBy, ProductEntity.ProductGender gender) {
+        List<ProductEntity> productEntities = this.productDao.searchV2(pageIndex,pageSize,keyword,status,materialId,vendorId,accessoryId,categoryId,startPrice,endPrice,sortBy,gender);
+        List<ProductDto> proProductDtos = productEntities.stream()
+                .map(productEntity -> modelMapper.map(productEntity,ProductDto.class)).collect(Collectors.toList());
+        Long count = this.productDao.countV2(pageIndex,pageSize,keyword,status,materialId,vendorId,accessoryId,categoryId,startPrice,endPrice,sortBy,gender);
+        proProductDtos.forEach(productDto -> {
+            productDto.setCategory(this.modelMapper.map(this.categoryRepository.findId(productDto.getCategoryId()).orElse(new CategoryEntity()), CategoryDto.class));
+            productDto.setAccessory(this.modelMapper.map(this.accessoryRepository.findById(productDto.getAccessoryId()).get(), AccessoryDTO.class));
+            productDto.setMaterial(this.modelMapper.map(this.materialRepository.findByID(productDto.getMaterialId()).get(),MaterialDto.class));
+            productDto.setVendor(this.modelMapper.map(this.vendorRepository.findByID(productDto.getVendorId()).get(), VendorDto.class));
+            if(!CollectionUtils.isEmpty( this.productImageRepository.findByProductId(productDto.getProductId()))){
+                List<ProductImageDTO> imageDTOList =  this.productImageRepository.findByProductId(productDto.getProductId()).stream()
+                        .map(productImage -> this.modelMapper.map(productImage,ProductImageDTO.class)).collect(Collectors.toList());
+                productDto.setProductImages(imageDTOList);
+            }
+            if(!CollectionUtils.isEmpty( this.productPropertyRepository.findByProductId(productDto.getProductId()))){
+                List<ProductPropertyDto> productPropertyDtos =  this.productPropertyRepository.findByProductId(productDto.getProductId()).stream()
+                        .map(productProperty -> this.modelMapper.map(productProperty,ProductPropertyDto.class)).collect(Collectors.toList());
+                productDto.setProductProperties(productPropertyDtos);
+            }
+            if(!CollectionUtils.isEmpty( this.productSizeRepository.findByProductId(productDto.getProductId()))){
+                List<ProductSizeDto> productSizeDtos =  this.productSizeRepository.findByProductId(productDto.getProductId()).stream()
+                        .map(productSize -> this.modelMapper.map(productSize,ProductSizeDto.class)).collect(Collectors.toList());
+                productSizeDtos.forEach(productSizeDto -> {
+                    Optional<SizeEntity> sizeEntity =  this.sizeRepository.getSizeEntitiesBy(productSizeDto.getSizeId());
+                    sizeEntity.ifPresent(entity -> productSizeDto.setSize(entity.getSize()));
+                });
+                productDto.setProductSizes(productSizeDtos);
+            }
+
+        });
+        return new PageDTO(proProductDtos,pageIndex,pageSize,count);
+    }
 
     @Override
     public PageDTO autoComplete(Integer pageIndex, Integer pageSize, String keyword, ProductEntity.StatusEnum status, UUID materialId, UUID vendorId, UUID categoryId, UUID accessoryId, BigDecimal startPrice, BigDecimal endPrice, String sortBy, ProductEntity.ProductGender gender) {
