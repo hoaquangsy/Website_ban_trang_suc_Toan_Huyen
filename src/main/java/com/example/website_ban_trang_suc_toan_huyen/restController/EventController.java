@@ -1,7 +1,9 @@
 package com.example.website_ban_trang_suc_toan_huyen.restController;
 
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.EventDto;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.EventRequest;
+import com.example.website_ban_trang_suc_toan_huyen.payload.request.EventSearchRequest;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.SampleResponse;
 import com.example.website_ban_trang_suc_toan_huyen.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.UUID;
 @CrossOrigin("*")
 @RestController()
@@ -43,8 +46,13 @@ public class EventController {
         return ResponseEntity.ok(SampleResponse.success(eventService.updateEvent(id,request)));
 
     }
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<?> getAllCategoryProduct() {
         return ResponseEntity.ok(SampleResponse.success(eventService.getAllEvent()));
     }
+    @GetMapping()
+    public ResponseEntity<?> search(EventSearchRequest eventSearchRequest) throws ParseException {
+        return ResponseEntity.ok(SampleResponse.success(this.eventService.search(eventSearchRequest)));
+    }
+
 }

@@ -22,7 +22,7 @@ public class UserRequest {
     private UserEntity.Gender gender;
     @NotNull(message = "Role không để trống")
     private UserEntity.Role role;
-    @NotNull(message = "Role không để trống")
+    @NotNull(message = "Số điện thoại không để trống")
     private String phoneNumber;
     @NotNull(message = "CCCD không để trống")
     private String cccd;

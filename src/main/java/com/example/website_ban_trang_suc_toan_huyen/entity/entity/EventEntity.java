@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -31,9 +32,9 @@ public class EventEntity extends BaseEntity {
     @Column
     private Integer discount;
     @Column
-    private LocalDate startDate;
+    private LocalDateTime startDate;
     @Column
-    private LocalDate endDate;
+    private LocalDateTime endDate;
     @Column
     private String description;
 }

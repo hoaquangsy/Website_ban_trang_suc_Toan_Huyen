@@ -61,6 +61,9 @@ public class ExchangeServiceImpl implements ExchangeService {
     private ProductSizeRepository productSizeRepository;
 
     @Autowired
+    private WaitingProductRepository waitingProductRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
@@ -118,17 +121,27 @@ public class ExchangeServiceImpl implements ExchangeService {
         exchangeEntity.setId(UUID.randomUUID());
         this.exchangeRepository.save(exchangeEntity);
         List<ExchangeDetailEntity> exchangeDetailEntities = new ArrayList<>();
+        List<WaitingProductEntity> waitingProductEntities = new ArrayList<>();
         request.getProducts().forEach(product -> {
             ExchangeDetailEntity exchangeDetailEntity = new ExchangeDetailEntity();
+            WaitingProductEntity waitingProductEntity = new WaitingProductEntity();
             exchangeDetailEntity.setExchangeId(exchangeEntity.getId());
             exchangeDetailEntity.setId(UUID.randomUUID());
             exchangeDetailEntity.setProductId(product.getProductId());
             exchangeDetailEntity.setSizeId(product.getSizeId());
             exchangeDetailEntity.setQuantity(product.getQuantity());
             exchangeDetailEntities.add(exchangeDetailEntity);
-        });
 
+            waitingProductEntity.setId(UUID.randomUUID());
+            waitingProductEntity.setProductId(product.getProductId());
+            waitingProductEntity.setNote(exchangeEntity.getNote());
+            waitingProductEntity.setQuantity(product.getQuantity());
+            waitingProductEntity.setSizeId(product.getSizeId());
+            waitingProductEntity.setCreateBy(exchangeEntity.getCreateBy());
+            waitingProductEntities.add(waitingProductEntity);
+        });
         this.exchangeDetailRepository.saveAll(exchangeDetailEntities);
+        this.waitingProductRepository.saveAll(waitingProductEntities);
         return this.modelMapper.map(exchangeEntity,ExchangeDTO.class);
     }
 

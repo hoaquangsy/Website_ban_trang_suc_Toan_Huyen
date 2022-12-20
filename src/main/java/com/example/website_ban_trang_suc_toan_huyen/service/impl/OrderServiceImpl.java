@@ -280,7 +280,7 @@ public class OrderServiceImpl implements OrderService {
             exportPdfDTOS.add(exportPdfDTO);
         });
         ExportPDFUtils exportPDFUtils = new ExportPDFUtils();
-      return   exportPDFUtils.exportPdf(exportPdfDTOS,total, user.getFullName(), user.getAddress());
+      return   exportPDFUtils.exportPdf(exportPdfDTOS,total, user.getFullName(), orderEntity.getAddress());
 
     }
 }

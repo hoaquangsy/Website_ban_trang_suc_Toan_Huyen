@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -19,9 +20,9 @@ public class EventDto {
 
     private Integer discount;
 
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     private String description;
     
@@ -32,5 +33,6 @@ public class EventDto {
     private Instant lastModifiedAt;
 
     private String lastModifiedBy;
+
     private Boolean deleted;
 }

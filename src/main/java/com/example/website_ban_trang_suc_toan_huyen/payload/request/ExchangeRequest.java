@@ -22,6 +22,8 @@ public class ExchangeRequest {
     @NotNull(message = "Trang thái không để trống")
     private ExchangeEntity.StatusEnum status;
 
+    private String createBy;
+
     @Data
     public static class ExchangeDetail{
       private UUID productId;
