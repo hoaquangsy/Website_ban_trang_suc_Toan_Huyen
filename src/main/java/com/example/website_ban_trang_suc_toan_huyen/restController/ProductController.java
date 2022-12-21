@@ -19,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Tag(
@@ -45,6 +46,11 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(SampleResponse.success(productService.getProductById(id)));
+    }
+    @Operation(summary = "Lấy thể loại theo Id", description = "Lấy sản phẩm theo Id")
+    @GetMapping("/trending")
+    public ResponseEntity<?> getProductTrending() {
+        return ResponseEntity.ok(SampleResponse.success(productService.getProductTrending()));
     }
 
     @PostMapping
@@ -84,6 +90,22 @@ public class ProductController {
                           @RequestParam(value = "sortBy",required = false,defaultValue = "") String sortBy,
                           @RequestParam(value = "gender",required = false) ProductEntity.ProductGender gender){
         return this.productService.search(pageIndex,pageSize,keyword,status,materialId,vendorId,accessoryId,categoryId,startPrice,endPrice,sortBy,gender);
+
+    }
+    @GetMapping("/search")
+    public PageDTO searchV2(@RequestParam(value = "pageIndex",defaultValue = "1",required = false) Integer pageIndex,
+                          @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize,
+                          @RequestParam(value = "keyword",defaultValue = "",required = false) String keyword,
+                          @RequestParam(value = "status",required = false) ProductEntity.StatusEnum status,
+                          @RequestParam(value = "materialId",required = false) List<UUID> materialId,
+                          @RequestParam(value = "vendorId",required = false) List<UUID> vendorId,
+                          @RequestParam(value = "categoryId",required = false) List<UUID> categoryId,
+                          @RequestParam(value = "accessoryId",required = false) List<UUID> accessoryId,
+                          @RequestParam(value = "startPrice",required = false) BigDecimal startPrice,
+                          @RequestParam(value = "endPrice",required = false) BigDecimal endPrice,
+                          @RequestParam(value = "sortBy",required = false,defaultValue = "") String sortBy,
+                          @RequestParam(value = "gender",required = false) ProductEntity.ProductGender gender){
+        return this.productService.searchV2(pageIndex,pageSize,keyword,status,materialId,vendorId,accessoryId,categoryId,startPrice,endPrice,sortBy,gender);
 
     }
     @GetMapping("autoComplete")

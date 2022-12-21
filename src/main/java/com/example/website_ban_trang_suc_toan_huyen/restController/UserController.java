@@ -7,6 +7,7 @@ import com.example.website_ban_trang_suc_toan_huyen.payload.request.UserRequest;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.SampleResponse;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.UserResponse;
 import com.example.website_ban_trang_suc_toan_huyen.service.UserService;
+import com.example.website_ban_trang_suc_toan_huyen.service.impl.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +23,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("")
+    @Autowired
+    private UserServiceImp userServiceImp;
+
+    @PostMapping("/add")
     public ResponseEntity<?> addUser(@Validated @RequestBody UserRequest userRequest){
         return ResponseEntity.ok(SampleResponse.success(userService.addUser(userRequest)));
     }
@@ -59,6 +63,11 @@ public class UserController {
     @GetMapping("/customer")
     public ResponseEntity<?> getEmployee(){
         return ResponseEntity.ok(SampleResponse.success(userService.getCustomer()));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable("id") UUID id){
+        return ResponseEntity.ok(SampleResponse.success(userServiceImp.getById(id)));
     }
 
     @GetMapping("")
