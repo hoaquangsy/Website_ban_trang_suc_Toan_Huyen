@@ -3,6 +3,7 @@ package com.example.website_ban_trang_suc_toan_huyen.service.impl;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.CartDetailDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.ProductSizeDto;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.*;
+import com.example.website_ban_trang_suc_toan_huyen.exception.BadRequestException;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.CartRequest;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.GetCartResponse;
@@ -16,10 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,10 +71,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         if (productSizeEntity.getQuantity() <= 0) {
             throw new NotFoundException(HttpStatus.BAD_REQUEST.value(), "Exceed the number of remaining products");
         }
-
         // Check product in cart
         CartDetailEntity cartDetailEn = cartDetailRepository.findByCartIdAndProductIdAndSizeId(cartId, cartRequest.getProductId(), cartRequest.getSizeId());
         if (ObjectUtils.isEmpty(cartDetailEn)) {
+            if(Objects.equals(cartDetailEn.getAmount(), productSizeEntity.getQuantity())){
+                throw new BadRequestException("Sản phẩm đã đạt số lượng tối ta trong giỏ hàng");
+            }
             cartDetailEntity.setId(UUID.randomUUID());
             cartDetailEntity.setCartId(cartId);
             cartDetailEntity.setSizeId(cartRequest.getSizeId());
