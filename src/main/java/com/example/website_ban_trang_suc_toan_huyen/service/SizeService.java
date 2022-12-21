@@ -2,7 +2,9 @@ package com.example.website_ban_trang_suc_toan_huyen.service;
 
 
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.SizeDto;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.SizeRequest;
+import com.example.website_ban_trang_suc_toan_huyen.payload.request.SizeSearchRequest;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +22,8 @@ public interface SizeService {
     List<SizeDto> getAllSize();
 
     List<SizeDto> getByProductId(UUID productId);
+
+    PageDTO search(SizeSearchRequest sizeSearchRequest);
 
 
 

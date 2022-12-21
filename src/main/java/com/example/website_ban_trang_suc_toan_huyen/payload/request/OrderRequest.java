@@ -34,6 +34,7 @@ public class OrderRequest {
 
     private UUID eventId;
 
+    private String createBy;
     @NotNull(message = "Địa chỉ không để trống")
     private String address;
 

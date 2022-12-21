@@ -214,6 +214,8 @@ public class ProductDaoIpml implements ProductDao {
         StringBuilder sql = new StringBuilder(" ");
         if (!sortBy.trim().equals("")) {
             sql.append(" order by p.").append(sortBy.replace(".", " "));
+        }else {
+            sql.append(" order by p.createAt desc");
         }
         return sql;
     }

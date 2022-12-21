@@ -1,6 +1,7 @@
 package com.example.website_ban_trang_suc_toan_huyen.service.impl;
 
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.CartDetailDTO;
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.ProductSizeDto;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.*;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.CartRequest;
@@ -172,7 +173,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
             ProductSizeEntity productSizeEntity = productSizeRepository.findByProductIdAndSizeId(productEntity.getProductId(), sizeEntity.getSizeId());
             cartDetailResponse.setPrice(productSizeEntity.getSalePrice());
-
+            cartDetailResponse.setProductSize(this.modelMapper.map(productSizeEntity, ProductSizeDto.class));
             cartDetailResponseList.add(cartDetailResponse);
         }
         response.setCartDetailResponseList(cartDetailResponseList);
