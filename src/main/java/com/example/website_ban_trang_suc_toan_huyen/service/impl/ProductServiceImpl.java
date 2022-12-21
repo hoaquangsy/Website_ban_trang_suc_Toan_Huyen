@@ -59,6 +59,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private HttpSession session;
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
 
     @Override
     @Transactional
@@ -389,5 +391,38 @@ public class ProductServiceImpl implements ProductService {
             productOrderDtos.add(productOrderDto);
         });
         return productOrderDtos;
+    }
+    @Override
+    public List<ProductDto> getProductTrending() {
+        List<OrderDetailEntity> orderDetailEntityList = orderDetailRepository.findByProductTrending().subList(0,4);
+
+        List<UUID> ProductIds = orderDetailEntityList.stream().map(OrderDetailEntity::getProductId).collect(Collectors.toList());
+        List<ProductDto> productDtos = new ArrayList<>();
+        ProductIds.forEach(uuid -> {
+            ProductEntity product = productRepository.findById(uuid).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "ProductId not found"));
+            ProductDto productDto = modelMapper.map(product, ProductDto.class);
+            if (!CollectionUtils.isEmpty(this.productImageRepository.findByProductId(uuid))) {
+                List<ProductImageDTO> imageDTOList = this.productImageRepository.findByProductId(uuid).stream()
+                        .map(productImage -> this.modelMapper.map(productImage, ProductImageDTO.class)).collect(Collectors.toList());
+                productDto.setProductImages(imageDTOList);
+            }
+            if (!CollectionUtils.isEmpty(this.productPropertyRepository.findByProductId(uuid))) {
+                List<ProductPropertyDto> productPropertyDtos = this.productPropertyRepository.findByProductId(uuid).stream()
+                        .map(productProperty -> this.modelMapper.map(productProperty, ProductPropertyDto.class)).collect(Collectors.toList());
+                productDto.setProductProperties(productPropertyDtos);
+            }
+            if (!CollectionUtils.isEmpty(this.productSizeRepository.findByProductId(uuid))) {
+                List<ProductSizeDto> productSizeDtos = this.productSizeRepository.findByProductId(uuid).stream()
+                        .map(productSize -> this.modelMapper.map(productSize, ProductSizeDto.class)).collect(Collectors.toList());
+                productSizeDtos.forEach(productSizeDto -> {
+                    Optional<SizeEntity> sizeEntity = this.sizeRepository.getSizeEntitiesBy(productSizeDto.getSizeId());
+                    sizeEntity.ifPresent(entity -> productSizeDto.setSize(entity.getSize()));
+                });
+                productSizeDtos = productSizeDtos.stream().sorted(Comparator.comparing(ProductSizeDto::getSize)).collect(Collectors.toList());
+                productDto.setProductSizes(productSizeDtos);
+            }
+            productDtos.add(productDto);
+        });
+        return productDtos;
     }
 }

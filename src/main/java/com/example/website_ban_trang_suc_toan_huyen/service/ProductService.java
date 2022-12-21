@@ -67,4 +67,6 @@ public interface ProductService {
                          ProductEntity.ProductGender gender);
 
     List<ProductOrderDto> getProductOrder();
+
+    List<ProductDto> getProductTrending();
 }
