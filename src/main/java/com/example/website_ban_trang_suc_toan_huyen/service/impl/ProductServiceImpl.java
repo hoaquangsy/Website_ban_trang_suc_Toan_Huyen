@@ -55,6 +55,9 @@ public class ProductServiceImpl implements ProductService {
     private VendorRepository vendorRepository;
 
     @Autowired
+    private CartDetailRepository cartDetailRepository;
+
+    @Autowired
     private ProductDao productDao;
 
     @Autowired
@@ -203,6 +206,10 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto lock(UUID id) {
         ProductEntity product = productRepository.findById(id).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(), "ProductId not found"));
         product.setStatus(ProductEntity.StatusEnum.INACTIVE);
+        List<CartDetailEntity> cartDetailEntities = this.cartDetailRepository.findByProductId(product.getProductId());
+        if(CollectionUtils.isEmpty(cartDetailEntities)){
+            this.cartDetailRepository.deleteAll(cartDetailEntities);
+        }
         return this.modelMapper.map(this.productRepository.save(product), ProductDto.class);
     }
 
