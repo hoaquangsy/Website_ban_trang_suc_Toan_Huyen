@@ -76,8 +76,8 @@ public class MaterialServiceImpl implements MaterialService {
             productEntities.forEach(productEntity -> {
                 List<ProductSizeEntity> productSizeEntities = this.productSizeRepository.findByProductId(productEntity.getProductId());
                 productSizeEntities.forEach(productSizeEntity -> {
-                    productSizeEntity.setSalePrice(productSizeEntity.getSalePrice().subtract(priceSale).add(materialDto.getSalePrice()));
-                    productSizeEntity.setPurchasePrice(productSizeEntity.getPurchasePrice().subtract(pricePurchase).add(materialDto.getPurchasePrice()));
+                    productSizeEntity.setSalePrice(productSizeEntity.getSalePrice().subtract(priceSale.multiply(BigDecimal.valueOf(productSizeEntity.getWeight()))).add(materialDto.getSalePrice().multiply(BigDecimal.valueOf(productSizeEntity.getWeight()))));
+                    productSizeEntity.setPurchasePrice(productSizeEntity.getPurchasePrice().subtract(pricePurchase.multiply(BigDecimal.valueOf(productSizeEntity.getWeight()))).add(materialDto.getPurchasePrice().multiply(BigDecimal.valueOf(productSizeEntity.getWeight()))));
                 });
                 this.productSizeRepository.saveAll(productSizeEntities);
             });
