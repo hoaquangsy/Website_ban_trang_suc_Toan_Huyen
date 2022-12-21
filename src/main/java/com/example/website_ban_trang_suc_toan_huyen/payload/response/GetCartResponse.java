@@ -1,6 +1,7 @@
 package com.example.website_ban_trang_suc_toan_huyen.payload.response;
 
 
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.ProductSizeDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,5 +31,6 @@ public class GetCartResponse {
         private Integer amount;
         private String code;
         private BigDecimal price;
+        private ProductSizeDto productSize;
     }
 }

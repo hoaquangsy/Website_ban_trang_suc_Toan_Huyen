@@ -15,6 +15,8 @@ public class ProductOrderDto {
 
     private String nameProduct;
 
+    private BigDecimal priceProduct;
+
     private List<String> imageUrl;
 
     private UUID sizeId;

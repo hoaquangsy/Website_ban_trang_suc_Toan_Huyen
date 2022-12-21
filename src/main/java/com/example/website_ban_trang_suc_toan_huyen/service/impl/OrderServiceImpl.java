@@ -133,9 +133,9 @@ public class OrderServiceImpl implements OrderService {
         BeanUtils.copyProperties(orderRequest, orderRequestEntity);
         orderRepository.save(orderRequestEntity);
         List<UUID> uuids = orderDetailRepository.findByOrderId(orderRequestEntity.getId()).stream().map(OrderDetailEntity::getId).collect(Collectors.toList());
-       List<OrderDetailEntity> orderDetailEntities = orderDetailRepository.findByOrderId(orderRequestEntity.getId());
-       List<ProductSizeEntity> productSizeEntities = new ArrayList<>();
-       orderDetailEntities.forEach(orderDetailEntity -> {
+        List<OrderDetailEntity> orderDetailEntities = orderDetailRepository.findByOrderId(orderRequestEntity.getId());
+        List<ProductSizeEntity> productSizeEntities = new ArrayList<>();
+        orderDetailEntities.forEach(orderDetailEntity -> {
            Optional<ProductSizeEntity> sizeEntity = this.productSizeRepository.findByProductAndSize(orderDetailEntity.getProductId(),orderDetailEntity.getSizeId());
            if(sizeEntity.isPresent()){
                ProductSizeEntity sizeEntity1 =   sizeEntity.get();
@@ -192,6 +192,8 @@ public class OrderServiceImpl implements OrderService {
        productOrderDto.setId(orderDetailEntity.getId());
        ProductEntity productEntity = this.productRepository.findID(orderDetailEntity.getProductId()).orElse(new ProductEntity());
        SizeEntity entity = this.sizeRepository.getSizeEntitiesBy(orderDetailEntity.getSizeId()).orElse(new SizeEntity());
+       ProductSizeEntity  productSizeEntity = this.productSizeRepository.findByProductIdAndSizeId(orderDetailEntity.getProductId(),orderDetailEntity.getSizeId());
+       productOrderDto.setPriceProduct(productSizeEntity.getPurchasePrice());
        productOrderDto.setSize(entity.getSize());
        productOrderDto.setNameProduct(productEntity.getNameProduct());
        productOrderDto.setQuantity(orderDetailEntity.getQuantity());
