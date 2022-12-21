@@ -74,8 +74,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         // Check product in cart
         CartDetailEntity cartDetailEn = cartDetailRepository.findByCartIdAndProductIdAndSizeId(cartId, cartRequest.getProductId(), cartRequest.getSizeId());
         if (ObjectUtils.isEmpty(cartDetailEn)) {
-            if(Objects.equals(cartDetailEn.getAmount(), productSizeEntity.getQuantity())){
-                throw new BadRequestException("Sản phẩm đã đạt số lượng tối ta trong giỏ hàng");
+            if(cartDetailEn != null){
+                if(Objects.equals(cartDetailEn.getAmount(), productSizeEntity.getQuantity())){
+                    throw new BadRequestException("Sản phẩm đã đạt số lượng tối ta trong giỏ hàng");
+                }
             }
             cartDetailEntity.setId(UUID.randomUUID());
             cartDetailEntity.setCartId(cartId);
@@ -86,8 +88,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 cartDetailEntity.setAmount(cartRequest.getAmount());
             }
         } else {
-            if (cartRequest.getAmount() > productSizeEntity.getQuantity()) {
-                throw new NotFoundException(HttpStatus.BAD_REQUEST.value(), "Exceed the number of remaining products");
+
+            if (cartRequest.getAmount() + cartDetailEn.getAmount() > productSizeEntity.getQuantity()) {
+                throw new NotFoundException(HttpStatus.BAD_REQUEST.value(), "Số lượng sản phẩm đã đạt tối đa trong giỏ hàng");
             } else {
                 cartDetailEntity.setAmount(cartRequest.getAmount() + cartDetailEn.getAmount());
             }
