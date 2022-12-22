@@ -400,6 +400,28 @@ public class ProductServiceImpl implements ProductService {
         });
         return productOrderDtos;
     }
+
+    @Override
+    public List<ProductOrderDto> getProductOrder1() {
+        List<ProductSizeEntity> productSizeEntities = this.productSizeRepository.findAllProductOrder1();
+        List<ProductOrderDto> productOrderDtos = new ArrayList<>();
+        productSizeEntities.forEach((productSize) -> {
+            ProductOrderDto productOrderDto = new ProductOrderDto();
+            productOrderDto.setId(productSize.getIdProductSize());
+            productOrderDto.setProductId(productSize.getProductId());
+            productOrderDto.setPrice(productSize.getSalePrice());
+            productOrderDto.setPricePurchase(productSize.getPurchasePrice());
+            productOrderDto.setProductCode(this.productRepository.findID(productSize.getProductId()).orElse(new ProductEntity()).getCode());
+            productOrderDto.setSizeId(productSize.getSizeId());
+            productOrderDto.setQuantity(productSize.getQuantity());
+            productOrderDto.setNameProduct(this.productRepository.findID(productSize.getProductId()).orElse(new ProductEntity()).getNameProduct());
+            productOrderDto.setSize(this.sizeRepository.getSizeEntitiesBy(productSize.getSizeId()).orElse(new SizeEntity()).getSize());
+            productOrderDto.setImageUrl(this.productImageRepository.findByProductId(productSize.getProductId()).stream().map(productImage -> productImage.getImageUrl()).collect(Collectors.toList()));
+            productOrderDtos.add(productOrderDto);
+        });
+        return productOrderDtos;
+    }
+
     @Override
     public List<ProductDto> getProductTrending() {
         List<OrderDetailEntity> orderDetailEntityList = orderDetailRepository.findByProductTrending().subList(0,4);

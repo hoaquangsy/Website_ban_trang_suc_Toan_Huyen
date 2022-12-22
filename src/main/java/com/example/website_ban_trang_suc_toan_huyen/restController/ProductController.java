@@ -128,4 +128,9 @@ public class ProductController {
     public ResponseEntity<?> getProductOrder(){
         return ResponseEntity.ok(SampleResponse.success(this.productService.getProductOrder()));
     }
+
+    @GetMapping("product-order1")
+    public ResponseEntity<?> getProductOrder1(){
+        return ResponseEntity.ok(SampleResponse.success(this.productService.getProductOrder1()));
+    }
 }

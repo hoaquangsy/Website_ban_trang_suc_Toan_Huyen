@@ -68,5 +68,7 @@ public interface ProductService {
 
     List<ProductOrderDto> getProductOrder();
 
+    List<ProductOrderDto> getProductOrder1();
+
     List<ProductDto> getProductTrending();
 }
