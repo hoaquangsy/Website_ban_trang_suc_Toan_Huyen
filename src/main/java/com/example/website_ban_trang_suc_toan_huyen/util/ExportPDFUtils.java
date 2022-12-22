@@ -91,7 +91,7 @@ public class ExportPDFUtils {
             PdfPCell c7 = new PdfPCell(new Phrase("Thành tiền", new Font(font)));
             t.addCell(c7);
             exportPdfDTOS.forEach(exportPdfDTO -> {
-                t.addCell(exportPdfDTO.getName());
+                t.addCell(new Phrase(exportPdfDTO.getName(), new Font(font)));
                 t.addCell(exportPdfDTO.getQuantity().toString());
                 t.addCell(exportPdfDTO.getAge().toString());
                 t.addCell(exportPdfDTO.getWight().toString());
