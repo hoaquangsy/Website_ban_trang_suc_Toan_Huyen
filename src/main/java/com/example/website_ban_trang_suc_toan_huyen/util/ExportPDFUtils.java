@@ -11,9 +11,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ExportPDFUtils {
@@ -101,7 +103,9 @@ public class ExportPDFUtils {
             });
 //           // tong
             font.setStyle(Font.BOLD);
-            Paragraph paragraphTong = new Paragraph("Tổng tiền: " + total.toString(), new Font(font));
+            NumberFormat currencyFormat02 = NumberFormat.getCurrencyInstance(Locale.getDefault());
+            currencyFormat02.setMinimumFractionDigits(0);
+            Paragraph paragraphTong = new Paragraph("Tổng tiền: " + currencyFormat02.format(total), new Font(font));
             paragraphTong.setSpacingBefore(5);
             paragraphTong.setAlignment(Element.ALIGN_LEFT);
             paragraphTong.setIndentationLeft(55);
@@ -114,7 +118,6 @@ public class ExportPDFUtils {
             paragraph6.setAlignment(Element.ALIGN_LEFT);
             paragraph6.setIndentationLeft(55);
             paragraph6.setIndentationRight(55);
-
             //+
             font.setStyle(Font.NORMAL);
             Paragraph paragraph7 = new Paragraph("Thưa quý khách chúng tôi có giá ưu đãi cho khách hàng mua \n - Quý khách giữ lại giấy đảm bảo để tiện mua bán, đổi: ", new Font(font));
