@@ -390,10 +390,11 @@ public class ProductServiceImpl implements ProductService {
             productOrderDto.setProductId(productSize.getProductId());
             productOrderDto.setPrice(productSize.getSalePrice());
             productOrderDto.setPricePurchase(productSize.getPurchasePrice());
+            productOrderDto.setProductCode(this.productRepository.findID(productSize.getProductId()).orElse(new ProductEntity()).getCode());
             productOrderDto.setSizeId(productSize.getSizeId());
             productOrderDto.setQuantity(productSize.getQuantity());
-            productOrderDto.setNameProduct(this.productRepository.findID(productSize.getProductId()).get().getNameProduct());
-            productOrderDto.setSize(this.sizeRepository.getSizeEntitiesBy(productSize.getSizeId()).get().getSize());
+            productOrderDto.setNameProduct(this.productRepository.findID(productSize.getProductId()).orElse(new ProductEntity()).getNameProduct());
+            productOrderDto.setSize(this.sizeRepository.getSizeEntitiesBy(productSize.getSizeId()).orElse(new SizeEntity()).getSize());
             productOrderDto.setImageUrl(this.productImageRepository.findByProductId(productSize.getProductId()).stream().map(productImage -> productImage.getImageUrl()).collect(Collectors.toList()));
             productOrderDtos.add(productOrderDto);
         });

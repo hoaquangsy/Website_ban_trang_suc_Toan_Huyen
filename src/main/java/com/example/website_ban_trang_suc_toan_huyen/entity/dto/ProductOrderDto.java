@@ -33,5 +33,7 @@ public class ProductOrderDto {
 
     private BigDecimal salary;
 
+    private String productCode;
+
 
 }

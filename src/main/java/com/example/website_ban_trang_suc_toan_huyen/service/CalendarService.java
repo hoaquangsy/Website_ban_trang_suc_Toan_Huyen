@@ -12,6 +12,8 @@ import java.util.UUID;
 public interface CalendarService {
     CalendarDTO createCalendar(CalendarRequest calendarRequest);
 
+    CalendarDTO createCalendar2(CalendarRequest calendarRequest);
+
     CalendarDTO updateCalendarByUser(UUID calendarId,CalendarRequest calendarRequest);
 
     CalendarDTO getCalendar(UUID calendarId);

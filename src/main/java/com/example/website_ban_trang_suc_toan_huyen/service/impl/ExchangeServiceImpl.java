@@ -134,7 +134,7 @@ public class ExchangeServiceImpl implements ExchangeService {
 
             waitingProductEntity.setId(UUID.randomUUID());
             waitingProductEntity.setProductId(product.getProductId());
-            waitingProductEntity.setNote(exchangeEntity.getNote());
+            waitingProductEntity.setNote(exchangeEntity.getReason());
             waitingProductEntity.setQuantity(product.getQuantity());
             waitingProductEntity.setSizeId(product.getSizeId());
             waitingProductEntity.setCreateBy(exchangeEntity.getCreateBy());

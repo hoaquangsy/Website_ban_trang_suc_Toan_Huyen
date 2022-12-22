@@ -54,6 +54,12 @@ public class CalendarServiceImpl implements CalendarService {
         calendar.setId(UUID.randomUUID());
         return modelMapper.map(calendarRepository.save(calendar), CalendarDTO.class);
     }
+    @Override
+    public CalendarDTO createCalendar2(CalendarRequest calendarRequest) {
+        CalendarEntity calendar = modelMapper.map(calendarRequest,CalendarEntity.class);
+        calendar.setId(UUID.randomUUID());
+        return modelMapper.map(calendarRepository.save(calendar), CalendarDTO.class);
+    }
 
     @Override
     public CalendarDTO updateCalendarByUser(UUID calendarId, CalendarRequest calendarRequest) {

@@ -33,6 +33,11 @@ public class CalendarController {
         return ResponseEntity.ok(SampleResponse.success(calendarService.createCalendar(calendarRequest)));
     }
 
+    @PostMapping("/add")
+    public ResponseEntity<?> createCalendar2(@RequestBody @Valid CalendarRequest calendarRequest) {
+        return ResponseEntity.ok(SampleResponse.success(calendarService.createCalendar2(calendarRequest)));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCalendarByUser(@PathVariable(name = "id") UUID id, @RequestBody @Valid CalendarRequest calendarRequest) {
         return ResponseEntity.ok(SampleResponse.success(calendarService.updateCalendarByUser(id, calendarRequest)));

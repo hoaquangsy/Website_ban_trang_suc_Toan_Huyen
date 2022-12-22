@@ -3,6 +3,7 @@ package com.example.website_ban_trang_suc_toan_huyen.restController;
 
 import com.example.website_ban_trang_suc_toan_huyen.entity.dto.response.PageDTO;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.UserEntity;
+import com.example.website_ban_trang_suc_toan_huyen.payload.request.UserCustomerRequest;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.UserRequest;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.SampleResponse;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.UserResponse;
@@ -30,6 +31,11 @@ public class UserController {
     public ResponseEntity<?> addUser(@Validated @RequestBody UserRequest userRequest){
         return ResponseEntity.ok(SampleResponse.success(userService.addUser(userRequest)));
     }
+    @PostMapping("/addCustomer")
+    public ResponseEntity<?> addUserCustomer(@Validated @RequestBody UserCustomerRequest userRequest){
+        return ResponseEntity.ok(SampleResponse.success(userService.addUserCustomer(userRequest)));
+    }
+
     @PostMapping("{id}/delete")
     public ResponseEntity<?> deleteUser(@PathVariable("id") UUID id){
         return ResponseEntity.ok(SampleResponse.success(this.userService.deleteUser(id)));

@@ -7,6 +7,7 @@ import com.example.website_ban_trang_suc_toan_huyen.entity.entity.CartEntity;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.UserEntity;
 import com.example.website_ban_trang_suc_toan_huyen.exception.BadRequestException;
 import com.example.website_ban_trang_suc_toan_huyen.exception.NotFoundException;
+import com.example.website_ban_trang_suc_toan_huyen.payload.request.UserCustomerRequest;
 import com.example.website_ban_trang_suc_toan_huyen.payload.request.UserRequest;
 import com.example.website_ban_trang_suc_toan_huyen.payload.response.UserResponse;
 import com.example.website_ban_trang_suc_toan_huyen.repository.CartRepository;
@@ -73,6 +74,30 @@ public class UserServiceImp implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setStatus(Boolean.FALSE);
 
+        CartEntity cartEntity = new CartEntity();
+        cartEntity.setId(UUID.randomUUID());
+        cartEntity.setUserId(user.getUserId());
+        cartRepository.save(cartEntity);
+        return this.modelMapper.map(this.userRepository.save(user),UserDTO.class);
+    }
+
+    @Override
+    public UserDTO addUserCustomer(UserCustomerRequest userRequest) {
+        UserEntity user = this.modelMapper.map(userRequest,UserEntity.class);
+        if(user.getRole() == UserEntity.Role.EMPLOYEE){
+            List<UserEntity> userLast = userRepository.getUserEmployee();
+            if(!CollectionUtils.isEmpty(userLast) && userLast.size() > 0){
+                userLast =  userLast.stream().sorted((o1, o2) -> o2.getMaNV().compareTo(o1.getMaNV())).collect(Collectors.toList());
+                UserEntity user1 =   userLast.get(0);
+                int maNv = Integer.parseInt(user1.getMaNV().substring(2));
+                user.setMaNV("NV"+(maNv+1));
+            }else{
+                user.setMaNV("NV1");
+            }
+        }
+        user.setUserId(UUID.randomUUID());
+        user.setDeleted(Boolean.FALSE);
+        user.setStatus(Boolean.FALSE);
         CartEntity cartEntity = new CartEntity();
         cartEntity.setId(UUID.randomUUID());
         cartEntity.setUserId(user.getUserId());
