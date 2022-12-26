@@ -50,6 +50,10 @@ public class OrderDTO {
 
     private String lastModifiedBy;
 
+    private String note;
+
+    private String phoneNumber;
+
     private List<ProductOrderDto> orderDetailDTOList;
 
     private Boolean isRepurchase;

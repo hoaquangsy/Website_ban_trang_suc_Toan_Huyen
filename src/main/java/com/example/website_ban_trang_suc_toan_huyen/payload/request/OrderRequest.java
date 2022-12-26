@@ -32,6 +32,10 @@ public class OrderRequest {
     @NotNull(message = "Trạng thái không để trống")
     private OrderEntity.StatusEnum status;
 
+    private String note;
+
+    private String phoneNumber;
+
     private UUID eventId;
 
     private String createBy;

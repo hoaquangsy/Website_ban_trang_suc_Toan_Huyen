@@ -35,9 +35,10 @@ public class OrderEntity extends BaseEntity{
     private BigDecimal transportFee;
     @Column
     private BigDecimal total;
-
     @Column
     private BigDecimal cost;
+    @Column
+    private String phoneNumber;
     @Column
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
@@ -52,13 +53,17 @@ public class OrderEntity extends BaseEntity{
     @Column
     @Type(type ="uuid-char")
     private UUID eventId;
+    @Column
+    private String note;
 
     @AllArgsConstructor
     @Getter
     public enum PaymentMethod {
         MONEY,
-        CARD;
+        CARD,
+        CARD_MONEY
     }
+
     @AllArgsConstructor
     @Getter
     public enum StatusEnum {
