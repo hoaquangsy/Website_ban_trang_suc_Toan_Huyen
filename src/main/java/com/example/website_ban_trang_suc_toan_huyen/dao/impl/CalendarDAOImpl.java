@@ -47,6 +47,10 @@ public class CalendarDAOImpl implements CalendarDAO {
         builder.append(" and C.productId = :productId");
         values.put("productId",calendarSearchRequest.getProductId());
     }
+        if(Objects.nonNull(calendarSearchRequest.getStatus())){
+            builder.append(" and C.status = :status");
+            values.put("status",calendarSearchRequest.getStatus());
+        }
        if (Objects.nonNull(calendarSearchRequest.getStartDate())) {
         builder.append(" AND  C.time >= :startDate ");
         values.put("startDate",new SimpleDateFormat("yyyy/MM/dd").parse(calendarSearchRequest.getStartDate()).toInstant());

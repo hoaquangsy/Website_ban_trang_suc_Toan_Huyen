@@ -167,13 +167,25 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDTO update(UUID idOrder, OrderEntity.StatusEnum status) {
         OrderEntity orderEntity = orderRepository.findById(idOrder).get();
         if (ObjectUtils.isEmpty(orderEntity)){
             throw new NotFoundException(HttpStatus.NOT_FOUND.value(), "Order not exist");
         }
         orderEntity.setStatus(status);
-        return    modelMapper.map(orderRepository.save(orderEntity),OrderDTO.class);
+        OrderDTO orderDTO = modelMapper.map(orderRepository.save(orderEntity),OrderDTO.class);
+        if(orderDTO.getStatus().equals(OrderEntity.StatusEnum.HUY)){
+          List<OrderDetailEntity> orderDetailEntities =   orderDetailRepository.findByOrderId(orderEntity.getId());
+          orderDetailEntities.forEach(orderDetailEntity -> {
+              Optional<ProductSizeEntity> sizeEntity = this.productSizeRepository.findByProductAndSize(orderDetailEntity.getProductId(),orderDetailEntity.getSizeId());
+              sizeEntity.ifPresent(productSizeEntity -> {
+                  productSizeEntity.setQuantity(productSizeEntity.getQuantity() + sizeEntity.get().getQuantity());
+                  this.productSizeRepository.save(productSizeEntity);
+              });
+          });
+        }
+        return orderDTO;
     }
 
     @Override
@@ -196,6 +208,7 @@ public class OrderServiceImpl implements OrderService {
        productOrderDto.setPriceProduct(productSizeEntity.getPurchasePrice());
        productOrderDto.setSize(entity.getSize());
        productOrderDto.setNameProduct(productEntity.getNameProduct());
+       productOrderDto.setProductCode(productEntity.getCode());
        productOrderDto.setQuantity(orderDetailEntity.getQuantity());
        productOrderDto.setPrice(orderDetailEntity.getPrice());
        productOrderDto.setSalary(productEntity.getSalary());

@@ -1,6 +1,7 @@
 package com.example.website_ban_trang_suc_toan_huyen.payload.request;
 
 
+import com.example.website_ban_trang_suc_toan_huyen.entity.entity.CalendarEntity;
 import lombok.Data;
 
 import java.util.Date;
@@ -14,6 +15,8 @@ public class CalendarSearchRequest {
     private UUID productId;
 
     private String startDate;
+
+    private CalendarEntity.Status status;
 
     private String endDate;
 
