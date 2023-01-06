@@ -54,6 +54,9 @@ public class UserServiceImp implements UserService {
         if(this.userRepository.findUserEntitiesByEmail(userRequest.getEmail()).isPresent()){
             throw new BadRequestException("Email đã tồn tại");
         }
+        if(this.userRepository.findUserEntitiesByPhoneNumber(userRequest.getPhoneNumber()).isPresent()){
+            throw new BadRequestException("Số điện thoại đã tồn tại");
+        }
         if(this.userRepository.finUserEntitybyUsername(userRequest.getUserName()) != null) {
             throw new BadRequestException("Username đã tồn tại");
         }
@@ -83,6 +86,12 @@ public class UserServiceImp implements UserService {
 
     @Override
     public UserDTO addUserCustomer(UserCustomerRequest userRequest) {
+        if(this.userRepository.findUserEntitiesByEmail(userRequest.getEmail()).isPresent()){
+            throw new BadRequestException("Email đã tồn tại");
+        }
+        if(this.userRepository.findUserEntitiesByPhoneNumber(userRequest.getPhoneNumber()).isPresent()){
+            throw new BadRequestException("Số điện thoại đã tồn tại");
+        }
         UserEntity user = this.modelMapper.map(userRequest,UserEntity.class);
         if(user.getRole() == UserEntity.Role.EMPLOYEE){
             List<UserEntity> userLast = userRepository.getUserEmployee();
