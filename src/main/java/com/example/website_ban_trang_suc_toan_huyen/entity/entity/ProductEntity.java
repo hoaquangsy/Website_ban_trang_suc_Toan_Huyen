@@ -34,7 +34,7 @@ public class ProductEntity extends BaseEntity {
     @Column(length = 50)
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
-    @Column(length = 50)
+    @Column(length = 2000)
     private String note;
     @Column
     private BigDecimal salary;
