@@ -24,7 +24,7 @@ public class UserEntity extends BaseEntity {
     private String fullName;
     @Column
     private LocalDate birthday;
-    @Column(length = 12)
+    @Column(length = 50)
     private String phoneNumber;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -35,7 +35,7 @@ public class UserEntity extends BaseEntity {
     private Boolean status;
     @Column(length = 200)
     private String password;
-    @Column(length = 20)
+    @Column(length = 50)
     private String cccd;
     @Column
     private String maNV;

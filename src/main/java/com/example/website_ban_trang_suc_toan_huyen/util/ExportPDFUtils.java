@@ -19,7 +19,7 @@ import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ExportPDFUtils {
-    public ByteArrayInputStream exportPdf(List<ExportPdfDTO> exportPdfDTOS, BigDecimal total, String userName, String dis) {
+    public ByteArrayInputStream exportPdf(List<ExportPdfDTO> exportPdfDTOS, BigDecimal total, String userName,Long orderCode, String dis) {
         // tạo một document
         Document document = new Document();
         ByteArrayOutputStream ot = new ByteArrayOutputStream();
@@ -72,6 +72,11 @@ public class ExportPDFUtils {
             paragraph5.setIndentationLeft(55);
             paragraph5.setIndentationRight(55);
 
+            Paragraph paragraph12 = new Paragraph("                   Mã Hóa Đơn: "+orderCode,new Font(font));
+            paragraph5.setSpacingBefore(15);
+            paragraph5.setAlignment(Element.ALIGN_LEFT);
+            paragraph5.setIndentationLeft(55);
+            paragraph5.setIndentationRight(55);
             // table
             PdfPTable t = new PdfPTable(7);
             t.setSpacingBefore(25);
@@ -137,7 +142,7 @@ public class ExportPDFUtils {
             Date date = new Date();// the date instance
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-            Paragraph paragraph9 = new Paragraph("Tân Sơn, ngày:" + new Date().getDate() + " tháng:" + calendar.get(Calendar.MONTH) + " năm: " + calendar.get(Calendar.YEAR), new Font(font));
+            Paragraph paragraph9 = new Paragraph("Tân Sơn, ngày:" + new Date().getDate() + " tháng:" + (calendar.get(Calendar.MONTH) + 1 ) + " năm: " + calendar.get(Calendar.YEAR), new Font(font));
             paragraph9.setSpacingBefore(5);
             paragraph9.setAlignment(Element.ALIGN_RIGHT);
             paragraph9.setIndentationLeft(55);
@@ -162,6 +167,7 @@ public class ExportPDFUtils {
             document.add(paragraph3);
             document.add(paragraph4);
             document.add(paragraph5);
+            document.add(paragraph12);
             document.add(t);
             document.add(paragraphTong);
             document.add(paragraph6);
@@ -170,6 +176,7 @@ public class ExportPDFUtils {
             document.add(paragraph9);
             document.add(paragraph10);
             document.add(paragraph11);
+
             // đóng file
             document.close();
 
