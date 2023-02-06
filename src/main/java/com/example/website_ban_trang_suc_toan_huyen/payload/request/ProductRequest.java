@@ -1,5 +1,6 @@
 package com.example.website_ban_trang_suc_toan_huyen.payload.request;
 
+import com.example.website_ban_trang_suc_toan_huyen.entity.dto.ProductStatistical;
 import com.example.website_ban_trang_suc_toan_huyen.entity.entity.ProductEntity;
 import lombok.Data;
 import javax.validation.constraints.NotBlank;
@@ -21,6 +22,8 @@ public class ProductRequest {
     private String nameProduct;
 
     private String note;
+
+    private ProductEntity.StatusEnum status;
 
     @NotNull(message = "Lương không để trống")
     private BigDecimal salary;

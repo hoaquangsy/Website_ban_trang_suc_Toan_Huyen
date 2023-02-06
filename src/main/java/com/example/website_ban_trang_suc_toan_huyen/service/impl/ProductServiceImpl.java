@@ -73,7 +73,7 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity product = modelMapper.map(productRequest, ProductEntity.class);
         product.setProductId(UUID.randomUUID());
         product.setDeleted(Boolean.FALSE);
-        product.setStatus(ProductEntity.StatusEnum.ACTIVE);
+        product.setStatus(productRequest.getStatus());
         String code = LocalDate.now().toString().replaceAll("-","");
         product.setCode("PRODUCT"+code+ RandomStringUtils.randomAlphabetic(3).toUpperCase(Locale.ROOT));
         this.productRepository.save(product);
