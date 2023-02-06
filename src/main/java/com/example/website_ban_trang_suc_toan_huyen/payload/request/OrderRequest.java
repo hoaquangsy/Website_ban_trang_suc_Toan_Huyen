@@ -38,6 +38,8 @@ public class OrderRequest {
 
     private UUID eventId;
 
+    private BigDecimal discount;
+
     private String createBy;
     @NotNull(message = "Địa chỉ không để trống")
     private String address;

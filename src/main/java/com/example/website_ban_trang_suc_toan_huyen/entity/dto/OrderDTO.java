@@ -30,6 +30,8 @@ public class OrderDTO {
 
     private BigDecimal total;
 
+    private BigDecimal discount;
+
     private BigDecimal cost;
 
     private OrderEntity.StatusEnum status;
