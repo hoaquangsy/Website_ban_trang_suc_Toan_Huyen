@@ -74,12 +74,12 @@ public class PaymentController {
 //        Mã website của merchant trên hệ thống của VNPAY
         String vnp_TmnCode = Config.vnp_TmnCode;
 
-        int amount = Integer.parseInt(req.getParameter("amount")) * 100;
+        String amount = req.getParameter("amount") ;
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
         vnp_Params.put("vnp_Command", vnp_Command);
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(amount));
+        vnp_Params.put("vnp_Amount", amount);
         vnp_Params.put("vnp_CurrCode", "VND");
         String bank_code = req.getParameter("bankcode");
         if (bank_code != null && !bank_code.isEmpty()) {
